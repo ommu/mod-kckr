@@ -23,7 +23,7 @@
 )); ?>
 
 	<div class="dialog-content">
-		<?php echo $model->publish == 1 ? Phrase::trans(282,0) : Phrase::trans(281,0)?>
+		<?php echo $model->publish == 1 ? Phrase::trans(282,0) : Yii::t('phrase', 'Are you sure you want to publish this item?')?>
 	</div>
 	<div class="dialog-submit">
 		<?php echo CHtml::submitButton($title, array('onclick' => 'setEnableSave()')); ?>

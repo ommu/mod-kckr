@@ -312,7 +312,7 @@
 	<div class="submit clearfix">
 		<label>&nbsp;</label>
 		<div class="desc">
-			<?php echo CHtml::submitButton($model->isNewRecord ? Phrase::trans(1,0) : Phrase::trans(2,0), array('onclick' => 'setEnableSave()')); ?>
+			<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Phrase::trans(2,0), array('onclick' => 'setEnableSave()')); ?>
 		</div>
 	</div>
 
@@ -321,7 +321,7 @@
 <div class="dialog-content">
 </div>
 <div class="dialog-submit">
-	<?php echo CHtml::submitButton($model->isNewRecord ? Phrase::trans(1,0) : Phrase::trans(2,0) ,array('onclick' => 'setEnableSave()')); ?>
+	<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Phrase::trans(2,0) ,array('onclick' => 'setEnableSave()')); ?>
 	<?php echo CHtml::button(Phrase::trans(4,0), array('id'=>'closed')); ?>
 </div>
 */?>
