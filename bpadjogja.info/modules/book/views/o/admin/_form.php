@@ -121,7 +121,7 @@
 					<div id="book-author" class="suggest clearfix">
 						<?php if($author != null) {
 							foreach($author as $key => $val) {?>
-							<div><?php echo $val->author_relation->author_name;?><a href="<?php echo Yii::app()->controller->createUrl('author/delete',array('id'=>$val->id,'type'=>'book'));?>" title="<?php echo Phrase::trans(173,0);?>"><?php echo Phrase::trans(173,0);?></a></div>
+							<div><?php echo $val->author_relation->author_name;?><a href="<?php echo Yii::app()->controller->createUrl('author/delete',array('id'=>$val->id,'type'=>'book'));?>" title="<?php echo Yii::t('phrase', 'Delete');?>"><?php echo Yii::t('phrase', 'Delete');?></a></div>
 						<?php }
 						}?>
 					</div>
@@ -167,7 +167,7 @@
 					<div id="book-interpreter" class="suggest clearfix">
 						<?php if($interpreter != null) {
 							foreach($interpreter as $key => $val) {?>
-							<div><?php echo $val->interpreter_relation->author_name;?><a href="<?php echo Yii::app()->controller->createUrl('interpreter/delete',array('id'=>$val->id,'type'=>'book'));?>" title="<?php echo Phrase::trans(173,0);?>"><?php echo Phrase::trans(173,0);?></a></div>
+							<div><?php echo $val->interpreter_relation->author_name;?><a href="<?php echo Yii::app()->controller->createUrl('interpreter/delete',array('id'=>$val->id,'type'=>'book'));?>" title="<?php echo Yii::t('phrase', 'Delete');?>"><?php echo Yii::t('phrase', 'Delete');?></a></div>
 						<?php }
 						}?>
 					</div>
@@ -284,7 +284,7 @@
 					<div id="book-subject" class="suggest clearfix">
 						<?php if($subject != null) {
 							foreach($subject as $key => $val) {?>
-							<div><?php echo $val->subject_relation->subject;?><a href="<?php echo Yii::app()->controller->createUrl('subject/delete',array('id'=>$val->id,'type'=>'book'));?>" title="<?php echo Phrase::trans(173,0);?>"><?php echo Phrase::trans(173,0);?></a></div>
+							<div><?php echo $val->subject_relation->subject;?><a href="<?php echo Yii::app()->controller->createUrl('subject/delete',array('id'=>$val->id,'type'=>'book'));?>" title="<?php echo Yii::t('phrase', 'Delete');?>"><?php echo Yii::t('phrase', 'Delete');?></a></div>
 						<?php }
 						}?>
 					</div>
@@ -360,7 +360,7 @@
 	<div class="submit clearfix">
 		<label>&nbsp;</label>
 		<div class="desc">
-			<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Phrase::trans(2,0), array('onclick' => 'setEnableSave()')); ?>
+			<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save'), array('onclick' => 'setEnableSave()')); ?>
 		</div>
 	</div>
 

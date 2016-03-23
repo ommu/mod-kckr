@@ -393,10 +393,10 @@ class ReviewController extends Controller
 		$model=$this->loadModel($id);
 		
 		if($model->publish == 1) {
-			$title = Phrase::trans(276,0);
+			$title = Yii::t('phrase', 'Unpublish');
 			$replace = 0;
 		} else {
-			$title = Phrase::trans(275,0);
+			$title = Yii::t('phrase', 'Publish');
 			$replace = 1;
 		}
 
@@ -462,7 +462,7 @@ class ReviewController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Phrase::trans(338,0);
+			$this->pageTitle = Yii::t('phrase', 'Headline');
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_headline');
@@ -478,7 +478,7 @@ class ReviewController extends Controller
 	{
 		$model = BookReviews::model()->findByPk($id);
 		if($model===null)
-			throw new CHttpException(404, Phrase::trans(193,0));
+			throw new CHttpException(404, Yii::t('phrase', 'The requested page does not exist.'));
 		return $model;
 	}
 
