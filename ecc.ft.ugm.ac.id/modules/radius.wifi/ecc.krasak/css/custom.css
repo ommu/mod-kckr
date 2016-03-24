@@ -14,7 +14,7 @@ hgroup, nav, section {
 	padding: 0;
 	border: 0;
 	background: #fff;
-	color: #9fa5b8; 
+	color: #b9b8b8; 
 	font-size: 13px; 
 	line-height: 18px;
 	font-weight: 300;
@@ -24,6 +24,7 @@ article, aside, details, figcaption, figure, footer,
 header, hgroup, nav, section {
 	display: block;
 }
+table {width: 100%; border-collapse: collapse; border-spacing: 0;}
 .clearfix {*zoom: 1;}
 .clearfix:before, 
 .clearfix:after {
@@ -323,6 +324,35 @@ fieldset div.clearfix:last-child {
 -------------------------------------------------------------- */
 #login input {
 	width: 100%;
+}
+#status.box {
+	margin: 30px 0 10px 0;
+}
+#status.box table {
+	margin: 0 0 10px 0;
+}
+#status.box table:last-child {
+	margin: 0 0 0 0;
+}
+#status.box h3 {
+	margin: 0 0 15px 0;
+	font-size: 16px;
+	line-height: 16px;
+	font-weight: 300;
+	color: #666;
+}
+#status.box h3 strong {
+	font-weight: 600;	
+}
+#status.box table {
+	text-align: left;
+}
+#status.box table td {
+	padding: 5px 10px 5px 10px;
+	border-bottom: 1px solid #eee;
+}
+#status.box table td:last-child {
+	padding: 5px 10px 5px 0;
 }
 
 /* =Responsive
