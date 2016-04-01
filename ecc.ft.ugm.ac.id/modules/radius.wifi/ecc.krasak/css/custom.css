@@ -25,6 +25,14 @@ header, hgroup, nav, section {
 	display: block;
 }
 table {width: 100%; border-collapse: collapse; border-spacing: 0;}
+ul, ol {
+	display: block;
+	padding: 0;
+	margin: 0 0 10px 20px;
+}
+ul ul, ul ol,
+ol ol, ol ul {margin-bottom: 0;}
+li {padding-left: 8px;}
 .clearfix {*zoom: 1;}
 .clearfix:before, 
 .clearfix:after {
@@ -50,22 +58,30 @@ body {
 	position: relative;
 }
 div.body,
-div.body .wrapper {
+div.body .wrapper,
+div.dialog,
+div.dialog .wrapper {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	min-width: 100%;
 	min-height: 100%;
 }
-div.body {
+div.body,
+div.dialog {
 	display: table;
 }
-div.body .wrapper {
+div.body .wrapper,
+div.dialog .wrapper {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 }
-div.body .boxed {
+div.body .boxed,
+div.dialog .boxed {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	width: 300px;
 	margin: 20px auto;
 }
@@ -76,10 +92,32 @@ div.body .intro .error {
 	margin: 12px 0 0 0;
 	color: #ff0000;
 }
-div.body .box {
+div.body .box,
+div.dialog .box {
 	margin: 20px 0 10px 0;		
 }
+div.body.hide {
+	display: none;
+}
 
+/* Dialog */
+div.dialog .wrapper {
+	background: rgba(255,255,255,0.7);
+}
+div.dialog .boxed {
+	width: 700px;
+	margin: 20px auto;
+}
+div.dialog .box {
+	text-align: left;	
+}
+div.dialog .box .button {
+	margin: 15px 0 0 0;
+	text-align: center;
+}
+div.dialog .box .button input[type="button"] {
+	width: 200px;
+}
 
 /* =Form
 -------------------------------------------------------------- */
@@ -383,7 +421,15 @@ fieldset div.clearfix:last-child {
 
 /* Resolution 800 */
 @media only screen and (max-width:800px) {
-	
+	div.dialog,
+	div.dialog .wrapper {
+		display: block;
+	}
+	div.dialog .boxed {
+		width: 100%;
+		margin: 0 0 0 0;
+		padding: 20px 20px 20px 20px;
+	}	
 }
 
 /* Resolution 600 */
@@ -393,7 +439,9 @@ fieldset div.clearfix:last-child {
 
 /* Resolution 480 */
 @media only screen and (max-width:480px) {
-	
+	div.dialog .boxed {
+		padding: 15px 15px 15px 15px;
+	}	
 }
 
 /* Resolution 320 */
@@ -405,6 +453,9 @@ fieldset div.clearfix:last-child {
 	div.body .boxed {
 		width: 100%;
 		margin: 0 0 0 0;
-		padding: 10px 10px 15px 10px;
-	}	
+	}
+	div.body .boxed,
+	div.dialog .boxed {
+		padding: 10px 10px 15px 10px;		
+	}
 }

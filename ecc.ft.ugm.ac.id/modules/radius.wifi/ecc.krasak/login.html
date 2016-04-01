@@ -13,9 +13,41 @@
 <link rel="stylesheet" type="text/css" href="css/custom.css" />
 <link rel="shortcut icon" href="favicon.ico" />
 </head>
+<script>
+function showHide() {
+    alert('test');
+	//if(document.getElementById("dialog").style.display == "none")
+		document.getElementById("dialog").style.display = "none";
+	//if(document.getElementById("body").style.display == "hidden")
+		document.getElementById("body").style.display = "table";
+	return false;
+}
+</script>
 <body>
+	<div id="dialog" class="dialog">
+		<div class="wrapper">
+			<div class="boxed">
+				<img src="images/eccugm.png" alt="ECC UGM">
+				<div class="box">
+					<ol>
+						<li>ECC Hotspot adalah sebuah fasilitas koneksi internet yang ditujukan kepada Karyawan ECC UGM</li>
+						<li>Dengan menggunakan layanan ini, anda :</li>
+						<li>Bersedia untuk tidak mengakses konten-konten yang melanggar norma-norma susila dan ilegal yang berlaku di wilayah Republik Indonesia.</li>
+						<li>Bersedia akun anda untuk diblokir apabila pihak admin menemukan bahwa akun anda digunakan untuk mengakses, menyimpan, dan mendistribusikan kembali konten-konten yang dapat merusak norma kesusilaan dan dapat membahayakan keamanan dan kesatuan wilayah Republik Indonesia.</li>
+						<li>Bersedia untuk disidik oleh Kepolisian Republik Indonesia jika dari akun anda terbukti membahayakan integritas bangsa dan negara baik nasional maupun internasional Republik Indonesia.</li>
+						<li>Wajib menjaga keamanan, ketertiban dan kebersihan lingkungan.</li>
+						<li>Wajib menggunakan Open Source atau produk legal untuk kenyamanan ber-TIK.</li>
+					</ol>
+					<div class="button">
+						<input onclick="showHide()" type="button" value="Setuju" />
+					</div>
+				</div>
+				<a href="http://www.swevel.com" target="_blank" style="border: none;"><img src="images/logoswevel.png" alt="swevel" /></a>
+			</div>
+		</div>
+	</div>
 
-	<div class="body">		
+	<div id="body" class="body hide">
 		<div class="wrapper">
 			$(if chap-id)
 				<form name="sendin" action="$(link-login-only)" method="post">
