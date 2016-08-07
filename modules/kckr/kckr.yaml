@@ -10,3 +10,44 @@ author			: Putra Sudaryanto [putra@sudaryanto.me]
 db_table_name	: 
  
 db_sql_filename	: 
+
+plugin_menu		:
+	- urlTitle: View KCKR
+		urlRules: {siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: o/admin/manage, attr: -, icon: -}
+		
+	- urlTitle: Media
+		urlRules: {siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: o/media/manage, attr: -, icon: -}
+				
+	- urlTitle: Settings
+		urlRules: {siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: -, attr: -, icon: -}
+		submenu :
+			- urlTitle: PIC
+				urlRules: {siteType: 0,1, userLevel: 1,2}
+				urlPath: {url: o/pic/manage, attr: -, icon: -}
+			- urlTitle: Publisher
+				urlRules: {siteType: 0,1, userLevel: 1,2}
+				urlPath: {url: o/publisher/manage, attr: -, icon: -}
+			- urlTitle: Category
+				urlRules: {siteType: 0,1, userLevel: 1,2}
+				urlPath: {url: o/category/manage, attr: -, icon: -}
+
+content_menu	:
+# controller o/admin
+	- urlTitle: Add KCKR
+		urlRules: {kckr, o/admin, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
+		
+	- urlTitle: Add PIC
+		urlRules: {kckr, o/pic, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
+		
+	- urlTitle: Add Publisher
+		urlRules: {kckr, o/publisher, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
+		
+	- urlTitle: Add Category
+		urlRules: {kckr, o/category, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
