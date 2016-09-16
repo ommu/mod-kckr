@@ -40,6 +40,10 @@
 class KckrPublisher extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -68,15 +72,17 @@ class KckrPublisher extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publisher_name, publisher_area, publisher_address, publisher_phone', 'required'),
+			array('publisher_name, publisher_area', 'required'),
+			array('publisher_address, publisher_phone', 'required', 'on'=>'updateDetail'),
 			array('publish, publisher_area', 'numerical', 'integerOnly'=>true),
 			array('publisher_name', 'length', 'max'=>64),
 			array('publisher_phone', 'length', 'max'=>15),
 			array('creation_id, modified_id', 'length', 'max'=>10),
-			array('', 'safe'),
+			array('publisher_address, publisher_phone', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('publisher_id, publish, publisher_name, publisher_area, publisher_address, publisher_phone, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('publisher_id, publish, publisher_name, publisher_area, publisher_address, publisher_phone, creation_date, creation_id, modified_date, modified_id, 
+				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,7 +94,9 @@ class KckrPublisher extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ommuKckrs_relation' => array(self::HAS_MANY, 'OmmuKckrs', 'publisher_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'kckr' => array(self::HAS_MANY, 'Kckrs', 'publisher_id'),
 		);
 	}
 
@@ -108,6 +116,8 @@ class KckrPublisher extends CActiveRecord
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 		/*
 			'Publisher' => 'Publisher',
@@ -169,6 +179,20 @@ class KckrPublisher extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['KckrPublisher_sort']))
 			$criteria->order = 't.publisher_id DESC';
@@ -231,37 +255,22 @@ class KckrPublisher extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->publisher_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
-					'type' => 'raw',
-				);
-			}
 			$this->defaultColumns[] = 'publisher_name';
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publisher_area',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publisher_area",array("id"=>$data->publisher_id)), $data->publisher_area, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
-					'type' => 'raw',
-				);
-			}
+			$this->defaultColumns[] = array(
+				'name' => 'publisher_area',
+				'value' => '$data->publisher_area == 1 ? Yii::t(\'phrase\', \'Yogyakarta\') : Yii::t(\'phrase\', \'Luar Yogyakarta\')',
+				'filter'=>array(
+					1=>Yii::t('phrase', 'Yogyakarta'),
+					0=>Yii::t('phrase', 'Luar Yogyakarta'),
+				),
+				'type' => 'raw',
+			);
 			$this->defaultColumns[] = 'publisher_address';
 			$this->defaultColumns[] = 'publisher_phone';
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -288,34 +297,20 @@ class KckrPublisher extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->publisher_id)), $data->publish, 1)',
 					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
+						'class' => 'center',
 					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
 					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}

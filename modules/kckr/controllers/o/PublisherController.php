@@ -44,7 +44,7 @@ class PublisherController extends Controller
 	public function init() 
 	{
 		if(!Yii::app()->user->isGuest) {
-			if(Yii::app()->user->level == 1) {
+			if(in_array(Yii::app()->user->level, array(1,2))) {
 				$arrThemes = Utility::getCurrentTemplate('admin');
 				Yii::app()->theme = $arrThemes['folder'];
 				$this->layout = $arrThemes['layout'];
@@ -88,7 +88,7 @@ class PublisherController extends Controller
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('manage','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
-				'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level == 1)',
+				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array(),
@@ -199,6 +199,7 @@ class PublisherController extends Controller
 
 		if(isset($_POST['KckrPublisher'])) {
 			$model->attributes=$_POST['KckrPublisher'];
+			$model->scenario = 'updateDetail';
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -247,7 +248,7 @@ class PublisherController extends Controller
 
 		$this->pageTitle = Yii::t('phrase', 'View Kckr Publishers');
 		$this->pageDescription = '';
-		$this->pageMeta = $setting->meta_keyword;
+		$this->pageMeta = '';
 		$this->render('admin_view',array(
 			'model'=>$model,
 		));

@@ -15,11 +15,7 @@ plugin_menu		:
 	- urlTitle: View KCKR
 		urlRules: {siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
-		
-	- urlTitle: Media
-		urlRules: {siteType: 0,1, userLevel: 1,2}
-		urlPath: {url: o/media/manage, attr: -, icon: -}
-				
+
 	- urlTitle: Settings
 		urlRules: {siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: -, attr: -, icon: -}
@@ -33,6 +29,9 @@ plugin_menu		:
 			- urlTitle: Publisher
 				urlRules: {siteType: 0,1, userLevel: 1,2}
 				urlPath: {url: o/publisher/manage, attr: -, icon: -}
+			- urlTitle: Media
+				urlRules: {siteType: 0,1, userLevel: 1,2}
+				urlPath: {url: o/media/manage, attr: -, icon: -}
 
 content_menu	:
 # controller o/admin
