@@ -28,12 +28,18 @@
  * @property integer $permission
  * @property string $meta_keyword
  * @property string $meta_description
+ * @property integer $photo_resize 
+ * @property string $photo_resize_size
+ * @property string $photo_view_size
  * @property string $modified_date
  * @property string $modified_id
  */
 class KckrSetting extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -62,14 +68,15 @@ class KckrSetting extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('license, permission, meta_keyword, meta_description, modified_id', 'required'),
-			array('permission', 'numerical', 'integerOnly'=>true),
+			array('license, permission, meta_keyword, meta_description, photo_resize', 'required'),
+			array('permission, photo_resize', 'numerical', 'integerOnly'=>true),
 			array('license', 'length', 'max'=>32),
 			array('modified_id', 'length', 'max'=>11),
-			array('modified_date', 'safe'),
+			array('photo_resize_size, photo_view_size', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, license, permission, meta_keyword, meta_description, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('id, license, permission, meta_keyword, meta_description, photo_resize, photo_resize_size, photo_view_size, modified_date, modified_id,
+				modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +88,7 @@ class KckrSetting extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -95,8 +103,12 @@ class KckrSetting extends CActiveRecord
 			'permission' => Yii::t('attribute', 'Permission'),
 			'meta_keyword' => Yii::t('attribute', 'Meta Keyword'),
 			'meta_description' => Yii::t('attribute', 'Meta Description'),
+			'photo_resize' => Yii::t('attribute', 'Photo Resize'),
+			'photo_resize_size' => Yii::t('attribute', 'Photo Resize Size'),
+			'photo_view_size' => Yii::t('attribute', 'Photo View Size'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 		/*
 			'ID' => 'ID',
@@ -133,12 +145,24 @@ class KckrSetting extends CActiveRecord
 		$criteria->compare('t.permission',$this->permission);
 		$criteria->compare('t.meta_keyword',strtolower($this->meta_keyword),true);
 		$criteria->compare('t.meta_description',strtolower($this->meta_description),true);
+		$criteria->compare('t.photo_resize',$this->photo_resize);
+		$criteria->compare('t.photo_resize_size',$this->photo_resize_size);
+		$criteria->compare('t.photo_view_size',$this->photo_view_size);
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		if(isset($_GET['modified']))
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname',
+			),
+		);
+		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['KckrSetting_sort']))
 			$criteria->order = 't.id DESC';
@@ -174,6 +198,9 @@ class KckrSetting extends CActiveRecord
 			$this->defaultColumns[] = 'permission';
 			$this->defaultColumns[] = 'meta_keyword';
 			$this->defaultColumns[] = 'meta_description';
+			$this->defaultColumns[] = 'photo_resize';
+			$this->defaultColumns[] = 'photo_resize_size';
+			$this->defaultColumns[] = 'photo_view_size';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = 'modified_id';
 		}
@@ -199,49 +226,17 @@ class KckrSetting extends CActiveRecord
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
 			$this->defaultColumns[] = 'license';
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'permission',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("permission",array("id"=>$data->id)), $data->permission, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
-					'type' => 'raw',
-				);
-			}
+			$this->defaultColumns[] = 'permission';
 			$this->defaultColumns[] = 'meta_keyword';
 			$this->defaultColumns[] = 'meta_description';
+			$this->defaultColumns[] = 'photo_resize';
+			$this->defaultColumns[] = 'photo_resize_size';
+			$this->defaultColumns[] = 'photo_view_size';
+			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
-					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
-					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
-					),
-				), true),
+				'name' => 'modified_search',
+				'value' => '$data->modified->displayname',
 			);
-			$this->defaultColumns[] = 'modified_id';
 		}
 		parent::afterConstruct();
 	}
@@ -266,68 +261,36 @@ class KckrSetting extends CActiveRecord
 	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			
+			if($this->photo_resize == 1 && ($this->photo_resize_size['width'] == '' || $this->photo_resize_size['height'] == ''))
+				$this->addError('photo_resize_size', Yii::t('phrase', 'Photo Resize cannot be blank.'));
+			
+			if($this->photo_view_size['large']['width'] == '' || $this->photo_view_size['large']['height'] == '')
+				$this->addError('photo_view_size[large]', Yii::t('phrase', 'Large Size cannot be blank.'));
+			
+			if($this->photo_view_size['medium']['width'] == '' || $this->photo_view_size['medium']['height'] == '')
+				$this->addError('photo_view_size[medium]', Yii::t('phrase', 'Medium Size cannot be blank.'));
+			
+			if($this->photo_view_size['small']['width'] == '' || $this->photo_view_size['small']['height'] == '')
+				$this->addError('photo_view_size[small]', Yii::t('phrase', 'Small Size cannot be blank.'));
+			
+			$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
 	
 	/**
 	 * before save attributes
 	 */
-	/*
 	protected function beforeSave() {
+		$controller = strtolower(Yii::app()->controller->id);
 		if(parent::beforeSave()) {
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
+			$this->photo_resize_size = serialize($this->photo_resize_size);
+			$this->photo_view_size = serialize($this->photo_view_size);
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }
