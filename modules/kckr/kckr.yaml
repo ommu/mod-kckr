@@ -24,15 +24,15 @@ plugin_menu		:
 		urlRules: {siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: -, attr: -, icon: -}
 		submenu :
+			- urlTitle: Category
+				urlRules: {siteType: 0,1, userLevel: 1,2}
+				urlPath: {url: o/category/manage, attr: -, icon: -}
 			- urlTitle: PIC
 				urlRules: {siteType: 0,1, userLevel: 1,2}
 				urlPath: {url: o/pic/manage, attr: -, icon: -}
 			- urlTitle: Publisher
 				urlRules: {siteType: 0,1, userLevel: 1,2}
 				urlPath: {url: o/publisher/manage, attr: -, icon: -}
-			- urlTitle: Category
-				urlRules: {siteType: 0,1, userLevel: 1,2}
-				urlPath: {url: o/category/manage, attr: -, icon: -}
 
 content_menu	:
 # controller o/admin

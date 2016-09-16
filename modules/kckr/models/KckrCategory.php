@@ -40,6 +40,10 @@
 class KckrCategory extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -76,7 +80,8 @@ class KckrCategory extends CActiveRecord
 			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('category_id, publish, category_type, category_name, category_desc, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('category_id, publish, category_type, category_name, category_desc, creation_date, creation_id, modified_date, modified_id, 
+				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,8 +93,10 @@ class KckrCategory extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ommuKckrMedias_relation' => array(self::HAS_MANY, 'OmmuKckrMedia', 'category_id'),
-			'ommuKckrs_relation' => array(self::HAS_MANY, 'OmmuKckrs', 'category_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'media' => array(self::HAS_MANY, 'KckrMedia', 'category_id'),
+			'kckr' => array(self::HAS_MANY, 'Kckrs', 'category_id'),
 		);
 	}
 
@@ -101,13 +108,15 @@ class KckrCategory extends CActiveRecord
 		return array(
 			'category_id' => Yii::t('attribute', 'Category'),
 			'publish' => Yii::t('attribute', 'Publish'),
-			'category_type' => Yii::t('attribute', 'Category Type'),
-			'category_name' => Yii::t('attribute', 'Category Name'),
-			'category_desc' => Yii::t('attribute', 'Category Desc'),
+			'category_type' => Yii::t('attribute', 'Type'),
+			'category_name' => Yii::t('attribute', 'Name'),
+			'category_desc' => Yii::t('attribute', 'Description'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 		/*
 			'Category' => 'Category',
@@ -167,6 +176,20 @@ class KckrCategory extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['KckrCategory_sort']))
 			$criteria->order = 't.category_id DESC';
@@ -228,23 +251,13 @@ class KckrCategory extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->category_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
-					'type' => 'raw',
-				);
-			}
 			$this->defaultColumns[] = 'category_type';
 			$this->defaultColumns[] = 'category_name';
 			$this->defaultColumns[] = 'category_desc';
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -271,34 +284,20 @@ class KckrCategory extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->category_id)), $data->publish, 1)',
 					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
+						'class' => 'center',
 					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
 					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
