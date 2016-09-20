@@ -31,6 +31,8 @@
  * @property integer $photo_resize 
  * @property string $photo_resize_size
  * @property string $photo_view_size
+ * @property integer $article_sync 
+ * @property string $article_cat_id
  * @property string $modified_date
  * @property string $modified_id
  */
@@ -68,14 +70,14 @@ class KckrSetting extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('license, permission, meta_keyword, meta_description, photo_resize', 'required'),
-			array('permission, photo_resize', 'numerical', 'integerOnly'=>true),
+			array('license, permission, meta_keyword, meta_description, photo_resize, article_sync, article_cat_id', 'required'),
+			array('permission, photo_resize, article_sync', 'numerical', 'integerOnly'=>true),
 			array('license', 'length', 'max'=>32),
 			array('modified_id', 'length', 'max'=>11),
 			array('photo_resize_size, photo_view_size', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, license, permission, meta_keyword, meta_description, photo_resize, photo_resize_size, photo_view_size, modified_date, modified_id,
+			array('id, license, permission, meta_keyword, meta_description, photo_resize, photo_resize_size, photo_view_size, article_sync, article_cat_id, modified_date, modified_id,
 				modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -106,6 +108,8 @@ class KckrSetting extends CActiveRecord
 			'photo_resize' => Yii::t('attribute', 'Photo Resize'),
 			'photo_resize_size' => Yii::t('attribute', 'Photo Resize Size'),
 			'photo_view_size' => Yii::t('attribute', 'Photo View Size'),
+			'article_sync' => Yii::t('attribute', 'Article Sync'),
+			'article_cat_id' => Yii::t('attribute', 'Article Category'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
@@ -148,6 +152,8 @@ class KckrSetting extends CActiveRecord
 		$criteria->compare('t.photo_resize',$this->photo_resize);
 		$criteria->compare('t.photo_resize_size',$this->photo_resize_size);
 		$criteria->compare('t.photo_view_size',$this->photo_view_size);
+		$criteria->compare('t.article_sync',$this->article_sync);
+		$criteria->compare('t.article_cat_id',$this->article_cat_id);
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		if(isset($_GET['modified']))
@@ -201,6 +207,8 @@ class KckrSetting extends CActiveRecord
 			$this->defaultColumns[] = 'photo_resize';
 			$this->defaultColumns[] = 'photo_resize_size';
 			$this->defaultColumns[] = 'photo_view_size';
+			$this->defaultColumns[] = 'article_sync';
+			$this->defaultColumns[] = 'article_cat_id';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = 'modified_id';
 		}
@@ -232,6 +240,8 @@ class KckrSetting extends CActiveRecord
 			$this->defaultColumns[] = 'photo_resize';
 			$this->defaultColumns[] = 'photo_resize_size';
 			$this->defaultColumns[] = 'photo_view_size';
+			$this->defaultColumns[] = 'article_sync';
+			$this->defaultColumns[] = 'article_cat_id';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = array(
 				'name' => 'modified_search',
@@ -262,8 +272,7 @@ class KckrSetting extends CActiveRecord
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
-		if(parent::beforeValidate()) {
-			
+		if(parent::beforeValidate()) {			
 			if($this->photo_resize == 1 && ($this->photo_resize_size['width'] == '' || $this->photo_resize_size['height'] == ''))
 				$this->addError('photo_resize_size', Yii::t('phrase', 'Photo Resize cannot be blank.'));
 			

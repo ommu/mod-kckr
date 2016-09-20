@@ -24,6 +24,14 @@ $js=<<<EOP
 			$('div#resize_size').slideUp();
 		}
 	});
+	$('input[name="KckrSetting[article_sync]"]').live('change', function() {
+		var id = $(this).val();
+		if(id == '1') {
+			$('div#article_sync').slideDown();
+		} else {
+			$('div#article_sync').slideUp();
+		}
+	});
 EOP;
 	$cs->registerScript('resize', $js, CClientScript::POS_END); 
 ?>
@@ -118,6 +126,36 @@ EOP;
 				<?php echo $form->error($model,'photo_view_size[small]'); ?>				
 			</div>
 		</div>
+
+		<?php if($module != null && $module->install == 1 && $module->actived == 1) {
+			Yii::import('application.modules.article.models.ArticleCategory');
+			$parent = null;
+			$category = ArticleCategory::getCategory(null, $parent);
+		?>
+			<div class="clearfix">
+				<label><?php echo Yii::t('phrase', 'Article Setting');?> <span class="required">*</span></label>
+				<div class="desc">
+					<p><?php echo $model->getAttributeLabel('article_sync');?></p>
+					<?php echo $form->radioButtonList($model, 'article_sync', array(
+						0 => Yii::t('phrase', 'No, not synchronize this module with article modules.'),
+						1 => Yii::t('phrase', 'Yes, synchronize this module with article modules.'),
+					)); ?>
+					
+					<div id="article_sync" class="mt-15 <?php echo $model->article_sync == 0 ? 'hide' : '';?>">
+						<p><?php echo $model->getAttributeLabel('article_cat_id');?></p>
+						<?php
+						if($category != null)
+							echo $form->dropDownList($model,'article_cat_id', $category, array('prompt'=>Yii::t('phrase', 'Select Category')));
+						else
+							echo $form->dropDownList($model,'article_cat_id', array('prompt'=>Yii::t('phrase', 'No Parent')));
+						echo $form->error($model,'article_cat_id');?>
+					</div>				
+				</div>
+			</div>
+		<?php } else {
+			$model->article_sync = 0;
+			echo $form->hiddenField($model,'article_sync');			
+		}?>
 
 		<div class="submit clearfix">
 			<label>&nbsp;</label>

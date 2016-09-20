@@ -112,6 +112,10 @@ class SettingController extends Controller
 		$model = KckrSetting::model()->findByPk(1);
 		if($model == null)
 			$model=new KckrSetting;
+		
+		$module = OmmuPlugins::model()->findByAttributes(array('folder'=>'article'), array(
+			'select' => 'install, actived',
+		));
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -154,6 +158,7 @@ class SettingController extends Controller
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
 			'model'=>$model,
+			'module'=>$module,
 		));
 	}
 
