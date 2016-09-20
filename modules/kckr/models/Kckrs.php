@@ -29,8 +29,10 @@
  * @property string $publisher_id
  * @property integer $category_id
  * @property string $letter_number
+ * @property string $receipt_type
  * @property string $receipt_date
  * @property string $thanks_date
+ * @property string $photos
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
@@ -45,6 +47,10 @@
 class Kckrs extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -73,14 +79,15 @@ class Kckrs extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pic_id, publisher_id, category_id, letter_number, receipt_date, thanks_date', 'required'),
+			array('pic_id, publisher_id, category_id, letter_number, receipt_type, receipt_date', 'required'),
 			array('publish, pic_id, category_id', 'numerical', 'integerOnly'=>true),
 			array('publisher_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('letter_number', 'length', 'max'=>64),
-			array('', 'safe'),
+			array('thanks_date, photos', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('kckr_id, publish, pic_id, publisher_id, category_id, letter_number, receipt_date, thanks_date, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('kckr_id, publish, pic_id, publisher_id, category_id, letter_number, receipt_type, receipt_date, thanks_date, photos, creation_date, creation_id, modified_date, modified_id, 
+				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,10 +99,12 @@ class Kckrs extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ommuKckrMedias_relation' => array(self::HAS_MANY, 'OmmuKckrMedia', 'kckr_id'),
-			'pic_relation' => array(self::BELONGS_TO, 'OmmuKckrPic', 'pic_id'),
-			'publisher_relation' => array(self::BELONGS_TO, 'OmmuKckrPublisher', 'publisher_id'),
-			'category_relation' => array(self::BELONGS_TO, 'OmmuKckrCategory', 'category_id'),
+			'media' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id'),
+			'pic' => array(self::BELONGS_TO, 'KckrPic', 'pic_id'),
+			'publisher' => array(self::BELONGS_TO, 'KckrPublisher', 'publisher_id'),
+			'category' => array(self::BELONGS_TO, 'KckrCategory', 'category_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -111,12 +120,16 @@ class Kckrs extends CActiveRecord
 			'publisher_id' => Yii::t('attribute', 'Publisher'),
 			'category_id' => Yii::t('attribute', 'Category'),
 			'letter_number' => Yii::t('attribute', 'Letter Number'),
+			'receipt_type' => Yii::t('attribute', 'Receipt Type'),
 			'receipt_date' => Yii::t('attribute', 'Receipt Date'),
 			'thanks_date' => Yii::t('attribute', 'Thanks Date'),
+			'photos' => Yii::t('attribute', 'Photo'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 		/*
 			'Kckr' => 'Kckr',
@@ -177,10 +190,12 @@ class Kckrs extends CActiveRecord
 		else
 			$criteria->compare('t.category_id',$this->category_id);
 		$criteria->compare('t.letter_number',strtolower($this->letter_number),true);
+		$criteria->compare('t.receipt_type',$this->receipt_type);
 		if($this->receipt_date != null && !in_array($this->receipt_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.receipt_date)',date('Y-m-d', strtotime($this->receipt_date)));
 		if($this->thanks_date != null && !in_array($this->thanks_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.thanks_date)',date('Y-m-d', strtotime($this->thanks_date)));
+		$criteria->compare('t.photos',strtolower($this->photos),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -193,6 +208,20 @@ class Kckrs extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['Kckrs_sort']))
 			$criteria->order = 't.kckr_id DESC';
@@ -229,8 +258,10 @@ class Kckrs extends CActiveRecord
 			$this->defaultColumns[] = 'publisher_id';
 			$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'letter_number';
+			$this->defaultColumns[] = 'receipt_type';
 			$this->defaultColumns[] = 'receipt_date';
 			$this->defaultColumns[] = 'thanks_date';
+			$this->defaultColumns[] = 'photos';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'modified_date';
@@ -257,27 +288,29 @@ class Kckrs extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
+			$this->defaultColumns[] = 'publisher_id';
+			if(!isset($_GET['category'])) {
 				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->kckr_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
+					'name' => 'category_id',
+					'value' => '$data->category->category_name',
+					'filter'=> KckrCategory::getCategory(),
 					'type' => 'raw',
 				);
 			}
-			$this->defaultColumns[] = 'pic_id';
-			$this->defaultColumns[] = 'publisher_id';
-			$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'letter_number';
+			$this->defaultColumns[] = 'pic_id';
+			$this->defaultColumns[] = array(
+				'name' => 'receipt_type',
+				'value' => '$data->receipt_type == \'pos\' ? Yii::t(\'phrase\', \'Pos\') : Yii::t(\'phrase\', \'Langsung\')',
+				'filter'=>array(
+					'pos'=>Yii::t('phrase', 'Pos'),
+					'langsung'=>Yii::t('phrase', 'Langsung'),
+				),
+				'type' => 'raw',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'receipt_date',
-				'value' => 'Utility::dateFormat($data->receipt_date)',
+				'value' => '!in_array($data->receipt_date, array(\'0000-00-00 00:00:00\', \'0000-00-00\')) ? Utility::dateFormat($data->receipt_date) : "-"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -303,7 +336,7 @@ class Kckrs extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'thanks_date',
-				'value' => 'Utility::dateFormat($data->thanks_date)',
+				'value' => '!in_array($data->thanks_date, array(\'0000-00-00 00:00:00\', \'0000-00-00\')) ? Utility::dateFormat($data->thanks_date) : "-"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -326,6 +359,10 @@ class Kckrs extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
@@ -353,34 +390,20 @@ class Kckrs extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->kckr_id)), $data->publish, 1)',
 					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
+						'class' => 'center',
 					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
 					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}

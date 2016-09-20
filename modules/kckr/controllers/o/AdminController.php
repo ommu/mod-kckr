@@ -145,6 +145,7 @@ class AdminController extends Controller
 	public function actionAdd() 
 	{
 		$model=new Kckrs;
+		$category = KckrCategory::getCategory();
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -158,11 +159,16 @@ class AdminController extends Controller
 			}
 		}
 
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
 		$this->pageTitle = Yii::t('phrase', 'Create Kckrs');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
 			'model'=>$model,
+			'category'=>$category,
 		));
 	}
 
@@ -192,6 +198,7 @@ class AdminController extends Controller
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
 			'model'=>$model,
+			'category'=>$category,
 		));
 	}
 	
