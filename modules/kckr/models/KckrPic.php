@@ -73,9 +73,9 @@ class KckrPic extends CActiveRecord
 		return array(
 			array('pic_name, pic_nip, pic_position', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
-			array('pic_name', 'length', 'max'=>64),
-			array('pic_nip, pic_position', 'length', 'max'=>32),
 			array('creation_id, modified_id', 'length', 'max'=>11),
+			array('pic_nip', 'length', 'max'=>32),
+			array('pic_name, pic_position', 'length', 'max'=>64),
 			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

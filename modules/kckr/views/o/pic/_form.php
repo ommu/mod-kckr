@@ -50,7 +50,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'pic_position'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'pic_position',array('maxlength'=>32)); ?>
+				<?php echo $form->textField($model,'pic_position',array('maxlength'=>64)); ?>
 				<?php echo $form->error($model,'pic_position'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
