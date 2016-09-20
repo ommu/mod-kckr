@@ -161,7 +161,7 @@ class KckrCategory extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1));
 			$criteria->compare('t.publish',$this->publish);
 		}
-		$criteria->compare('t.category_type',strtolower($this->category_type),true);
+		$criteria->compare('t.category_type',$this->category_type);
 		$criteria->compare('t.category_name',strtolower($this->category_name),true);
 		$criteria->compare('t.category_desc',strtolower($this->category_desc),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -251,7 +251,15 @@ class KckrCategory extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = 'category_type';
+			$this->defaultColumns[] = array(
+				'name' => 'category_type',
+				'value' => '$data->category_type == \'book\' ? Yii::t(\'phrase\', \'Book\') : Yii::t(\'phrase\', \'Record\')',
+				'filter'=>array(
+					'book'=>Yii::t('phrase', 'Book'),
+					'record'=>Yii::t('phrase', 'Record'),
+				),
+				'type' => 'raw',
+			);
 			$this->defaultColumns[] = 'category_name';
 			$this->defaultColumns[] = 'category_desc';
 			$this->defaultColumns[] = array(
