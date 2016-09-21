@@ -9,6 +9,7 @@
  *
  * TOC :
  *	Index
+ *	Suggest
  *	Manage
  *	Add
  *	Edit
@@ -80,7 +81,7 @@ class PublisherController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array(),
+				'actions'=>array('suggest'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level)',
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
@@ -106,6 +107,33 @@ class PublisherController extends Controller
 	public function actionIndex() 
 	{
 		$this->redirect(array('manage'));
+	}
+	
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionSuggest($limit=10) {
+		if(isset($_GET['term'])) {
+			$criteria = new CDbCriteria;
+			$criteria->condition = 'publisher_name LIKE :publisher_name';
+			$criteria->select	= "publisher_id, publisher_name";
+			$criteria->limit = $limit;
+			$criteria->order = "publisher_id ASC";
+			$criteria->params = array(':publisher_name' => '%' . strtolower($_GET['term']) . '%');
+			$model = KckrPublisher::model()->findAll($criteria);
+
+			if($model) {
+				foreach($model as $items) {
+					$result[] = array('id' => $items->publisher_id, 'value' => $items->publisher_name);
+				}
+			} else {
+				$result[] = array('id' => 0, 'value' => $_GET['term']);
+			}
+		}
+		echo CJSON::encode($result);
+		Yii::app()->end();
 	}
 
 	/**
@@ -151,6 +179,7 @@ class PublisherController extends Controller
 
 		if(isset($_POST['KckrPublisher'])) {
 			$model->attributes=$_POST['KckrPublisher'];
+			$model->scenario = 'adminAdd';
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -199,7 +228,7 @@ class PublisherController extends Controller
 
 		if(isset($_POST['KckrPublisher'])) {
 			$model->attributes=$_POST['KckrPublisher'];
-			$model->scenario = 'updateDetail';
+			$model->scenario = 'adminEdit';
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {

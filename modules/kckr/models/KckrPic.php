@@ -71,7 +71,8 @@ class KckrPic extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pic_name, pic_nip, pic_position', 'required'),
+			array('pic_name', 'required'),
+			array('pic_nip, pic_position', 'required', 'on'=>'adminAdd, adminEdit'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('creation_id, modified_id', 'length', 'max'=>11),
 			array('pic_nip', 'length', 'max'=>32),

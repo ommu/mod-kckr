@@ -72,8 +72,9 @@ class KckrPublisher extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publisher_name, publisher_area', 'required'),
-			array('publisher_address, publisher_phone', 'required', 'on'=>'updateDetail'),
+			array('publisher_name', 'required'),
+			array('publisher_area', 'required', 'on'=>'adminAdd, adminEdit'),
+			array('publisher_address, publisher_phone', 'required', 'on'=>'adminEdit'),
 			array('publish, publisher_area', 'numerical', 'integerOnly'=>true),
 			array('publisher_name', 'length', 'max'=>64),
 			array('publisher_phone', 'length', 'max'=>15),

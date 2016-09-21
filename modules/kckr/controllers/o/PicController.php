@@ -9,6 +9,7 @@
  *
  * TOC :
  *	Index
+ *	Suggest
  *	Manage
  *	Add
  *	Edit
@@ -80,7 +81,7 @@ class PicController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array(),
+				'actions'=>array('suggest'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level)',
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
@@ -106,6 +107,33 @@ class PicController extends Controller
 	public function actionIndex() 
 	{
 		$this->redirect(array('manage'));
+	}
+	
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionSuggest($limit=10) {
+		if(isset($_GET['term'])) {
+			$criteria = new CDbCriteria;
+			$criteria->condition = 'pic_name LIKE :pic_name';
+			$criteria->select	= "pic_id, pic_name";
+			$criteria->limit = $limit;
+			$criteria->order = "pic_id ASC";
+			$criteria->params = array(':pic_name' => '%' . strtolower($_GET['term']) . '%');
+			$model = KckrPic::model()->findAll($criteria);
+
+			if($model) {
+				foreach($model as $items) {
+					$result[] = array('id' => $items->pic_id, 'value' => $items->pic_name);
+				}
+			} else {
+				$result[] = array('id' => 0, 'value' => $_GET['term']);
+			}
+		}
+		echo CJSON::encode($result);
+		Yii::app()->end();
 	}
 
 	/**
@@ -151,6 +179,7 @@ class PicController extends Controller
 
 		if(isset($_POST['KckrPic'])) {
 			$model->attributes=$_POST['KckrPic'];
+			$model->scenario = 'adminAdd';
 			
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -199,6 +228,7 @@ class PicController extends Controller
 
 		if(isset($_POST['KckrPic'])) {
 			$model->attributes=$_POST['KckrPic'];
+			$model->scenario = 'adminEdit';
 			
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
