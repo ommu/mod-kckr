@@ -47,24 +47,6 @@
 <fieldset>
 
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'pic_id'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'pic_id'); ?>
-			<?php echo $form->error($model,'pic_id'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'publisher_id'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'publisher_id',array('maxlength'=>11)); ?>
-			<?php echo $form->error($model,'publisher_id'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
 		<?php echo $form->labelEx($model,'category_id'); ?>
 		<div class="desc">
 			<?php 
@@ -78,10 +60,28 @@
 	</div>
 
 	<div class="clearfix">
+		<?php echo $form->labelEx($model,'publisher_input'); ?>
+		<div class="desc">
+			<?php echo $form->textField($model,'publisher_input',array('maxlength'=>64,'class'=>'span-7')); ?>
+			<?php echo $form->error($model,'publisher_input'); ?>
+			<?php /*<div class="small-px silent"></div>*/?>
+		</div>
+	</div>
+
+	<div class="clearfix">
 		<?php echo $form->labelEx($model,'letter_number'); ?>
 		<div class="desc">
-			<?php echo $form->textField($model,'letter_number',array('maxlength'=>64)); ?>
+			<?php echo $form->textField($model,'letter_number',array('maxlength'=>64,'class'=>'span-7')); ?>
 			<?php echo $form->error($model,'letter_number'); ?>
+			<?php /*<div class="small-px silent"></div>*/?>
+		</div>
+	</div>
+
+	<div class="clearfix">
+		<?php echo $form->labelEx($model,'pic_input'); ?>
+		<div class="desc">
+			<?php echo $form->textField($model,'pic_input',array('maxlength'=>64,'class'=>'span-7')); ?>
+			<?php echo $form->error($model,'pic_input'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
@@ -118,6 +118,30 @@
 				 ),
 			)); ?>
 			<?php echo $form->error($model,'receipt_date'); ?>
+			<?php /*<div class="small-px silent"></div>*/?>
+		</div>
+	</div>
+	
+	<?php if(!$model->isNewRecord) {
+		$model->photo_old_input = $model->photos;
+		echo $form->hiddenField($model,'photo_old_input');
+		if($model->photos != '') {
+			$setting = KckrSetting::getInfo(1);
+			$resizeSize = unserialize($setting->photo_view_size);
+			$filePhoto = Yii::app()->request->baseUrl.'/public/kckr/'.$model->photo_old_input;
+			$photo = '<img src="'.Utility::getTimThumb($filePhoto, $resizeSize['small']['width'], $resizeSize['small']['height'], 1).'" alt="">';
+			echo '<div class="clearfix">';
+			echo $form->labelEx($model,'photo_old_input');
+			echo '<div class="desc">'.$photo.'</div>';
+			echo '</div>';
+		}
+	}?>
+
+	<div class="clearfix">
+		<?php echo $form->labelEx($model,'photos'); ?>
+		<div class="desc">
+			<?php echo $form->fileField($model,'photos'); ?>
+			<?php echo $form->error($model,'photos'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>

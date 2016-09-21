@@ -47,6 +47,9 @@
 class Kckrs extends CActiveRecord
 {
 	public $defaultColumns = array();
+	public $pic_input;
+	public $publisher_input;
+	public $photo_old_input;
 	
 	// Variable Search
 	public $creation_search;
@@ -79,15 +82,18 @@ class Kckrs extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pic_id, publisher_id, category_id, letter_number, receipt_type, receipt_date', 'required'),
+			array('category_id, letter_number, receipt_type, receipt_date,
+				pic_input, publisher_input', 'required'),
 			array('publish, pic_id, category_id', 'numerical', 'integerOnly'=>true),
 			array('publisher_id, creation_id, modified_id', 'length', 'max'=>11),
-			array('letter_number', 'length', 'max'=>64),
-			array('thanks_date, photos', 'safe'),
+			array('letter_number,
+				pic_input, publisher_input', 'length', 'max'=>64),
+			array('pic_id, publisher_id, thanks_date, photos,
+				photo_old_input', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('kckr_id, publish, pic_id, publisher_id, category_id, letter_number, receipt_type, receipt_date, thanks_date, photos, creation_date, creation_id, modified_date, modified_id, 
-				creation_search, modified_search', 'safe', 'on'=>'search'),
+				pic_input, publisher_input, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -128,6 +134,9 @@ class Kckrs extends CActiveRecord
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'pic_input' => Yii::t('attribute', 'Pic'),
+			'publisher_input' => Yii::t('attribute', 'Publisher'),
+			'photo_old_input' => Yii::t('attribute', 'Photo Old'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
@@ -211,6 +220,14 @@ class Kckrs extends CActiveRecord
 		
 		// Custom Search
 		$criteria->with = array(
+			'pic' => array(
+				'alias'=>'pic',
+				'select'=>'pic_name'
+			),
+			'publisher' => array(
+				'alias'=>'publisher',
+				'select'=>'publisher_name'
+			),
 			'creation' => array(
 				'alias'=>'creation',
 				'select'=>'displayname'
@@ -220,6 +237,8 @@ class Kckrs extends CActiveRecord
 				'select'=>'displayname'
 			),
 		);
+		$criteria->compare('pic.pic_name',strtolower($this->pic_input), true);
+		$criteria->compare('publisher.publisher_name',strtolower($this->publisher_input), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
@@ -288,7 +307,6 @@ class Kckrs extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = 'publisher_id';
 			if(!isset($_GET['category'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'category_id',
@@ -297,8 +315,15 @@ class Kckrs extends CActiveRecord
 					'type' => 'raw',
 				);
 			}
+			$this->defaultColumns[] = array(
+				'name' => 'publisher_input',
+				'value' => '$data->publisher->publisher_name',
+			);
 			$this->defaultColumns[] = 'letter_number';
-			$this->defaultColumns[] = 'pic_id';
+			$this->defaultColumns[] = array(
+				'name' => 'pic_input',
+				'value' => '$data->pic->pic_name',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'receipt_type',
 				'value' => '$data->receipt_type == \'pos\' ? Yii::t(\'phrase\', \'Pos\') : Yii::t(\'phrase\', \'Langsung\')',
@@ -370,16 +395,100 @@ class Kckrs extends CActiveRecord
 	}
 
 	/**
+	 * Get Article
+	 */
+	public static function resizePhoto($photos, $size) {
+		Yii::import('ext.phpthumb.PhpThumbFactory');
+		$photoImg = PhpThumbFactory::create($photos, array('jpegQuality' => 90, 'correctPermissions' => true));
+		if($size['height'] == 0)
+			$photoImg->resize($size['width']);
+		else
+			$photoImg->adaptiveResize($size['width'], $size['height']);
+		$photoImg->save($photos);
+		
+		return true;
+	}
+
+	/**
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
-		if(parent::beforeValidate()) {
+		if(parent::beforeValidate()) {			
+			$photo = CUploadedFile::getInstance($this, 'photos');
+			if($photo->name != '') {
+				$extension = pathinfo($photo->name, PATHINFO_EXTENSION);
+				if(!in_array(strtolower($extension), array('bmp','gif','jpg','png')))
+					$this->addError('photos', 'The file "'.$media->name.'" cannot be uploaded. Only files with these extensions are allowed: bmp, gif, jpg, png.');
+			}
+			
 			if($this->isNewRecord)
 				$this->creation_id = Yii::app()->user->id;
 			else
 				$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
+	}
+	
+	/**
+	 * before save attributes
+	 */
+	protected function beforeSave() {
+		if(parent::beforeSave()) {			
+			$action = strtolower(Yii::app()->controller->action->id);
+			if(!$this->isNewRecord && $action == 'edit') {
+				//Update kckr photo
+				$kckr_path = 'public/kckr';
+				
+				$this->photos = CUploadedFile::getInstance($this, 'photos');
+				if($this->photos instanceOf CUploadedFile) {
+					$fileName = $this->kckr_id.'_'.time().'_'.Utility::getUrlTitle($this->publisher->publisher_name).'.'.strtolower($this->photos->extensionName);
+					if($this->photos->saveAs($kckr_path.'/'.$fileName)) {
+						$setting = KckrSetting::getInfo(1);
+						if($setting->photo_resize == 1)
+							self::resizePhoto($kckr_path.'/'.$fileName, unserialize($setting->photo_resize_size));
+						if($this->photo_old_input != '' && file_exists($kckr_path.'/'.$this->photo_old_input))
+							rename($kckr_path.'/'.$this->photo_old_input, 'public/banner/verwijderen/'.$this->kckr_id.'_'.$this->photo_old_input);
+						$this->photos = $fileName;
+					}
+				}
+					
+				if($this->photos == '')
+					$this->photos = $this->photo_old_input;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * After save attributes
+	 */
+	protected function afterSave() {
+		parent::afterSave();
+		
+		if($this->isNewRecord) {
+			$kckr_path = 'public/kckr';
+			
+			$this->photos = CUploadedFile::getInstance($this, 'photos');
+			if($this->photos instanceOf CUploadedFile) {
+				$fileName = $this->kckr_id.'_'.time().'_'.Utility::getUrlTitle($this->publisher->publisher_name).'.'.strtolower($this->photos->extensionName);
+				if($this->photos->saveAs($kckr_path.'/'.$fileName)) {
+					$setting = KckrSetting::getInfo(1);
+					if($setting->photo_resize == 1)
+						self::resizePhoto($kckr_path.'/'.$fileName, unserialize($setting->photo_resize_size));
+				}
+			}
+		}
+	}
+
+	/**
+	 * After delete attributes
+	 */
+	protected function afterDelete() {
+		parent::afterDelete();
+		//delete kckr image
+		$kckr_path = 'public/kckr';
+		if($this->photos != '' && file_exists($kckr_path.'/'.$this->photos))
+			rename($kckr_path.'/'.$this->photos, 'public/kckr/verwijderen/'.$this->kckr_id.'_'.$this->photos);
 	}
 
 }
