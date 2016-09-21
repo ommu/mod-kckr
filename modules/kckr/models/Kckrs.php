@@ -416,7 +416,7 @@ class Kckrs extends CActiveRecord
 			if($photo->name != '') {
 				$extension = pathinfo($photo->name, PATHINFO_EXTENSION);
 				if(!in_array(strtolower($extension), array('bmp','gif','jpg','png')))
-					$this->addError('photos', 'The file "'.$media->name.'" cannot be uploaded. Only files with these extensions are allowed: bmp, gif, jpg, png.');
+					$this->addError('photos', 'The file "'.$photo->name.'" cannot be uploaded. Only files with these extensions are allowed: bmp, gif, jpg, png.');
 			}
 			
 			if($this->isNewRecord)
@@ -445,9 +445,10 @@ class Kckrs extends CActiveRecord
 						if($setting->photo_resize == 1)
 							self::resizePhoto($kckr_path.'/'.$fileName, unserialize($setting->photo_resize_size));
 						if($this->photo_old_input != '' && file_exists($kckr_path.'/'.$this->photo_old_input))
-							rename($kckr_path.'/'.$this->photo_old_input, 'public/banner/verwijderen/'.$this->kckr_id.'_'.$this->photo_old_input);
+							rename($kckr_path.'/'.$this->photo_old_input, 'public/kckr/verwijderen/'.$this->kckr_id.'_'.$this->photo_old_input);
 						$this->photos = $fileName;
-					}
+					} else
+						$this->photos = '';
 				}
 					
 				if($this->photos == '')
@@ -475,6 +476,7 @@ class Kckrs extends CActiveRecord
 					$setting = KckrSetting::getInfo(1);
 					if($setting->photo_resize == 1)
 						self::resizePhoto($kckr_path.'/'.$fileName, unserialize($setting->photo_resize_size));
+					self::model()->updateByPk($this->kckr_id, array('photos'=>$fileName));
 				}
 			}
 		}
