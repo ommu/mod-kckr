@@ -144,18 +144,61 @@ class AdminController extends Controller
 	 */
 	public function actionAdd() 
 	{
-		$model=new Kckrs;
 		$category = KckrCategory::getCategory();
+		$model=new Kckrs;
+		$pic=new KckrPic;
+		$publisher=new KckrPublisher;
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
+		$this->performAjaxValidation($pic);
+		$this->performAjaxValidation($publisher);
 
 		if(isset($_POST['Kckrs'])) {
 			$model->attributes=$_POST['Kckrs'];
-
-			if($model->save()) {
-				Yii::app()->user->setFlash('success', Yii::t('phrase', 'Kckrs success created.'));
-				$this->redirect(array('view','id'=>$model->kckr_id));
+			$pic->attributes=$_POST['KckrPic'];
+			$publisher->attributes=$_POST['KckrPublisher'];
+			$pic->validate();
+			$publisher->validate();
+			
+			if($model->validate() && $pic->validate() && $publisher->validate()) {
+				//if($model->publisher_id != '' && $model->publisher_id != 0) {
+					$publisherFind = KckrPublisher::model()->find(array(
+						'select' => 'publisher_id, publisher_name',
+						'condition' => 'publisher_name = :publisher',
+						'params' => array(
+							':publisher' => $publisher->publisher_name,
+						),
+					));
+					if($publisherFind != null)
+						$model->publisher_id = $publisherFind->publisher_id;
+					else {
+						if($publisher->save())
+							$model->publisher_id = $publisher->publisher_id;
+					}
+				//}
+				
+				//if($model->pic_id != '' && $model->pic_id != 0) {
+					$picFind = KckrPic::model()->find(array(
+						'select' => 'pic_id, pic_name',
+						'condition' => 'pic_name = :pic',
+						'params' => array(
+							':pic' => $pic->pic_name,
+						),
+					));
+					if($picFind != null)
+						$model->pic_id = $picFind->pic_id;
+					else {
+						if($pic->save())
+							$model->pic_id = $pic->pic_id;
+					}
+				//}
+				
+				if($model->save()) {
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Kckrs success created.'));
+					$this->redirect(array('edit','id'=>$model->kckr_id));
+				}
+				
 			}
 		}
 
@@ -167,8 +210,10 @@ class AdminController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
-			'model'=>$model,
 			'category'=>$category,
+			'model'=>$model,
+			'pic'=>$pic,
+			'publisher'=>$publisher,
 		));
 	}
 
@@ -179,17 +224,75 @@ class AdminController extends Controller
 	 */
 	public function actionEdit($id) 
 	{
-		$model=$this->loadModel($id);
+		$category = KckrCategory::getCategory();
+		$model = $this->loadModel($id);
+		$pic = KckrPic::model()->findByPk($model->pic_id);
+		$publisher = KckrPublisher::model()->findByPk($model->publisher_id);	
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
+		$this->performAjaxValidation($pic);
+		$this->performAjaxValidation($publisher);
+			
+		if(!$model->getErrors()) {
+			$pic_id = $model->pic_id;
+			$pic_name = $pic->pic_name;
+			$publisher_id = $model->publisher_id;
+			$publisher_name = $publisher->publisher_name;
+		}
 
 		if(isset($_POST['Kckrs'])) {
 			$model->attributes=$_POST['Kckrs'];
+			$pic->attributes=$_POST['KckrPic'];
+			$publisher->attributes=$_POST['KckrPublisher'];
+			$pic->validate();
+			$publisher->validate();
 
-			if($model->save()) {
-				Yii::app()->user->setFlash('success', Yii::t('phrase', 'Kckrs success updated.'));
-				$this->redirect(array('manage'));
+			if($model->validate() && $pic->validate() && $publisher->validate()) {				
+				if($publisher_id != $model->publisher_id || $publisher_name != $publisher->publisher_name) {
+					//if($model->publisher_id != '' && $model->publisher_id != 0) {
+						$publisherFind = KckrPublisher::model()->find(array(
+							'select' => 'publisher_id, publisher_name',
+							'condition' => 'publisher_name = :publisher',
+							'params' => array(
+								':publisher' => $publisher->publisher_name,
+							),
+						));
+						if($publisherFind != null)
+							$model->publisher_id = $publisherFind->publisher_id;
+						else {
+							$publishers=new KckrPublisher;
+							$publishers->publisher_name = $publisher->publisher_name;
+							if($publishers->save())
+								$model->publisher_id = $publishers->publisher_id;
+						}
+					//}
+				}
+				
+				if($pic_id != $model->pic_id || $pic_name != $pic->pic_name) {
+					//if($model->pic_id != '' && $model->pic_id != 0) {
+						$picFind = KckrPic::model()->find(array(
+							'select' => 'pic_id, pic_name',
+							'condition' => 'pic_name = :pic',
+							'params' => array(
+								':pic' => $pic->pic_name,
+							),
+						));
+						if($picFind != null)
+							$model->pic_id = $picFind->pic_id;
+						else {
+							$pics=new KckrPic;
+							$pics->pic_name = $pic->pic_name;
+							if($pics->save())
+								$model->pic_id = $pics->pic_id;
+						}
+					//}
+				}
+				
+				if($model->save()) {
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Kckrs success updated.'));
+					$this->redirect(array('manage'));
+				}				
 			}
 		}
 
@@ -197,8 +300,10 @@ class AdminController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
-			'model'=>$model,
 			'category'=>$category,
+			'model'=>$model,
+			'pic'=>$pic,
+			'publisher'=>$publisher,
 		));
 	}
 	

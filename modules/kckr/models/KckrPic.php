@@ -107,7 +107,7 @@ class KckrPic extends CActiveRecord
 		return array(
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'publish' => Yii::t('attribute', 'Publish'),
-			'pic_name' => Yii::t('attribute', 'Name'),
+			'pic_name' => Yii::t('attribute', 'PIC'),
 			'pic_nip' => Yii::t('attribute', 'NIP'),
 			'pic_position' => Yii::t('attribute', 'Position'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),

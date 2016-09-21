@@ -47,11 +47,11 @@
 class Kckrs extends CActiveRecord
 {
 	public $defaultColumns = array();
-	public $pic_input;
-	public $publisher_input;
 	public $photo_old_input;
 	
 	// Variable Search
+	public $pic_search;
+	public $publisher_search;
 	public $creation_search;
 	public $modified_search;
 
@@ -82,18 +82,16 @@ class Kckrs extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('category_id, letter_number, receipt_type, receipt_date,
-				pic_input, publisher_input', 'required'),
+			array('category_id, letter_number, receipt_type, receipt_date', 'required'),
 			array('publish, pic_id, category_id', 'numerical', 'integerOnly'=>true),
 			array('publisher_id, creation_id, modified_id', 'length', 'max'=>11),
-			array('letter_number,
-				pic_input, publisher_input', 'length', 'max'=>64),
+			array('letter_number', 'length', 'max'=>64),
 			array('pic_id, publisher_id, thanks_date, photos,
 				photo_old_input', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('kckr_id, publish, pic_id, publisher_id, category_id, letter_number, receipt_type, receipt_date, thanks_date, photos, creation_date, creation_id, modified_date, modified_id, 
-				pic_input, publisher_input, creation_search, modified_search', 'safe', 'on'=>'search'),
+				pic_search, publisher_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -134,8 +132,8 @@ class Kckrs extends CActiveRecord
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
-			'pic_input' => Yii::t('attribute', 'Pic'),
-			'publisher_input' => Yii::t('attribute', 'Publisher'),
+			'pic_search' => Yii::t('attribute', 'Pic'),
+			'publisher_search' => Yii::t('attribute', 'Publisher'),
 			'photo_old_input' => Yii::t('attribute', 'Photo Old'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
@@ -237,8 +235,8 @@ class Kckrs extends CActiveRecord
 				'select'=>'displayname'
 			),
 		);
-		$criteria->compare('pic.pic_name',strtolower($this->pic_input), true);
-		$criteria->compare('publisher.publisher_name',strtolower($this->publisher_input), true);
+		$criteria->compare('pic.pic_name',strtolower($this->pic_search), true);
+		$criteria->compare('publisher.publisher_name',strtolower($this->publisher_search), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
@@ -316,12 +314,12 @@ class Kckrs extends CActiveRecord
 				);
 			}
 			$this->defaultColumns[] = array(
-				'name' => 'publisher_input',
+				'name' => 'publisher_search',
 				'value' => '$data->publisher->publisher_name',
 			);
 			$this->defaultColumns[] = 'letter_number';
 			$this->defaultColumns[] = array(
-				'name' => 'pic_input',
+				'name' => 'pic_search',
 				'value' => '$data->pic->pic_name',
 			);
 			$this->defaultColumns[] = array(
@@ -455,6 +453,8 @@ class Kckrs extends CActiveRecord
 				if($this->photos == '')
 					$this->photos = $this->photo_old_input;
 			}
+			$this->receipt_date = date('Y-m-d', strtotime($this->receipt_date));
+			$this->thanks_date = date('Y-m-d', strtotime($this->thanks_date));
 		}
 		return true;
 	}

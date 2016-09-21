@@ -15,22 +15,14 @@
  */
 ?>
 
-<?php if($model->isNewRecord) {?>
-	<?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
-		'id'=>'kckrs-form',
-		'enableAjaxValidation'=>true,
-		'htmlOptions' => array(
-			'enctype' => 'multipart/form-data',
-			'on_post' => '',
-		),
-	)); ?>
-<?php } else {?>
-	<?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
-		'id'=>'kckrs-form',
-		'enableAjaxValidation'=>true,
-		//'htmlOptions' => array('enctype' => 'multipart/form-data')
-	)); ?>
-<?php }?>
+<?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
+	'id'=>'kckrs-form',
+	'enableAjaxValidation'=>true,
+	'htmlOptions' => array(
+		'enctype' => 'multipart/form-data',
+		'on_post' => '',
+	),
+)); ?>
 
 <?php if($model->isNewRecord) {?>
 	<div class="dialog-content">
@@ -60,10 +52,30 @@
 	</div>
 
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'publisher_input'); ?>
+		<?php echo $form->labelEx($publisher,'publisher_name'); ?>
 		<div class="desc">
-			<?php echo $form->textField($model,'publisher_input',array('maxlength'=>64,'class'=>'span-7')); ?>
-			<?php echo $form->error($model,'publisher_input'); ?>
+			<?php 
+			//echo $form->textField($publisher,'publisher_name',array('maxlength'=>64,'class'=>'span-7'));		
+			$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+				'model' => $publisher,
+				'attribute' => 'publisher_name',
+				'source' => Yii::app()->controller->createUrl('o/publisher/suggest'),
+				'options' => array(
+					//'delay '=> 50,
+					'minLength' => 1,
+					'showAnim' => 'fold',
+					'select' => "js:function(event, ui) {
+						$('form #KckrPublisher_publisher_name').val(ui.item.value);
+						$('form #Kckrs_publisher_id').val(ui.item.id);
+					}"
+				),
+				'htmlOptions' => array(
+					'class'	=> 'span-6',
+					'maxlength'=>64,
+				),
+			));
+			echo $form->hiddenField($model,'publisher_id');?>
+			<?php echo $form->error($publisher,'publisher_name'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
@@ -71,17 +83,37 @@
 	<div class="clearfix">
 		<?php echo $form->labelEx($model,'letter_number'); ?>
 		<div class="desc">
-			<?php echo $form->textField($model,'letter_number',array('maxlength'=>64,'class'=>'span-7')); ?>
+			<?php echo $form->textField($model,'letter_number',array('maxlength'=>64,'class'=>'span-6')); ?>
 			<?php echo $form->error($model,'letter_number'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
 
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'pic_input'); ?>
+		<?php echo $form->labelEx($pic,'pic_name'); ?>
 		<div class="desc">
-			<?php echo $form->textField($model,'pic_input',array('maxlength'=>64,'class'=>'span-7')); ?>
-			<?php echo $form->error($model,'pic_input'); ?>
+			<?php 
+			//echo $form->textField($model,'pic_name',array('maxlength'=>64,'class'=>'span-7'));	
+			$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+				'model' => $pic,
+				'attribute' => 'pic_name',
+				'source' => Yii::app()->controller->createUrl('o/pic/suggest'),
+				'options' => array(
+					//'delay '=> 50,
+					'minLength' => 1,
+					'showAnim' => 'fold',
+					'select' => "js:function(event, ui) {
+						$('form #KckrPic_pic_name').val(ui.item.value);
+						$('form #Kckrs_pic_id').val(ui.item.id);
+					}"
+				),
+				'htmlOptions' => array(
+					'class'	=> 'span-6',
+					'maxlength'=>64,
+				),
+			));
+			echo $form->hiddenField($model,'pic_id'); ?>
+			<?php echo $form->error($pic,'pic_name'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
