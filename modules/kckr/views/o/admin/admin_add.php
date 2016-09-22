@@ -21,7 +21,6 @@
 ?>
 
 <?php echo $this->renderPartial('_form', array(
-	'category'=>$category,
 	'model'=>$model,
 	'pic'=>$pic,
 	'publisher'=>$publisher,

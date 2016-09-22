@@ -41,11 +41,6 @@
 		</li>
 
 		<li>
-			<?php echo $model->getAttributeLabel('category_id'); ?><br/>
-			<?php echo $form->textField($model,'category_id'); ?>
-		</li>
-
-		<li>
 			<?php echo $model->getAttributeLabel('letter_number'); ?><br/>
 			<?php echo $form->textField($model,'letter_number',array('size'=>60,'maxlength'=>64)); ?>
 		</li>

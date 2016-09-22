@@ -27,7 +27,6 @@
  * @property integer $publish
  * @property integer $pic_id
  * @property string $publisher_id
- * @property integer $category_id
  * @property string $letter_number
  * @property string $receipt_type
  * @property string $receipt_date
@@ -82,15 +81,15 @@ class Kckrs extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('category_id, letter_number, receipt_type, receipt_date', 'required'),
-			array('publish, pic_id, category_id', 'numerical', 'integerOnly'=>true),
+			array('letter_number, receipt_type, receipt_date', 'required'),
+			array('publish, pic_id', 'numerical', 'integerOnly'=>true),
 			array('publisher_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('letter_number', 'length', 'max'=>64),
 			array('pic_id, publisher_id, thanks_date, photos,
 				photo_old_input', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('kckr_id, publish, pic_id, publisher_id, category_id, letter_number, receipt_type, receipt_date, thanks_date, photos, creation_date, creation_id, modified_date, modified_id, 
+			array('kckr_id, publish, pic_id, publisher_id, letter_number, receipt_type, receipt_date, thanks_date, photos, creation_date, creation_id, modified_date, modified_id, 
 				pic_search, publisher_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -106,7 +105,6 @@ class Kckrs extends CActiveRecord
 			'media' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id'),
 			'pic' => array(self::BELONGS_TO, 'KckrPic', 'pic_id'),
 			'publisher' => array(self::BELONGS_TO, 'KckrPublisher', 'publisher_id'),
-			'category' => array(self::BELONGS_TO, 'KckrCategory', 'category_id'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
@@ -122,7 +120,6 @@ class Kckrs extends CActiveRecord
 			'publish' => Yii::t('attribute', 'Publish'),
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'publisher_id' => Yii::t('attribute', 'Publisher'),
-			'category_id' => Yii::t('attribute', 'Category'),
 			'letter_number' => Yii::t('attribute', 'Letter Number'),
 			'receipt_type' => Yii::t('attribute', 'Receipt Type'),
 			'receipt_date' => Yii::t('attribute', 'Receipt Date'),
@@ -192,10 +189,6 @@ class Kckrs extends CActiveRecord
 			$criteria->compare('t.publisher_id',$_GET['publisher']);
 		else
 			$criteria->compare('t.publisher_id',$this->publisher_id);
-		if(isset($_GET['category']))
-			$criteria->compare('t.category_id',$_GET['category']);
-		else
-			$criteria->compare('t.category_id',$this->category_id);
 		$criteria->compare('t.letter_number',strtolower($this->letter_number),true);
 		$criteria->compare('t.receipt_type',$this->receipt_type);
 		if($this->receipt_date != null && !in_array($this->receipt_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -273,7 +266,6 @@ class Kckrs extends CActiveRecord
 			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'pic_id';
 			$this->defaultColumns[] = 'publisher_id';
-			$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'letter_number';
 			$this->defaultColumns[] = 'receipt_type';
 			$this->defaultColumns[] = 'receipt_date';
@@ -305,14 +297,6 @@ class Kckrs extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['category'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'category_id',
-					'value' => '$data->category->category_name',
-					'filter'=> KckrCategory::getCategory(),
-					'type' => 'raw',
-				);
-			}
 			$this->defaultColumns[] = array(
 				'name' => 'publisher_search',
 				'value' => '$data->publisher->publisher_name',
@@ -325,6 +309,9 @@ class Kckrs extends CActiveRecord
 			$this->defaultColumns[] = array(
 				'name' => 'receipt_type',
 				'value' => '$data->receipt_type == \'pos\' ? Yii::t(\'phrase\', \'Pos\') : Yii::t(\'phrase\', \'Langsung\')',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
 				'filter'=>array(
 					'pos'=>Yii::t('phrase', 'Pos'),
 					'langsung'=>Yii::t('phrase', 'Langsung'),

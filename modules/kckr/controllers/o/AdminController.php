@@ -144,7 +144,6 @@ class AdminController extends Controller
 	 */
 	public function actionAdd() 
 	{
-		$category = KckrCategory::getCategory();
 		$model=new Kckrs;
 		$pic=new KckrPic;
 		$publisher=new KckrPublisher;
@@ -210,7 +209,6 @@ class AdminController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
-			'category'=>$category,
 			'model'=>$model,
 			'pic'=>$pic,
 			'publisher'=>$publisher,
@@ -224,10 +222,25 @@ class AdminController extends Controller
 	 */
 	public function actionEdit($id) 
 	{
-		$category = KckrCategory::getCategory();
 		$model = $this->loadModel($id);
 		$pic = KckrPic::model()->findByPk($model->pic_id);
 		$publisher = KckrPublisher::model()->findByPk($model->publisher_id);	
+		
+		$media=new KckrMedia('searchKckrEdit');
+		$media->unsetAttributes();  // clear any default values
+		if(isset($_GET['KckrMedia'])) {
+			$media->attributes=$_GET['KckrMedia'];
+		}
+
+		$columnTemp = array();
+		if(isset($_GET['GridColumn'])) {
+			foreach($_GET['GridColumn'] as $key => $val) {
+				if($_GET['GridColumn'][$key] == 1) {
+					$columnTemp[] = $key;
+				}
+			}
+		}
+		$columns = $media->getGridColumn($columnTemp);
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -300,10 +313,11 @@ class AdminController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
-			'category'=>$category,
 			'model'=>$model,
 			'pic'=>$pic,
 			'publisher'=>$publisher,
+			'media'=>$media,
+			'columns' => $columns,
 		));
 	}
 	

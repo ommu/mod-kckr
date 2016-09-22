@@ -23,9 +23,62 @@
 
 <div class="form">
 	<?php echo $this->renderPartial('_form', array(
-		'category'=>$category,
 		'model'=>$model,
 		'pic'=>$pic,
 		'publisher'=>$publisher,
 	)); ?>
+</div>
+
+<div id="partial-kckr-media">
+	<?php //begin.Messages ?>
+	<div id="ajax-message">
+	<?php
+	if(Yii::app()->user->hasFlash('error'))
+		echo Utility::flashError(Yii::app()->user->getFlash('error'));
+	if(Yii::app()->user->hasFlash('success'))
+		echo Utility::flashSuccess(Yii::app()->user->getFlash('success'));
+	?>
+	</div>
+	<?php //begin.Messages ?>
+
+	<div class="boxed">
+		<?php //begin.Grid Item ?>
+		<?php 
+			$columnData   = $columns;
+			array_push($columnData, array(
+				'header' => Yii::t('phrase', 'Options'),
+				'class'=>'CButtonColumn',
+				'buttons' => array(
+					'view' => array(
+						'label' => 'view',
+						'options' => array(							
+							'class' => 'view',
+						),
+						'url' => 'Yii::app()->controller->createUrl("o/media/view",array("id"=>$data->primaryKey,"type"=>"update"))'),
+					'update' => array(
+						'label' => 'update',
+						'options' => array(
+							'class' => 'update'
+						),
+						'url' => 'Yii::app()->controller->createUrl("o/media/edit",array("id"=>$data->primaryKey,"type"=>"update"))'),
+					'delete' => array(
+						'label' => 'delete',
+						'options' => array(
+							'class' => 'delete'
+						),
+						'url' => 'Yii::app()->controller->createUrl("o/media/delete",array("id"=>$data->primaryKey,"type"=>"update"))')
+				),
+				'template' => '{view}|{update}|{delete}',
+			));
+
+			$this->widget('application.components.system.OGridView', array(
+				'id'=>'kckr-media-grid',
+				'dataProvider'=>$media->searchKckrEdit(),
+				'filter'=>$media,
+				'columns' => $columnData,
+				'pager' => array('header' => ''),
+			));
+		?>
+		<?php //end.Grid Item ?>
+	</div>
 </div>

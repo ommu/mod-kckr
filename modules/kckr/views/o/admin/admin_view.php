@@ -19,53 +19,47 @@
 	);
 ?>
 
-<?php //begin.Messages ?>
-<?php
-if(Yii::app()->user->hasFlash('success'))
-	echo Utility::flashSuccess(Yii::app()->user->getFlash('success'));
-?>
-<?php //end.Messages ?>
-
 <?php $this->widget('application.components.system.FDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
+		/*
 		array(
 			'name'=>'kckr_id',
 			'value'=>$model->kckr_id,
-			//'value'=>$model->kckr_id != '' ? $model->kckr_id : '-',
 		),
+		*/
 		array(
-			'name'=>'publish',
-			'value'=>$model->publish == '1' ? Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
-			//'value'=>$model->publish,
-		),
-		array(
-			'name'=>'pic_id',
-			'value'=>$model->pic_id,
-			//'value'=>$model->pic_id != '' ? $model->pic_id : '-',
+			'name'=>'category_id',
+			'value'=>$model->category_id != '' ? $model->category->category_name : '-',
 		),
 		array(
 			'name'=>'publisher_id',
-			'value'=>$model->publisher_id,
-			//'value'=>$model->publisher_id != '' ? $model->publisher_id : '-',
-		),
-		array(
-			'name'=>'category_id',
-			'value'=>$model->category_id,
-			//'value'=>$model->category_id != '' ? $model->category_id : '-',
+			'value'=>$model->publisher_id != '' ? $model->publisher->publisher_name : '-',
 		),
 		array(
 			'name'=>'letter_number',
-			'value'=>$model->letter_number,
-			//'value'=>$model->letter_number != '' ? $model->letter_number : '-',
+			'value'=>$model->letter_number != '' ? $model->letter_number : '-',
+		),
+		array(
+			'name'=>'pic_id',
+			'value'=>$model->pic_id != '' ? $model->pic->pic_name : '-',
+		),
+		array(
+			'name'=>'receipt_type',
+			'value'=>$model->receipt_type != 'pos' ? Yii::t('phrase', 'Pos') : Yii::t('phrase', 'Langsung'),
 		),
 		array(
 			'name'=>'receipt_date',
-			'value'=>!in_array($model->receipt_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00')) ? Utility::dateFormat($model->receipt_date, true) : '-',
+			'value'=>!in_array($model->receipt_date, array('0000-00-00','1970-01-01')) ? Utility::dateFormat($model->receipt_date) : '-',
+		),
+		array(
+			'name'=>'photos',
+			'value'=>CHtml::link($model->photos, Yii::app()->request->baseUrl.'/public/kckr/'.$model->photos, array('target' => '_blank')),
+			'type' => 'raw',
 		),
 		array(
 			'name'=>'thanks_date',
-			'value'=>!in_array($model->thanks_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00')) ? Utility::dateFormat($model->thanks_date, true) : '-',
+			'value'=>!in_array($model->thanks_date, array('0000-00-00','1970-01-01')) ? Utility::dateFormat($model->thanks_date) : '-',
 		),
 		array(
 			'name'=>'creation_date',
@@ -73,8 +67,7 @@ if(Yii::app()->user->hasFlash('success'))
 		),
 		array(
 			'name'=>'creation_id',
-			'value'=>$model->creation_id,
-			//'value'=>$model->creation_id != 0 ? $model->creation_id : '-',
+			'value'=>$model->creation_id != 0 ? $model->creation->displayname : '-',
 		),
 		array(
 			'name'=>'modified_date',
@@ -82,14 +75,11 @@ if(Yii::app()->user->hasFlash('success'))
 		),
 		array(
 			'name'=>'modified_id',
-			'value'=>$model->modified_id,
-			//'value'=>$model->modified_id != 0 ? $model->modified_id : '-',
+			'value'=>$model->modified_id != 0 ? $model->modified->displayname : '-',
+		),
+		array(
+			'name'=>'publish',
+			'value'=>$model->publish == 1 ? Yii::t('phrase', 'Publish') : Yii::t('phrase', 'Unpublish'),
 		),
 	),
 )); ?>
-
-<div class="dialog-content">
-</div>
-<div class="dialog-submit">
-	<?php echo CHtml::button(Yii::t('phrase', 'Close'), array('id'=>'closed')); ?>
-</div>

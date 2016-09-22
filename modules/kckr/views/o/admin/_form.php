@@ -39,19 +39,6 @@
 <fieldset>
 
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'category_id'); ?>
-		<div class="desc">
-			<?php 
-				if($category != null)
-					echo $form->dropDownList($model,'category_id', $category, array('prompt'=>Yii::t('phrase', 'Select Category')));
-				else
-					echo $form->dropDownList($model,'category_id', array('prompt'=>Yii::t('phrase', 'No Category')));?>
-			<?php echo $form->error($model,'category_id'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
 		<?php echo $form->labelEx($publisher,'publisher_name'); ?>
 		<div class="desc">
 			<?php 
