@@ -44,6 +44,11 @@
 class KckrMedia extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $kckr_search;
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -74,13 +79,13 @@ class KckrMedia extends CActiveRecord
 		return array(
 			array('kckr_id, category_id, media_title, media_desc, media_publish_year, media_author, media_total', 'required'),
 			array('publish, category_id, media_total', 'numerical', 'integerOnly'=>true),
-			array('kckr_id, creation_id, modified_id', 'length', 'max'=>11),
-			array('media_title', 'length', 'max'=>32),
 			array('media_publish_year', 'length', 'max'=>4),
+			array('kckr_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('media_id, publish, kckr_id, category_id, media_title, media_desc, media_publish_year, media_author, media_total, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('media_id, publish, kckr_id, category_id, media_title, media_desc, media_publish_year, media_author, media_total, creation_date, creation_id, modified_date, modified_id, 
+				kckr_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,8 +97,10 @@ class KckrMedia extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'kckr_relation' => array(self::BELONGS_TO, 'OmmuKckrs', 'kckr_id'),
-			'category_relation' => array(self::BELONGS_TO, 'OmmuKckrCategory', 'category_id'),
+			'kckr' => array(self::BELONGS_TO, 'Kckrs', 'kckr_id'),
+			'category' => array(self::BELONGS_TO, 'KckrCategory', 'category_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -107,15 +114,18 @@ class KckrMedia extends CActiveRecord
 			'publish' => Yii::t('attribute', 'Publish'),
 			'kckr_id' => Yii::t('attribute', 'Kckr'),
 			'category_id' => Yii::t('attribute', 'Category'),
-			'media_title' => Yii::t('attribute', 'Media Title'),
-			'media_desc' => Yii::t('attribute', 'Media Desc'),
-			'media_publish_year' => Yii::t('attribute', 'Media Publish Year'),
-			'media_author' => Yii::t('attribute', 'Media Author'),
-			'media_total' => Yii::t('attribute', 'Media Total'),
+			'media_title' => Yii::t('attribute', 'Title'),
+			'media_desc' => Yii::t('attribute', 'Description'),
+			'media_publish_year' => Yii::t('attribute', 'Publish Year'),
+			'media_author' => Yii::t('attribute', 'Author'),
+			'media_total' => Yii::t('attribute', 'Total'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'kckr_search' => Yii::t('attribute', 'Kckr'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 		/*
 			'Media' => 'Media',
@@ -189,6 +199,24 @@ class KckrMedia extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'kckr' => array(
+				'alias'=>'kckr',
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
+		//$criteria->compare('kckr.displayname',strtolower($this->kckr_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['KckrMedia_sort']))
 			$criteria->order = 't.media_id DESC';
@@ -201,6 +229,87 @@ class KckrMedia extends CActiveRecord
 		));
 	}
 
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function searchKckrEdit()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('t.media_id',strtolower($this->media_id),true);
+		if(isset($_GET['type']) && $_GET['type'] == 'publish')
+			$criteria->compare('t.publish',1);
+		elseif(isset($_GET['type']) && $_GET['type'] == 'unpublish')
+			$criteria->compare('t.publish',0);
+		elseif(isset($_GET['type']) && $_GET['type'] == 'trash')
+			$criteria->compare('t.publish',2);
+		else {
+			$criteria->addInCondition('t.publish',array(0,1));
+			$criteria->compare('t.publish',$this->publish);
+		}
+		if(isset($_GET['id']))
+			$criteria->compare('t.kckr_id',$_GET['id']);
+		if(isset($_GET['category']))
+			$criteria->compare('t.category_id',$_GET['category']);
+		else
+			$criteria->compare('t.category_id',$this->category_id);
+		$criteria->compare('t.media_title',strtolower($this->media_title),true);
+		$criteria->compare('t.media_desc',strtolower($this->media_desc),true);
+		$criteria->compare('t.media_publish_year',strtolower($this->media_publish_year),true);
+		$criteria->compare('t.media_author',strtolower($this->media_author),true);
+		$criteria->compare('t.media_total',$this->media_total);
+		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
+		if(isset($_GET['creation']))
+			$criteria->compare('t.creation_id',$_GET['creation']);
+		else
+			$criteria->compare('t.creation_id',$this->creation_id);
+		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
+		if(isset($_GET['modified']))
+			$criteria->compare('t.modified_id',$_GET['modified']);
+		else
+			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'kckr' => array(
+				'alias'=>'kckr',
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
+		//$criteria->compare('kckr.displayname',strtolower($this->kckr_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
+
+		if(!isset($_GET['KckrMedia_sort']))
+			$criteria->order = 't.media_id DESC';
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>30,
+			),
+		));
+	}
 
 	/**
 	 * Get column for CGrid View
@@ -241,6 +350,7 @@ class KckrMedia extends CActiveRecord
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
+		$controller = strtolower(Yii::app()->controller->id);
 		if(count($this->defaultColumns) == 0) {
 			/*
 			$this->defaultColumns[] = array(
@@ -254,20 +364,6 @@ class KckrMedia extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->media_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
-					'type' => 'raw',
-				);
-			}
 			$this->defaultColumns[] = 'kckr_id';
 			$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'media_title';
@@ -275,6 +371,10 @@ class KckrMedia extends CActiveRecord
 			$this->defaultColumns[] = 'media_publish_year';
 			$this->defaultColumns[] = 'media_author';
 			$this->defaultColumns[] = 'media_total';
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -301,34 +401,20 @@ class KckrMedia extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
+			if(!isset($_GET['type']) && $controller != 'o/admin') {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->media_id)), $data->publish, 1)',
 					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
+						'class' => 'center',
 					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
 					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}

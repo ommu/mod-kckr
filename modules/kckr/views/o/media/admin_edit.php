@@ -21,6 +21,7 @@
 	);
 ?>
 
-<div class="form">
-	<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
-</div>
+<?php echo $this->renderPartial('_form', array(
+	'model'=>$model,
+	'category'=>$category,
+)); ?>
