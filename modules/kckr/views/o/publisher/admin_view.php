@@ -23,36 +23,28 @@
 	<?php $this->widget('application.components.system.FDetailView', array(
 		'data'=>$model,
 		'attributes'=>array(
+			/*
 			array(
 				'name'=>'publisher_id',
 				'value'=>$model->publisher_id,
-				//'value'=>$model->publisher_id != '' ? $model->publisher_id : '-',
 			),
-			array(
-				'name'=>'publish',
-				'value'=>$model->publish == '1' ? Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
-				//'value'=>$model->publish,
-			),
+			*/
 			array(
 				'name'=>'publisher_name',
-				'value'=>$model->publisher_name,
-				//'value'=>$model->publisher_name != '' ? $model->publisher_name : '-',
+				'value'=>$model->publisher_name != '' ? $model->publisher_name : '-',
 			),
 			array(
 				'name'=>'publisher_area',
 				'value'=>$model->publisher_area,
-				//'value'=>$model->publisher_area != '' ? $model->publisher_area : '-',
+				'value'=>$model->publisher_area == 1 ? Yii::t('phrase', 'Yogyakarta') : Yii::t('phrase', 'Luar Yogyakarta'),
 			),
 			array(
 				'name'=>'publisher_address',
 				'value'=>$model->publisher_address != '' ? $model->publisher_address : '-',
-				//'value'=>$model->publisher_address != '' ? CHtml::link($model->publisher_address, Yii::app()->request->baseUrl.'/public/visit/'.$model->publisher_address, array('target' => '_blank')) : '-',
-				'type'=>'raw',
 			),
 			array(
 				'name'=>'publisher_phone',
-				'value'=>$model->publisher_phone,
-				//'value'=>$model->publisher_phone != '' ? $model->publisher_phone : '-',
+				'value'=>$model->publisher_phone != '' ? $model->publisher_phone : '-',
 			),
 			array(
 				'name'=>'creation_date',
@@ -60,8 +52,7 @@
 			),
 			array(
 				'name'=>'creation_id',
-				'value'=>$model->creation_id,
-				//'value'=>$model->creation_id != 0 ? $model->creation_id : '-',
+				'value'=>$model->creation_id != 0 ? $model->creation->displayname : '-',
 			),
 			array(
 				'name'=>'modified_date',
@@ -69,8 +60,11 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified_id,
-				//'value'=>$model->modified_id != 0 ? $model->modified_id : '-',
+				'value'=>$model->modified_id != 0 ? $model->modified->displayname : '-',
+			),
+			array(
+				'name'=>'publish',
+				'value'=>$model->publish == 1 ? Yii::t('phrase', 'Publish') : Yii::t('phrase', 'Unpublish'),
 			),
 		),
 	)); ?>
