@@ -29,10 +29,6 @@
 		),
 		*/
 		array(
-			'name'=>'category_id',
-			'value'=>$model->category_id != '' ? $model->category->category_name : '-',
-		),
-		array(
 			'name'=>'publisher_id',
 			'value'=>$model->publisher_id != '' ? $model->publisher->publisher_name : '-',
 		),

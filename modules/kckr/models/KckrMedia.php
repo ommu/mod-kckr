@@ -364,43 +364,63 @@ class KckrMedia extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = 'kckr_id';
-			$this->defaultColumns[] = 'category_id';
+			if($controller != 'o/admin') {
+				$this->defaultColumns[] = 'kckr_id';
+			}
+			$this->defaultColumns[] = array(
+				'name' => 'category_id',
+				'value' => '$data->category->category_name',
+				'filter'=>KckrCategory::getCategory(),
+			);
 			$this->defaultColumns[] = 'media_title';
 			$this->defaultColumns[] = 'media_desc';
-			$this->defaultColumns[] = 'media_publish_year';
 			$this->defaultColumns[] = 'media_author';
-			$this->defaultColumns[] = 'media_total';
 			$this->defaultColumns[] = array(
-				'name' => 'creation_search',
-				'value' => '$data->creation->displayname',
-			);
-			$this->defaultColumns[] = array(
-				'name' => 'creation_date',
-				'value' => 'Utility::dateFormat($data->creation_date)',
+				'name' => 'media_publish_year',
+				'value' => '$data->media_publish_year',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'creation_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
-					'htmlOptions' => array(
-						'id' => 'creation_date_filter',
-					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
-					),
-				), true),
 			);
+			$this->defaultColumns[] = array(
+				'name' => 'media_total',
+				'value' => '$data->media_total',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+			);
+			if($controller != 'o/admin') {
+				$this->defaultColumns[] = array(
+					'name' => 'creation_search',
+					'value' => '$data->creation->displayname',
+				);
+				$this->defaultColumns[] = array(
+					'name' => 'creation_date',
+					'value' => 'Utility::dateFormat($data->creation_date)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+						'model'=>$this,
+						'attribute'=>'creation_date',
+						'language' => 'ja',
+						'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+						//'mode'=>'datetime',
+						'htmlOptions' => array(
+							'id' => 'creation_date_filter',
+						),
+						'options'=>array(
+							'showOn' => 'focus',
+							'dateFormat' => 'dd-mm-yy',
+							'showOtherMonths' => true,
+							'selectOtherMonths' => true,
+							'changeMonth' => true,
+							'changeYear' => true,
+							'showButtonPanel' => true,
+						),
+					), true),
+				);
+			}
 			if(!isset($_GET['type']) && $controller != 'o/admin') {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',

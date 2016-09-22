@@ -15,6 +15,14 @@ plugin_menu		:
 	- urlTitle: Kelola KCKR
 		urlRules: {siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
+        
+	- urlTitle: Daftar Karya Cetak
+		urlRules: {siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: o/media/manage, attr: -, icon: -}
+        
+	- urlTitle: Daftar Karya Rekam
+		urlRules: {siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: o/media/manage, attr: -, icon: -}
 
 	- urlTitle: Pengaturan
 		urlRules: {siteType: 0,1, userLevel: 1,2}
