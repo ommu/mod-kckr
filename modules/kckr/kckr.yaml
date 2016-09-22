@@ -12,77 +12,69 @@ db_table_name	:
 db_sql_filename	: 
 
 plugin_menu		:
-	- urlTitle: Kelola KCKR
+	- urlTitle: View KCKR
 		urlRules: {siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
-        
-	- urlTitle: Daftar Karya Cetak
-		urlRules: {siteType: 0,1, userLevel: 1,2}
-		urlPath: {url: o/media/manage, attr: -, icon: -}
-        
-	- urlTitle: Daftar Karya Rekam
-		urlRules: {siteType: 0,1, userLevel: 1,2}
-		urlPath: {url: o/media/manage, attr: -, icon: -}
 
-	- urlTitle: Pengaturan
+	- urlTitle: Setting
 		urlRules: {siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: o/setting/index, attr: -, icon: -}
 		submenu :
-			- urlTitle: Kategori
+			- urlTitle: Category
 				urlRules: {siteType: 0,1, userLevel: 1,2}
 				urlPath: {url: o/category/manage, attr: -, icon: -}
 			- urlTitle: PIC
 				urlRules: {siteType: 0,1, userLevel: 1,2}
 				urlPath: {url: o/pic/manage, attr: -, icon: -}
-			- urlTitle: Penerbit dan Perekam
+			- urlTitle: Publisher
 				urlRules: {siteType: 0,1, userLevel: 1,2}
 				urlPath: {url: o/publisher/manage, attr: -, icon: -}
-			- urlTitle: Daftar Karya
+			- urlTitle: Media
 				urlRules: {siteType: 0,1, userLevel: 1,2}
 				urlPath: {url: o/media/manage, attr: -, icon: -}
 
 content_menu	:
 # controller o/admin
-	- urlTitle: Tambah KCKR
+	- urlTitle: Add KCKR
 		urlRules: {kckr, o/admin, manage, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: add, attr: -, icon: -}
 		
-	- urlTitle: Kembali ke kelola
+	- urlTitle: Back to manage
 		urlRules: {kckr, o/admin, add,edit,view, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: manage, attr: -, icon: -}
         
-	- urlTitle: Perbarui KCKR
+	- urlTitle: Update KCKR
 		urlRules: {kckr, o/admin, view, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: edit, attr: id=$_GET*id, icon: -}
         
-	- urlTitle: Lihat Detail KCKR
+	- urlTitle: Detail KCKR
 		urlRules: {kckr, o/admin, edit, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: view, attr: id=$_GET*id, icon: -}
         
-	- urlTitle: Tambah Daftar Karya
+	- urlTitle: Add Media
 		urlRules: {kckr, o/admin, edit, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: o/media/add, attr: id=$_GET*id,type=update, icon: -}
         
-	- urlTitle: Import Daftar Karya
+	- urlTitle: Import Media
 		urlRules: {kckr, o/admin, edit, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: import, attr: id=$_GET*id,type=update, icon: -}
 		
 # controller o/pic
-	- urlTitle: Tambah PIC
+	- urlTitle: Add PIC
 		urlRules: {kckr, o/pic, manage, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: add, attr: -, icon: -}
 		
 # controller o/publisher		
-	- urlTitle: Tambah Penerbit
+	- urlTitle: Add Publisher
 		urlRules: {kckr, o/publisher, manage, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: add, attr: -, icon: -}
 		
 # controller o/category		
-	- urlTitle: Tambah Kategori
+	- urlTitle: Add Category
 		urlRules: {kckr, o/category, manage, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: add, attr: -, icon: -}
 		
 # controller o/media		
-	- urlTitle: Kembali ke kelola
+	- urlTitle: Back to manage
 		urlRules: {kckr, o/media, manage, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
