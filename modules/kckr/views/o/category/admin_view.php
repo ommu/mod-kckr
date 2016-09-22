@@ -23,31 +23,24 @@
 	<?php $this->widget('application.components.system.FDetailView', array(
 		'data'=>$model,
 		'attributes'=>array(
+			/*
 			array(
 				'name'=>'category_id',
 				'value'=>$model->category_id,
-				//'value'=>$model->category_id != '' ? $model->category_id : '-',
 			),
-			array(
-				'name'=>'publish',
-				'value'=>$model->publish == '1' ? Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
-				//'value'=>$model->publish,
-			),
+			*/
 			array(
 				'name'=>'category_type',
 				'value'=>$model->category_type,
-				//'value'=>$model->category_type != '' ? $model->category_type : '-',
+				'value'=>$model->publish == 'book' ? Yii::t('phrase', 'Book') : Yii::t('phrase', 'Record'),
 			),
 			array(
 				'name'=>'category_name',
 				'value'=>$model->category_name,
-				//'value'=>$model->category_name != '' ? $model->category_name : '-',
 			),
 			array(
 				'name'=>'category_desc',
 				'value'=>$model->category_desc != '' ? $model->category_desc : '-',
-				//'value'=>$model->category_desc != '' ? CHtml::link($model->category_desc, Yii::app()->request->baseUrl.'/public/visit/'.$model->category_desc, array('target' => '_blank')) : '-',
-				'type'=>'raw',
 			),
 			array(
 				'name'=>'creation_date',
@@ -55,8 +48,7 @@
 			),
 			array(
 				'name'=>'creation_id',
-				'value'=>$model->creation_id,
-				//'value'=>$model->creation_id != 0 ? $model->creation_id : '-',
+				'value'=>$model->creation_id != 0 ? $model->creation->displayname : '-',
 			),
 			array(
 				'name'=>'modified_date',
@@ -64,8 +56,11 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified_id,
-				//'value'=>$model->modified_id != 0 ? $model->modified_id : '-',
+				'value'=>$model->modified_id != 0 ? $model->modified->displayname : '-',
+			),
+			array(
+				'name'=>'publish',
+				'value'=>$model->publish == 1 ? Yii::t('phrase', 'Publish') : Yii::t('phrase', 'Unpublish'),
 			),
 		),
 	)); ?>
