@@ -53,7 +53,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'publisher_address'); ?>
 			<div class="desc">
-				<?php echo $form->textArea($model,'publisher_address',array('rows'=>6, 'cols'=>50)); ?>
+				<?php echo $form->textArea($model,'publisher_address',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 smaller')); ?>
 				<?php echo $form->error($model,'publisher_address'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>

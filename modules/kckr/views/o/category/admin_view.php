@@ -36,7 +36,7 @@
 			),
 			array(
 				'name'=>'category_name',
-				'value'=>$model->category_name,
+				'value'=>$model->category_name != '' ? $model->category_name : '-',
 			),
 			array(
 				'name'=>'category_desc',

@@ -45,11 +45,11 @@ content_menu	:
         
 	- urlTitle: Edit KCKR
 		urlRules: {kckr, o/admin, view, siteType: 0,1, userLevel: 1,2}
-		urlPath: {url: add, attr: id=$_GET*id, icon: -}
+		urlPath: {url: edit, attr: id=$_GET*id, icon: -}
         
 	- urlTitle: View KCKR
 		urlRules: {kckr, o/admin, edit, siteType: 0,1, userLevel: 1,2}
-		urlPath: {url: add, attr: id=$_GET*id, icon: -}
+		urlPath: {url: view, attr: id=$_GET*id, icon: -}
 		
 # controller o/pic
 	- urlTitle: Add PIC
@@ -65,3 +65,8 @@ content_menu	:
 	- urlTitle: Add Category
 		urlRules: {kckr, o/category, manage, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: add, attr: -, icon: -}
+		
+# controller o/media		
+	- urlTitle: Back to Manage
+		urlRules: {kckr, o/media, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: o/admin/manage, attr: -, icon: -}
