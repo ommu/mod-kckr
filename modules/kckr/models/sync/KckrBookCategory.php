@@ -5,7 +5,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
- * @created date 23 September 2016, 06:53 WIB
+ * @created date 23 September 2016, 07:16 WIB
  * @link http://company.ommu.co
  * @contact (+62)856-299-4114
  *
@@ -20,21 +20,14 @@
  *
  * --------------------------------------------------------------------------------------
  *
- * This is the model class for table "tbbuku".
+ * This is the model class for table "tbjeniskcetak".
  *
- * The followings are the available columns in table 'tbbuku':
- * @property integer $idbuku
- * @property integer $idsurat
- * @property string $judul
- * @property string $tahunterbit
- * @property string $pengarang1
- * @property integer $jml
- * @property string $edisi_cet
- * @property integer $kodejenis
+ * The followings are the available columns in table 'tbjeniskcetak':
+ * @property integer $kodejeniskcetak
+ * @property string $jeniskcetak
  *
  * The followings are the available model relations:
- * @property Tbjeniskcetak $kodejenis0
- * @property Tbkcetak $idsurat0
+ * @property Tbbuku[] $tbbukus
  */
 class KckrBookCategory extends CActiveRecord
 {
@@ -64,7 +57,9 @@ class KckrBookCategory extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'tbbuku';
+		preg_match("/dbname=([^;]+)/i", $this->dbConnection->connectionString, $matches);
+		return $matches[1].'.tbjeniskcetak';
+		//return 'tbjeniskcetak';
 	}
 
 	/**
@@ -75,14 +70,10 @@ class KckrBookCategory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('idsurat, jml, kodejenis', 'numerical', 'integerOnly'=>true),
-			array('judul', 'length', 'max'=>250),
-			array('tahunterbit', 'length', 'max'=>4),
-			array('pengarang1', 'length', 'max'=>150),
-			array('edisi_cet', 'length', 'max'=>15),
+			array('jeniskcetak', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('idbuku, idsurat, judul, tahunterbit, pengarang1, jml, edisi_cet, kodejenis', 'safe', 'on'=>'search'),
+			array('kodejeniskcetak, jeniskcetak', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -94,8 +85,7 @@ class KckrBookCategory extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'kodejenis0_relation' => array(self::BELONGS_TO, 'Tbjeniskcetak', 'kodejenis'),
-			'idsurat0_relation' => array(self::BELONGS_TO, 'Tbkcetak', 'idsurat'),
+			'tbbukus_relation' => array(self::HAS_MANY, 'Tbbuku', 'kodejenis'),
 		);
 	}
 
@@ -105,24 +95,12 @@ class KckrBookCategory extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'idbuku' => Yii::t('attribute', 'Idbuku'),
-			'idsurat' => Yii::t('attribute', 'Idsurat'),
-			'judul' => Yii::t('attribute', 'Judul'),
-			'tahunterbit' => Yii::t('attribute', 'Tahunterbit'),
-			'pengarang1' => Yii::t('attribute', 'Pengarang1'),
-			'jml' => Yii::t('attribute', 'Jml'),
-			'edisi_cet' => Yii::t('attribute', 'Edisi Cet'),
-			'kodejenis' => Yii::t('attribute', 'Kodejenis'),
+			'kodejeniskcetak' => Yii::t('attribute', 'Kodejeniskcetak'),
+			'jeniskcetak' => Yii::t('attribute', 'Jeniskcetak'),
 		);
 		/*
-			'Idbuku' => 'Idbuku',
-			'Idsurat' => 'Idsurat',
-			'Judul' => 'Judul',
-			'Tahunterbit' => 'Tahunterbit',
-			'Pengarang1' => 'Pengarang1',
-			'Jml' => 'Jml',
-			'Edisi Cet' => 'Edisi Cet',
-			'Kodejenis' => 'Kodejenis',
+			'Kodejeniskcetak' => 'Kodejeniskcetak',
+			'Jeniskcetak' => 'Jeniskcetak',
 		
 		*/
 	}
@@ -145,23 +123,11 @@ class KckrBookCategory extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.idbuku',$this->idbuku);
-		if(isset($_GET['idsurat']))
-			$criteria->compare('t.idsurat',$_GET['idsurat']);
-		else
-			$criteria->compare('t.idsurat',$this->idsurat);
-		$criteria->compare('t.judul',strtolower($this->judul),true);
-		$criteria->compare('t.tahunterbit',strtolower($this->tahunterbit),true);
-		$criteria->compare('t.pengarang1',strtolower($this->pengarang1),true);
-		$criteria->compare('t.jml',$this->jml);
-		$criteria->compare('t.edisi_cet',strtolower($this->edisi_cet),true);
-		if(isset($_GET['kodejenis']))
-			$criteria->compare('t.kodejenis',$_GET['kodejenis']);
-		else
-			$criteria->compare('t.kodejenis',$this->kodejenis);
+		$criteria->compare('t.kodejeniskcetak',$this->kodejeniskcetak);
+		$criteria->compare('t.jeniskcetak',strtolower($this->jeniskcetak),true);
 
 		if(!isset($_GET['KckrBookCategory_sort']))
-			$criteria->order = 't.idbuku DESC';
+			$criteria->order = 't.kodejeniskcetak DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -189,14 +155,8 @@ class KckrBookCategory extends CActiveRecord
 				$this->defaultColumns[] = $val;
 			}
 		} else {
-			//$this->defaultColumns[] = 'idbuku';
-			$this->defaultColumns[] = 'idsurat';
-			$this->defaultColumns[] = 'judul';
-			$this->defaultColumns[] = 'tahunterbit';
-			$this->defaultColumns[] = 'pengarang1';
-			$this->defaultColumns[] = 'jml';
-			$this->defaultColumns[] = 'edisi_cet';
-			$this->defaultColumns[] = 'kodejenis';
+			//$this->defaultColumns[] = 'kodejeniskcetak';
+			$this->defaultColumns[] = 'jeniskcetak';
 		}
 
 		return $this->defaultColumns;
@@ -219,13 +179,7 @@ class KckrBookCategory extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = 'idsurat';
-			$this->defaultColumns[] = 'judul';
-			$this->defaultColumns[] = 'tahunterbit';
-			$this->defaultColumns[] = 'pengarang1';
-			$this->defaultColumns[] = 'jml';
-			$this->defaultColumns[] = 'edisi_cet';
-			$this->defaultColumns[] = 'kodejenis';
+			$this->defaultColumns[] = 'jeniskcetak';
 		}
 		parent::afterConstruct();
 	}
@@ -246,72 +200,5 @@ class KckrBookCategory extends CActiveRecord
 			return $model;			
 		}
 	}
-
-	/**
-	 * before validate attributes
-	 */
-	/*
-	protected function beforeValidate() {
-		if(parent::beforeValidate()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
-	
-	/**
-	 * before save attributes
-	 */
-	/*
-	protected function beforeSave() {
-		if(parent::beforeSave()) {
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }
