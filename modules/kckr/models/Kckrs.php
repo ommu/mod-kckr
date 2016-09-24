@@ -104,6 +104,7 @@ class Kckrs extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'view' => array(self::BELONGS_TO, 'ViewKckrs', 'kckr_id'),
 			'media' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id'),
 			'pic' => array(self::BELONGS_TO, 'KckrPic', 'pic_id'),
 			'publisher' => array(self::BELONGS_TO, 'KckrPublisher', 'publisher_id'),
