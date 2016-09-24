@@ -331,14 +331,16 @@ class KckrCategory extends CActiveRecord
 	/**
 	 * Get Category
 	 */
-	public static function getCategory($publish=null, $type=null) 
+	public static function getCategory($publish=null, $category_type=null, $data_type=null) 
 	{		
 		$criteria=new CDbCriteria;
 		if($publish != null)
 			$criteria->compare('t.publish',$publish);
+		if($category_type != null)
+			$criteria->compare('t.category_type',$category_type);
 		$model = self::model()->findAll($criteria);
 
-		if($type == null) {
+		if($data_type == null) {
 			$items = array();
 			if($model != null) {
 				foreach($model as $key => $val)

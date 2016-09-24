@@ -178,6 +178,22 @@ class KckrMedia extends CActiveRecord
 			$criteria->compare('t.kckr_id',$_GET['kckr']);
 		else
 			$criteria->compare('t.kckr_id',$this->kckr_id);
+		if(isset($_GET['type'])) {
+			$parent = $_GET['type'];
+			$categoryFind = KckrCategory::model()->findAll(array(
+				'condition' => 'category_type = :type',
+				'params' => array(
+					':type' => $parent,
+				),
+			));
+			$items = array();
+			if($categoryFind != null) {
+				foreach($categoryFind as $key => $val)
+					$items[] = $val->category_id;
+			}
+			$criteria->addInCondition('t.category_id',$items);
+			
+		}
 		if(isset($_GET['category']))
 			$criteria->compare('t.category_id',$_GET['category']);
 		else
@@ -367,11 +383,18 @@ class KckrMedia extends CActiveRecord
 			if($controller != 'o/admin') {
 				$this->defaultColumns[] = 'kckr_id';
 			}
-			$this->defaultColumns[] = array(
-				'name' => 'category_id',
-				'value' => '$data->category->category_name',
-				'filter'=>KckrCategory::getCategory(),
-			);
+			if(!isset($_GET['category'])) {
+				if(isset($_GET['type']))
+					$parent = $_GET['type'];
+				else
+					$parent = null;
+				$this->defaultColumns[] = array(
+					'name' => 'category_id',
+					'value' => '$data->category->category_name',
+					'filter'=>KckrCategory::getCategory(null, $parent),
+					'type' => 'raw',
+				);				
+			}
 			$this->defaultColumns[] = 'media_title';
 			$this->defaultColumns[] = 'media_desc';
 			$this->defaultColumns[] = 'media_author';
