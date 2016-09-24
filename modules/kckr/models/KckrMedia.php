@@ -77,11 +77,11 @@ class KckrMedia extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('kckr_id, category_id, media_title, media_desc, media_publish_year, media_author, media_total', 'required'),
+			array('kckr_id, category_id, media_title, media_total', 'required'),
 			array('publish, category_id, media_total', 'numerical', 'integerOnly'=>true),
 			array('media_publish_year', 'length', 'max'=>4),
 			array('kckr_id, creation_id, modified_id', 'length', 'max'=>11),
-			array('', 'safe'),
+			array('media_desc, media_publish_year, media_author', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('media_id, publish, kckr_id, category_id, media_title, media_desc, media_publish_year, media_author, media_total, creation_date, creation_id, modified_date, modified_id, 

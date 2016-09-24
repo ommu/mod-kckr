@@ -41,8 +41,8 @@
 			'value'=>$model->pic_id != '' ? $model->pic->pic_name : '-',
 		),
 		array(
-			'name'=>'receipt_type',
-			'value'=>$model->receipt_type != 'pos' ? Yii::t('phrase', 'Pos') : Yii::t('phrase', 'Langsung'),
+			'name'=>'send_type',
+			'value'=>$model->send_type != 'pos' ? Yii::t('phrase', 'Pos') : Yii::t('phrase', 'Langsung'),
 		),
 		array(
 			'name'=>'receipt_date',

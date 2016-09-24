@@ -107,9 +107,93 @@ class BookController extends Controller
 	 */
 	public function actionIndexing() 
 	{
+		$id = $_GET['id'];
 		ini_set('max_execution_time', 0);
-		ob_start();		
-
+		ob_start();
+		
+		$criteria=new CDbCriteria;
+		if(isset($id)) {
+			$criteria->condition = 'idsurat > :surat';
+			$criteria->params = array(':surat'=>$id);
+		}
+		$model = KckrBooks::model()->findAll($criteria);
+		echo '<pre>';
+		//print_r($model);
+		echo '</pre>';
+		//exit();
+		
+		if($model != null) {
+			$i;
+			foreach($model as $key => $val) {
+				$i++;
+				if($val->kodepenerbit != null && $val->kodepenerbit != '') {
+					$kckr=new Kckrs;
+					$kckr->pic_id = 1;				
+					
+					//find publisher
+					$publisherFind = KckrPublisher::model()->find(array(
+						'select' => 'publisher_id, publisher_name',
+						'condition' => 'publisher_name = :publisher',
+						'params' => array(
+							':publisher' => $val->publisher->penerbit,
+						),
+					));
+					if($publisherFind == null) {
+						$publisher=new KckrPublisher;
+						$publisher->publisher_name = $val->publisher->penerbit;
+						$publisher->publisher_area = $val->publisher->kodekota == 1 ? 1 : 0;
+						if($val->publisher->alamat != null && $val->publisher->alamat != '')
+							$publisher->publisher_address = $val->publisher->alamat;
+						if($val->publisher->telepon != null && $val->publisher->telepon != '')
+							$publisher->publisher_phone = $val->publisher->telepon;
+						if($publisher->save())
+							$kckr->publisher_id = $publisher->publisher_id;
+					} else
+						$kckr->publisher_id = $publisherFind->publisher_id;
+					
+					$kckr->letter_number = $val->nosurat != null && $val->nosurat != '' ? $val->nosurat : '-';
+					if(($val->tglkirimpos != null && !in_array($val->tglkirimpos, array('0000-00-00 00:00:00', '1990-01-01 00:00:00'))) || ($val->tglkirimls != null && !in_array($val->tglkirimls, array('0000-00-00 00:00:00', '1990-01-01 00:00:00')))) {
+						if($val->tglkirimpos != null && $val->tglkirimpos != '') {
+							$kckr->send_type = 'pos';
+							$kckr->send_date = date('Y-m-d', strtotime($val->tglkirimpos));
+						} else {
+							$kckr->send_type = 'langsung';
+							$kckr->send_date = date('Y-m-d', strtotime($val->tglkirimls));
+						}
+					}
+					$kckr->receipt_date = date('Y-m-d', strtotime($val->tglterima));
+					if($val->ucapan != null && !in_array($val->ucapan, array('0000-00-00 00:00:00', '1990-01-01 00:00:00')))
+						$kckr->thanks_date = date('Y-m-d', strtotime($val->ucapan));
+					
+					if($kckr->save()) {
+						$books = $val->medias;
+						if(!empty($books)) {
+							foreach($books as $key => $row) {
+								$media=new KckrMedia;
+								$media->kckr_id = $kckr->kckr_id;
+								if($row->kodejenis != null && $row->kodejenis != '')
+									$media->category_id = $row->kodejenis;
+								else
+									$media->category_id = 1;
+								$media->media_title = $row->judul != null && $row->judul != '' ? $row->judul : '-';
+								$media->media_desc = $row->edisi_cet != null && $row->edisi_cet != '' ? $row->edisi_cet : '';
+								$media->media_publish_year = $row->tahunterbit != null && $row->tahunterbit != '' ? $row->tahunterbit : '';
+								$media->media_author = $row->pengarang1 != null && $row->pengarang1 != '' ? $row->pengarang1 : '';
+								$media->media_total = $row->jml;
+								$media->save();							
+							}		
+						}
+						echo '<pre>';
+						//print_r($books);
+						echo '</pre>';
+					}
+				}
+			}
+			echo '<pre>';
+			//print_r($model);
+			echo '</pre>';
+		}
+		
 		ob_end_flush();
 	}
 

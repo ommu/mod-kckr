@@ -77,7 +77,7 @@ class KckrPic extends CActiveRecord
 			array('creation_id, modified_id', 'length', 'max'=>11),
 			array('pic_nip', 'length', 'max'=>32),
 			array('pic_name, pic_position', 'length', 'max'=>64),
-			array('', 'safe'),
+			array('pic_nip, pic_position', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('pic_id, publish, pic_name, pic_nip, pic_position, creation_date, creation_id, modified_date, modified_id, 
@@ -107,7 +107,7 @@ class KckrPic extends CActiveRecord
 		return array(
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'publish' => Yii::t('attribute', 'Publish'),
-			'pic_name' => Yii::t('attribute', 'PIC'),
+			'pic_name' => Yii::t('attribute', 'Name'),
 			'pic_nip' => Yii::t('attribute', 'NIP'),
 			'pic_position' => Yii::t('attribute', 'Position'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),

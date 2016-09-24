@@ -76,10 +76,8 @@ class KckrPublisher extends CActiveRecord
 			array('publisher_area', 'required', 'on'=>'adminAdd, adminEdit'),
 			array('publisher_address, publisher_phone', 'required', 'on'=>'adminEdit'),
 			array('publish, publisher_area', 'numerical', 'integerOnly'=>true),
-			array('publisher_name', 'length', 'max'=>64),
-			array('publisher_phone', 'length', 'max'=>15),
-			array('creation_id, modified_id', 'length', 'max'=>10),
-			array('publisher_address, publisher_phone', 'safe'),
+			array('creation_id, modified_id', 'length', 'max'=>11),
+			array('publisher_area, publisher_address, publisher_phone', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('publisher_id, publish, publisher_name, publisher_area, publisher_address, publisher_phone, creation_date, creation_id, modified_date, modified_id, 

@@ -32,7 +32,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'publisher_name'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'publisher_name',array('maxlength'=>64)); ?>
+				<?php echo $form->textField($model,'publisher_name',array('class'=>'span-8')); ?>
 				<?php echo $form->error($model,'publisher_name'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
@@ -62,7 +62,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'publisher_phone'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'publisher_phone',array('maxlength'=>15)); ?>
+				<?php echo $form->textField($model,'publisher_phone',array('class'=>'span-7')); ?>
 				<?php echo $form->error($model,'publisher_phone'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>

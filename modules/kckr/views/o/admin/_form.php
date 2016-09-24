@@ -106,15 +106,37 @@
 	</div>
 
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'receipt_type'); ?>
+		<?php echo $form->labelEx($model,'send_type'); ?>
 		<div class="desc">
 			<?php 
-			$receipt_type = array(
+			$send_type = array(
 				'pos'=>Yii::t('phrase', 'Pos'),
 				'langsung'=>Yii::t('phrase', 'Langsung'),				
 			);
-			echo $form->dropDownList($model,'receipt_type', $receipt_type, array('prompt'=>Yii::t('phrase', 'Select Type'))); ?>
-			<?php echo $form->error($model,'receipt_type'); ?>
+			echo $form->dropDownList($model,'send_type', $send_type, array('prompt'=>Yii::t('phrase', 'Select Type'))); ?>
+			<?php echo $form->error($model,'send_type'); ?>
+			<?php /*<div class="small-px silent"></div>*/?>
+		</div>
+	</div>
+
+	<div class="clearfix">
+		<?php echo $form->labelEx($model,'send_date'); ?>
+		<div class="desc">
+			<?php
+			!$model->isNewRecord ? ($model->send_date != '0000-00-00' ? $model->send_date = date('d-m-Y', strtotime($model->send_date)) : '') : '';
+			//echo $form->textField($model,'send_date');
+			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+				'model'=>$model,
+				'attribute'=>'send_date',
+				//'mode'=>'datetime',
+				'options'=>array(
+					'dateFormat' => 'dd-mm-yy',
+				),
+				'htmlOptions'=>array(
+					'class' => 'span-4',
+				 ),
+			)); ?>
+			<?php echo $form->error($model,'send_date'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
