@@ -86,8 +86,8 @@ class KckrLocations extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'tbpenerbits_relation' => array(self::HAS_MANY, 'Tbpenerbit', 'kodekota'),
-			'tbperekams_relation' => array(self::HAS_MANY, 'Tbperekam', 'kodekota'),
+			'book_publisher' => array(self::HAS_MANY, 'KckrBookPublisher', 'kodekota'),
+			'record_publisher' => array(self::HAS_MANY, 'KckrRecordPublisher', 'kodekota'),
 		);
 	}
 

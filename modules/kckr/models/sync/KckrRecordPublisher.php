@@ -91,8 +91,8 @@ class KckrRecordPublisher extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'tbkrekams_relation' => array(self::HAS_MANY, 'Tbkrekam', 'kodeperekam'),
-			'kodekota0_relation' => array(self::BELONGS_TO, 'Tbkota', 'kodekota'),
+			'kckrs' => array(self::HAS_MANY, 'KckrRecords', 'kodeperekam'),
+			'location' => array(self::BELONGS_TO, 'KckrLocations', 'kodekota'),
 		);
 	}
 
