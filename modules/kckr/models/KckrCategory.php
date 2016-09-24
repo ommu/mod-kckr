@@ -44,6 +44,7 @@ class KckrCategory extends CActiveRecord
 	// Variable Search
 	public $creation_search;
 	public $modified_search;
+	public $media_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -81,7 +82,7 @@ class KckrCategory extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('category_id, publish, category_type, category_name, category_desc, creation_date, creation_id, modified_date, modified_id, 
-				creation_search, modified_search', 'safe', 'on'=>'search'),
+				creation_search, modified_search, media_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -118,6 +119,7 @@ class KckrCategory extends CActiveRecord
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
+			'media_search' => Yii::t('attribute', 'Karya'),
 		);
 		/*
 			'Category' => 'Category',
@@ -180,6 +182,9 @@ class KckrCategory extends CActiveRecord
 		
 		// Custom Search
 		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
 			'creation' => array(
 				'alias'=>'creation',
 				'select'=>'displayname'
@@ -191,6 +196,7 @@ class KckrCategory extends CActiveRecord
 		);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('view.medias',strtolower($this->media_search), true);
 
 		if(!isset($_GET['KckrCategory_sort']))
 			$criteria->order = 't.category_id DESC';
@@ -263,6 +269,14 @@ class KckrCategory extends CActiveRecord
 			);
 			$this->defaultColumns[] = 'category_name';
 			$this->defaultColumns[] = 'category_desc';
+			$this->defaultColumns[] = array(
+				'name' => 'media_search',
+				'value' => 'CHtml::link($data->view->medias, Yii::app()->controller->createUrl("o/media/manage",array(\'category\'=>$data->category_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',

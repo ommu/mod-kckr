@@ -44,6 +44,8 @@ class KckrPublisher extends CActiveRecord
 	// Variable Search
 	public $creation_search;
 	public $modified_search;
+	public $kckr_search;
+	public $media_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -81,7 +83,7 @@ class KckrPublisher extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('publisher_id, publish, publisher_name, publisher_area, publisher_address, publisher_phone, creation_date, creation_id, modified_date, modified_id, 
-				creation_search, modified_search', 'safe', 'on'=>'search'),
+				creation_search, modified_search, kckr_search, media_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -118,6 +120,8 @@ class KckrPublisher extends CActiveRecord
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
+			'kckr_search' => Yii::t('attribute', 'KCKR'),
+			'media_search' => Yii::t('attribute', 'Karya'),
 		);
 		/*
 			'Publisher' => 'Publisher',
@@ -182,6 +186,9 @@ class KckrPublisher extends CActiveRecord
 		
 		// Custom Search
 		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
 			'creation' => array(
 				'alias'=>'creation',
 				'select'=>'displayname'
@@ -193,6 +200,8 @@ class KckrPublisher extends CActiveRecord
 		);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('view.kckrs',strtolower($this->kckr_search), true);
+		$criteria->compare('view.medias',strtolower($this->media_search), true);
 
 		if(!isset($_GET['KckrPublisher_sort']))
 			$criteria->order = 't.publisher_id DESC';
@@ -268,34 +277,20 @@ class KckrPublisher extends CActiveRecord
 			$this->defaultColumns[] = 'publisher_address';
 			$this->defaultColumns[] = 'publisher_phone';
 			$this->defaultColumns[] = array(
-				'name' => 'creation_search',
-				'value' => '$data->creation->displayname',
-			);
-			$this->defaultColumns[] = array(
-				'name' => 'creation_date',
-				'value' => 'Utility::dateFormat($data->creation_date)',
+				'name' => 'kckr_search',
+				'value' => 'CHtml::link($data->view->kckrs, Yii::app()->controller->createUrl("o/admin/manage",array(\'publisher\'=>$data->publisher_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'creation_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
-					'htmlOptions' => array(
-						'id' => 'creation_date_filter',
-					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
-					),
-				), true),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'media_search',
+				'value' => 'CHtml::link($data->view->medias, Yii::app()->controller->createUrl("o/media/manage",array(\'publisher\'=>$data->publisher_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
 			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(

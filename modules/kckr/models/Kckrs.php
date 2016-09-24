@@ -54,6 +54,7 @@ class Kckrs extends CActiveRecord
 	public $publisher_search;
 	public $creation_search;
 	public $modified_search;
+	public $media_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -92,7 +93,7 @@ class Kckrs extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('kckr_id, publish, pic_id, publisher_id, letter_number, send_type, send_date, receipt_date, thanks_date, photos, creation_date, creation_id, modified_date, modified_id, 
-				pic_search, publisher_search, creation_search, modified_search', 'safe', 'on'=>'search'),
+				pic_search, publisher_search, creation_search, modified_search, media_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -138,6 +139,7 @@ class Kckrs extends CActiveRecord
 			'photo_old_input' => Yii::t('attribute', 'Photo Old'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
+			'media_search' => Yii::t('attribute', 'Karya'),
 		);
 		/*
 			'Kckr' => 'Kckr',
@@ -217,6 +219,9 @@ class Kckrs extends CActiveRecord
 		
 		// Custom Search
 		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
 			'pic' => array(
 				'alias'=>'pic',
 				'select'=>'pic_name'
@@ -238,6 +243,7 @@ class Kckrs extends CActiveRecord
 		$criteria->compare('publisher.publisher_name',strtolower($this->publisher_search), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('view.medias',strtolower($this->media_search), true);
 
 		if(!isset($_GET['Kckrs_sort']))
 			$criteria->order = 't.kckr_id DESC';
@@ -372,6 +378,14 @@ class Kckrs extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'media_search',
+				'value' => 'CHtml::link($data->view->medias, Yii::app()->controller->createUrl("o/media/manage",array(\'kckr\'=>$data->kckr_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
 			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(

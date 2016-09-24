@@ -191,8 +191,7 @@ class KckrMedia extends CActiveRecord
 				foreach($categoryFind as $key => $val)
 					$items[] = $val->category_id;
 			}
-			$criteria->addInCondition('t.category_id',$items);
-			
+			$criteria->addInCondition('t.category_id',$items);			
 		}
 		if(isset($_GET['category']))
 			$criteria->compare('t.category_id',$_GET['category']);
@@ -230,6 +229,9 @@ class KckrMedia extends CActiveRecord
 				'select'=>'displayname'
 			),
 		);
+		if(isset($_GET['publisher']))
+			$criteria->compare('kckr.publisher_id',$_GET['publisher']);
+		
 		//$criteria->compare('kckr.displayname',strtolower($this->kckr_search), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
