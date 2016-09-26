@@ -402,7 +402,7 @@ class KckrMedia extends CActiveRecord
 			$this->defaultColumns[] = 'media_author';
 			$this->defaultColumns[] = array(
 				'name' => 'media_publish_year',
-				'value' => '$data->media_publish_year',
+				'value' => '$data->media_publish_year != \'0000\' ? $data->media_publish_year : \'-\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

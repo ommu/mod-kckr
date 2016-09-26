@@ -10,6 +10,7 @@
  * TOC :
  *	Index
  *	Manage
+ *	Import
  *	Add
  *	Edit
  *	View
@@ -86,7 +87,7 @@ class MediaController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','import','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -136,7 +137,82 @@ class MediaController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionImport() 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		$path = 'public/archive/import';
+
+		// Generate path directory
+		if(!file_exists($path)) {
+			@mkdir($path, 0755, true);
+
+			// Add File in Article Folder (index.php)
+			$newFile = $path.'/index.php';
+			$FileHandle = fopen($newFile, 'w');
+		} else
+			@chmod($path, 0755, true);
+		
+		$error = array();
+		
+		$kckrID = $_GET['id'];
+		if(isset($_GET['type']) && $_GET['type'] == 'update')
+			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$kckrID));
+		else
+			$url = Yii::app()->controller->createUrl('manage');
+		
+		if(isset($_FILES['importExcel'])) {
+			$fileName = CUploadedFile::getInstanceByName('importExcel');
+			if(in_array(strtolower($fileName->extensionName), array('xls','xlsx'))) {
+				$file = time().'_archive_'.$fileName->name;
+				if($fileName->saveAs($path.'/'.$file)) {
+					Yii::import('ext.excel_reader.OExcelReader');
+					$xls = new OExcelReader($path.'/'.$file);
+					
+					for ($row = 2; $row <= $xls->sheets[0]['numRows']; $row++) {
+						$category_id			= trim($xls->sheets[0]['cells'][$row][1]);
+						$media_title			= trim($xls->sheets[0]['cells'][$row][2]);
+						$media_desc				= trim($xls->sheets[0]['cells'][$row][3]);
+						$media_publish_year		= trim($xls->sheets[0]['cells'][$row][4]);
+						$media_author			= trim($xls->sheets[0]['cells'][$row][5]);
+						$media_total			= trim($xls->sheets[0]['cells'][$row][6]);
+						
+						$model=new KckrMedia;
+						$model->kckr_id = $kckrID;
+						$model->category_id = $category_id != '' ? $category_id : 1;
+						$model->media_title = $media_title;
+						$model->media_desc = $media_desc;
+						$model->media_publish_year = $media_publish_year;
+						$model->media_author = $media_author;
+						$model->media_total = $media_total;
+						$model->save();						
+					}
+					
+					Yii::app()->user->setFlash('success', 'Import Daftar Karya Success.');
+					$this->redirect($url);
+					
+				} else
+					Yii::app()->user->setFlash('errorFile', 'Gagal menyimpan file.');
+			} else
+				Yii::app()->user->setFlash('errorFile', 'Hanya file .xls dan .xlsx yang dibolehkan.');
+		}
+
+		ob_end_flush();
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = $url;
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = 'Import Archive';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_import');
+	}
 	
 	/**
 	 * Creates a new model.
