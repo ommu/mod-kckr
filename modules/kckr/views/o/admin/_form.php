@@ -145,7 +145,7 @@
 		<?php echo $form->labelEx($model,'receipt_date'); ?>
 		<div class="desc">
 			<?php
-			!$model->isNewRecord ? ($model->receipt_date != '0000-00-00' ? $model->receipt_date = date('d-m-Y', strtotime($model->receipt_date)) : '') : '';
+			!$model->isNewRecord ? (!in_array($model->receipt_date, array('0000-00-00','1970-01-01')) ? $model->receipt_date = date('d-m-Y', strtotime($model->receipt_date)) : '') : '';
 			//echo $form->textField($model,'receipt_date');
 			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
 				'model'=>$model,
@@ -192,7 +192,7 @@
 			<?php echo $form->labelEx($model,'thanks_date'); ?>
 			<div class="desc">
 				<?php
-				!$model->isNewRecord ? ($model->thanks_date != '0000-00-00' ? $model->thanks_date = date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
+				!$model->isNewRecord ? (!in_array($model->receipt_date, array('0000-00-00','1970-01-01')) ? $model->thanks_date = date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
 				//echo $form->textField($model,'thanks_date');
 				$this->widget('zii.widgets.jui.CJuiDatePicker',array(
 					'model'=>$model,
