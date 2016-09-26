@@ -146,7 +146,7 @@ class MediaController extends Controller
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		$path = 'public/archive/import';
+		$path = 'public/kckr/import';
 
 		// Generate path directory
 		if(!file_exists($path)) {
