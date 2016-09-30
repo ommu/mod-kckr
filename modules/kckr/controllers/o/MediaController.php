@@ -190,7 +190,7 @@ class MediaController extends Controller
 						$model->media_publish_year = $media_publish_year;
 						$model->media_author = $media_author;
 						$model->media_total = $media_total;
-						$model->save();						
+						$model->save();
 					}
 					
 					Yii::app()->user->setFlash('success', 'Import Daftar Karya Success.');
