@@ -74,14 +74,14 @@ class KckrPic extends CActiveRecord
 		return array(
 			array('pic_name', 'required'),
 			array('pic_nip, pic_position', 'required', 'on'=>'adminAdd, adminEdit'),
-			array('publish', 'numerical', 'integerOnly'=>true),
+			array('publish, default', 'numerical', 'integerOnly'=>true),
 			array('creation_id, modified_id', 'length', 'max'=>11),
 			array('pic_nip', 'length', 'max'=>32),
 			array('pic_name, pic_position', 'length', 'max'=>64),
 			array('pic_nip, pic_position', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('pic_id, publish, pic_name, pic_nip, pic_position, creation_date, creation_id, modified_date, modified_id, 
+			array('pic_id, publish, default, pic_name, pic_nip, pic_position, creation_date, creation_id, modified_date, modified_id, 
 				creation_search, modified_search, kckr_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -109,6 +109,7 @@ class KckrPic extends CActiveRecord
 		return array(
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'publish' => Yii::t('attribute', 'Publish'),
+			'default' => Yii::t('attribute', 'Default'),
 			'pic_name' => Yii::t('attribute', 'Name'),
 			'pic_nip' => Yii::t('attribute', 'NIP'),
 			'pic_position' => Yii::t('attribute', 'Position'),
@@ -163,6 +164,7 @@ class KckrPic extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1));
 			$criteria->compare('t.publish',$this->publish);
 		}
+		$criteria->compare('t.default',$this->default);
 		$criteria->compare('t.pic_name',strtolower($this->pic_name),true);
 		$criteria->compare('t.pic_nip',strtolower($this->pic_nip),true);
 		$criteria->compare('t.pic_position',strtolower($this->pic_position),true);
@@ -228,6 +230,7 @@ class KckrPic extends CActiveRecord
 		} else {
 			//$this->defaultColumns[] = 'pic_id';
 			$this->defaultColumns[] = 'publish';
+			$this->defaultColumns[] = 'default';
 			$this->defaultColumns[] = 'pic_name';
 			$this->defaultColumns[] = 'pic_nip';
 			$this->defaultColumns[] = 'pic_position';
@@ -302,6 +305,18 @@ class KckrPic extends CActiveRecord
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
 					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->pic_id)), $data->publish, 1)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
+					),
+					'type' => 'raw',
+				);
+				$this->defaultColumns[] = array(
+					'name' => 'default',
+					'value' => '$data->default == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
