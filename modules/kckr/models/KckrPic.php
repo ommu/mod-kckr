@@ -303,8 +303,8 @@ class KckrPic extends CActiveRecord
 			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->pic_id)), $data->publish, 1)',
+					'name' => 'default',
+					'value' => '$data->default == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
@@ -315,8 +315,8 @@ class KckrPic extends CActiveRecord
 					'type' => 'raw',
 				);
 				$this->defaultColumns[] = array(
-					'name' => 'default',
-					'value' => '$data->default == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->pic_id)), $data->publish, 1)',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),

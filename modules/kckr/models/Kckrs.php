@@ -401,6 +401,14 @@ class Kckrs extends CActiveRecord
 					'type' => 'raw',
 				);
 			}
+			$this->defaultColumns[] = array(
+				'header' => 'Print',
+				'value' => '!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? \'-\' : CHtml::link(\'Print\', Yii::app()->controller->createUrl("print",array(\'kckr\'=>$data->kckr_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
 		}
 		parent::afterConstruct();
 	}
