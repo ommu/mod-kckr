@@ -142,10 +142,30 @@ class AdminController extends Controller
 	/**
 	 * Lists all models.
 	 */
-	public function actionPrint($id) 
+	public function actionPrint($kckr) 
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
+		
+		$model=$this->loadModel($kckr);
+		$search = array(
+			'{$baseURL}', 
+			'{$displayname}', '{$test_number}', '{$major}',
+			'{$batch_day}', '{$batch_data}','{$batch_month}', '{$batch_year}',
+			'{$session_date}', '{$session_time_start}', '{$session_time_finish}');
+		$replace = array(
+			Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl,
+			$val->user->displayname, strtoupper($val->eventUser->test_number), $val->user->major,
+			Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
+			$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
+		$message = str_ireplace($search, $replace, $message);
+		
+		$letter_template = 'document_letter';
+		$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+		$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);	
+		
+		$letter = new KckrUtility();
+		echo $letter->getPdf($model, true, $letter_template, $letter_path, $letter_documentName);
 		
 		ob_end_flush();	
 	}

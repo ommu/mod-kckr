@@ -37,7 +37,7 @@ class KckrUtility
 			// initialisation de HTML2PDF
 			if($page == null)
 				$page = 'P';
-			$html2pdf = new HTML2PDF($page,'A4','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
+			$html2pdf = new HTML2PDF($page,'Legal','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
 
 			// affichage de la page en entier
 			$html2pdf->pdf->SetDisplayMode('fullpage');
