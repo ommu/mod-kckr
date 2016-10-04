@@ -24,6 +24,7 @@ class KckrModule extends CWebModule
 			'kckr.models.*',
 			'kckr.models.sync.*',
 			'kckr.components.*',
+			'kckr.components.extensions.*',
 		));
 	}
 
