@@ -10,6 +10,7 @@
  * TOC :
  *	Index
  *	Manage
+ *	Print
  *	Add
  *	Edit
  *	View
@@ -86,7 +87,7 @@ class AdminController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','print','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level == 1)',
 			),
@@ -136,7 +137,18 @@ class AdminController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}
+	
+	/**
+	 * Lists all models.
+	 */
+	public function actionPrint($id) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		ob_end_flush();	
+	}
 	
 	/**
 	 * Creates a new model.
