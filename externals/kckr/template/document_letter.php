@@ -94,7 +94,7 @@
 	</div>
 		
 	<div class="copyright">
-		Generate by <a href="http://company.ommu.co" title="Ommu Platform">Ommu Platform</a> webssite: http://company.ommu.co
+		Generate by <a href="http://company.ommu.co" title="Ommu Platform">Ommu Platform</a> website: http://company.ommu.co
 	</div>	
 </div>
 </page>

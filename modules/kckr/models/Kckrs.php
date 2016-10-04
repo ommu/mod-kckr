@@ -106,11 +106,13 @@ class Kckrs extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'view' => array(self::BELONGS_TO, 'ViewKckrs', 'kckr_id'),
-			'media' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id'),
 			'pic' => array(self::BELONGS_TO, 'KckrPic', 'pic_id'),
 			'publisher' => array(self::BELONGS_TO, 'KckrPublisher', 'publisher_id'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'medias' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id'),
+			'media_publish' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id', 'on'=>'media_publish.publish = 1'),
+			'media_unpublish' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id', 'on'=>'media_unpublish.publish = 0'),
 		);
 	}
 

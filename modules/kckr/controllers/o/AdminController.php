@@ -149,12 +149,24 @@ class AdminController extends Controller
 		
 		$model=$this->loadModel($kckr);
 		
+		/*		
 		$letter_template = 'document_letter';
 		$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
-		$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);	
+		$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
 		
-		$letter = new KckrUtility();
-		echo $letter->getPdf($model, true, $letter_template, $letter_path, $letter_documentName);
+		$letters = new KckrUtility();
+		echo $letters->getPdf($model, true, $letter_template, $letter_path, $letter_documentName);
+		*/
+		
+		$attachment = $model->media_publish;
+		if(!empty($attachment)) {
+			$attachment_template = 'document_lampiran';
+			$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+			$attachment_documentName = Utility::getUrlTitle('lampiran_'.$model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
+			
+			$attachments = new KckrUtility();
+			echo $attachments->getPdf($attachment, true, $attachment_template, $attachment_path, $attachment_documentName, 'L');
+		}
 		
 		ob_end_flush();	
 	}
