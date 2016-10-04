@@ -148,17 +148,6 @@ class AdminController extends Controller
 		ob_start();
 		
 		$model=$this->loadModel($kckr);
-		$search = array(
-			'{$baseURL}', 
-			'{$displayname}', '{$test_number}', '{$major}',
-			'{$batch_day}', '{$batch_data}','{$batch_month}', '{$batch_year}',
-			'{$session_date}', '{$session_time_start}', '{$session_time_finish}');
-		$replace = array(
-			Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl,
-			$val->user->displayname, strtoupper($val->eventUser->test_number), $val->user->major,
-			Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
-			$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
-		$message = str_ireplace($search, $replace, $message);
 		
 		$letter_template = 'document_letter';
 		$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
