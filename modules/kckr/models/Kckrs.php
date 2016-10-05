@@ -32,6 +32,8 @@
  * @property string $send_date
  * @property string $receipt_date
  * @property string $thanks_date
+ * @property string $thanks_document
+ * @property string $thanks_user_id
  * @property string $photos
  * @property string $creation_date
  * @property string $creation_id
@@ -48,6 +50,7 @@ class Kckrs extends CActiveRecord
 {
 	public $defaultColumns = array();
 	public $photo_old_input;
+	public $regenerate_input;
 	
 	// Variable Search
 	public $pic_search;
@@ -84,15 +87,15 @@ class Kckrs extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('letter_number', 'required'),
-			array('publish, pic_id', 'numerical', 'integerOnly'=>true),
-			array('publisher_id, creation_id, modified_id', 'length', 'max'=>11),
+			array('publish, pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('letter_number', 'length', 'max'=>64),
 			array('pic_id, publisher_id, thanks_date, photos, 
 				send_type, send_date, receipt_date,
-				photo_old_input', 'safe'),
+				photo_old_input, regenerate_input', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('kckr_id, publish, pic_id, publisher_id, letter_number, send_type, send_date, receipt_date, thanks_date, photos, creation_date, creation_id, modified_date, modified_id, 
+			array('kckr_id, publish, pic_id, publisher_id, letter_number, send_type, send_date, receipt_date, thanks_date, thanks_document, thanks_user_id, photos, creation_date, creation_id, modified_date, modified_id, 
 				pic_search, publisher_search, creation_search, modified_search, media_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -131,6 +134,8 @@ class Kckrs extends CActiveRecord
 			'send_date' => Yii::t('attribute', 'Send Date'),
 			'receipt_date' => Yii::t('attribute', 'Receipt Date'),
 			'thanks_date' => Yii::t('attribute', 'Thanks Date'),
+			'thanks_document' => Yii::t('attribute', 'Thanks Document'),
+			'thanks_user_id' => Yii::t('attribute', 'Thanks User'),
 			'photos' => Yii::t('attribute', 'Photo'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
@@ -139,6 +144,7 @@ class Kckrs extends CActiveRecord
 			'pic_search' => Yii::t('attribute', 'Pic'),
 			'publisher_search' => Yii::t('attribute', 'Publisher'),
 			'photo_old_input' => Yii::t('attribute', 'Photo Old'),
+			'regenerate_input' => Yii::t('attribute', 'Regenerate Document'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 			'media_search' => Yii::t('attribute', 'Karya'),
@@ -205,6 +211,11 @@ class Kckrs extends CActiveRecord
 			$criteria->compare('date(t.receipt_date)',date('Y-m-d', strtotime($this->receipt_date)));
 		if($this->thanks_date != null && !in_array($this->thanks_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.thanks_date)',date('Y-m-d', strtotime($this->thanks_date)));
+		$criteria->compare('t.thanks_document',strtolower($this->thanks_document),true);
+		if(isset($_GET['thanks']))
+			$criteria->compare('t.thanks_user_id',$_GET['thanks']);
+		else
+			$criteria->compare('t.thanks_user_id',$this->thanks_user_id);
 		$criteria->compare('t.photos',strtolower($this->photos),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
@@ -285,6 +296,8 @@ class Kckrs extends CActiveRecord
 			$this->defaultColumns[] = 'send_date';
 			$this->defaultColumns[] = 'receipt_date';
 			$this->defaultColumns[] = 'thanks_date';
+			$this->defaultColumns[] = 'thanks_document';
+			$this->defaultColumns[] = 'thanks_user_id';
 			$this->defaultColumns[] = 'photos';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
@@ -405,7 +418,7 @@ class Kckrs extends CActiveRecord
 			}
 			$this->defaultColumns[] = array(
 				'header' => 'Print',
-				'value' => '!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? \'-\' : CHtml::link(\'Print\', Yii::app()->controller->createUrl("print",array(\'kckr\'=>$data->kckr_id)))',
+				'value' =>  'CHtml::link(!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : \'Print\', Yii::app()->controller->createUrl("print",array(\'id\'=>$data->kckr_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
