@@ -11,6 +11,7 @@
  *	Index
  *	Manage
  *	Print
+ *	Generate
  *	Add
  *	Edit
  *	View
@@ -87,7 +88,7 @@ class AdminController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','print','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','print','generate','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level == 1)',
 			),
@@ -201,6 +202,53 @@ class AdminController extends Controller
 				'condition'=>$condition,
 			));			
 		}
+	}
+	
+	/**
+	 * Lists all models.
+	 */
+	public function actionGenerate() 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		$criteria=new CDbCriteria;
+		$criteria->addNotInCondition('thanks_date', array('0000-00-00', '1970-01-01'));
+		$model = Kckrs::model()->findAll($criteria);
+		
+		if($model != null) {
+			foreach($model as $key => $item) {			
+				$documentArray = array();
+				
+				$letter_template = 'document_letter';
+				$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+				$letter_documentName = Utility::getUrlTitle($item->kckr_id.' '.$item->publisher->publisher_name.' '.$item->receipt_date);
+				
+				$letters = new KckrUtility();
+				$fileName = $letters->getPdf($item, false, $letter_template, $letter_path, $letter_documentName, null, false);
+				array_push($documentArray, $fileName);
+				
+				$attachment = $item->media_publish;
+				if(!empty($attachment)) {
+					$attachment_template = 'document_lampiran';
+					$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+					$attachment_documentName = Utility::getUrlTitle($item->kckr_id.' lampiran '.$item->publisher->publisher_name.' '.$item->receipt_date);
+					
+					$attachments = new KckrUtility();
+					$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
+					array_push($documentArray, $fileName);
+				}
+				
+				Kckrs::model()->updateByPk($item->kckr_id, array(
+					'thanks_document'=>serialize($documentArray),
+					'thanks_user_id'=>Yii::app()->user->id,
+				));
+			}
+		}
+		
+		echo Yii::t('phrase', 'Generated document print success.');
+
+		ob_end_flush();
 	}
 	
 	/**
