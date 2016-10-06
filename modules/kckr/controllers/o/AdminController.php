@@ -175,10 +175,9 @@ class AdminController extends Controller
 				$attachments = new KckrUtility();
 				$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
 				array_push($documentArray, $fileName);
-			}			
+			}
 			
-			if($condition == false)
-				$model->thanks_date = date('Y-m-d');
+			$model->thanks_date = date('Y-m-d');
 			$model->thanks_document = serialize($documentArray);
 			$model->thanks_user_id = Yii::app()->user->id;
 				
