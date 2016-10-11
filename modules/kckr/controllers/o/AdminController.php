@@ -159,41 +159,44 @@ class AdminController extends Controller
 			$model->attributes=$_POST['Kckrs'];
 			$model->scenario = 'generateDocument';
 			
-			if($model->save() && ($condition == false || ($condition == true && $model->regenerate_input == 1))) {
+			if($model->save()) {
 				ini_set('max_execution_time', 0);
 				ob_start();
-			
-				$documentArray = array();
 				
-				$letter_template = 'document_letter';
-				$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
-				$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
-				
-				$letters = new KckrUtility();
-				$fileName = $letters->getPdf($model, false, $letter_template, $letter_path, $letter_documentName, null, false);
-				array_push($documentArray, $fileName);
-				
-				$attachment = $model->media_publish;
-				if(!empty($attachment)) {
-					$attachment_template = 'document_lampiran';
-					$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
-					$attachment_documentName = Utility::getUrlTitle($model->kckr_id.' lampiran '.$model->publisher->publisher_name.' '.$model->receipt_date);
+				if($condition == false || ($condition == true && $model->regenerate_input == 1)) {
+					$documentArray = array();
 					
-					$attachments = new KckrUtility();
-					$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
+					$letter_template = 'document_letter';
+					$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+					$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
+					
+					$letters = new KckrUtility();
+					$fileName = $letters->getPdf($model, false, $letter_template, $letter_path, $letter_documentName, null, false);
 					array_push($documentArray, $fileName);
-				}
-				if(Kckrs::model()->updateByPk($model->kckr_id, array(
-					'thanks_document'=>serialize($documentArray),
-					'thanks_user_id'=>Yii::app()->user->id,
-				))) {
-					$letter_path = 'public/kckr/document_pdf';		
-					$data = unserialize($thanks_document);
 					
-					if(!empty($data)) {
-						foreach($data as $key => $val) {
-							if(file_exists($letter_path.'/'.$val))
-								rename($letter_path.'/'.$val, 'public/kckr/verwijderen/'.$model->kckr_id.'_'.$val);
+					$attachment = $model->media_publish;
+					if(!empty($attachment)) {
+						$attachment_template = 'document_lampiran';
+						$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+						$attachment_documentName = Utility::getUrlTitle($model->kckr_id.' lampiran '.$model->publisher->publisher_name.' '.$model->receipt_date);
+						
+						$attachments = new KckrUtility();
+						$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
+						array_push($documentArray, $fileName);
+					}
+					
+					if(Kckrs::model()->updateByPk($model->kckr_id, array(
+						'thanks_document'=>serialize($documentArray),
+						'thanks_user_id'=>Yii::app()->user->id,
+					))) {
+						$letter_path = 'public/kckr/document_pdf';		
+						$data = unserialize($thanks_document);
+						
+						if(!empty($data)) {
+							foreach($data as $key => $val) {
+								if(file_exists($letter_path.'/'.$val))
+									rename($letter_path.'/'.$val, 'public/kckr/verwijderen/'.$model->kckr_id.'_'.$val);
+							}
 						}
 					}
 				}
@@ -231,7 +234,11 @@ class AdminController extends Controller
 		$model = Kckrs::model()->findAll($criteria);
 		
 		if($model != null) {
-			foreach($model as $key => $item) {			
+			foreach($model as $key => $item) {		
+				if($item->thanks_document != '') {
+					$thanks_document = $item->thanks_document;
+				}
+				
 				$documentArray = array();
 				
 				$letter_template = 'document_letter';
@@ -253,10 +260,20 @@ class AdminController extends Controller
 					array_push($documentArray, $fileName);
 				}
 				
-				Kckrs::model()->updateByPk($item->kckr_id, array(
+				if(Kckrs::model()->updateByPk($item->kckr_id, array(
 					'thanks_document'=>serialize($documentArray),
 					'thanks_user_id'=>Yii::app()->user->id,
-				));
+				))) {
+					$letter_path = 'public/kckr/document_pdf';		
+					$data = unserialize($thanks_document);
+					
+					if(!empty($data)) {
+						foreach($data as $key => $val) {
+							if(file_exists($letter_path.'/'.$val))
+								rename($letter_path.'/'.$val, 'public/kckr/verwijderen/'.$item->kckr_id.'_'.$val);
+						}
+					}
+				}
 			}
 		}
 		
