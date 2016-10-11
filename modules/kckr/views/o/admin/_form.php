@@ -123,7 +123,7 @@
 		<?php echo $form->labelEx($model,'send_date'); ?>
 		<div class="desc">
 			<?php
-			!$model->isNewRecord ? ($model->send_date != '0000-00-00' ? $model->send_date = date('d-m-Y', strtotime($model->send_date)) : '') : '';
+			$model->send_date = !$model->isNewRecord ? (!in_array($model->send_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->send_date)) : '') : '';
 			//echo $form->textField($model,'send_date');
 			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
 				'model'=>$model,
@@ -145,7 +145,7 @@
 		<?php echo $form->labelEx($model,'receipt_date'); ?>
 		<div class="desc">
 			<?php
-			!$model->isNewRecord ? (!in_array($model->receipt_date, array('0000-00-00','1970-01-01')) ? $model->receipt_date = date('d-m-Y', strtotime($model->receipt_date)) : '') : '';
+			$model->receipt_date = !$model->isNewRecord ? (!in_array($model->receipt_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->receipt_date)) : '') : '';
 			//echo $form->textField($model,'receipt_date');
 			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
 				'model'=>$model,
@@ -186,30 +186,6 @@
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
-
-	<?php if(!$model->isNewRecord) {?>
-		<div class="clearfix">
-			<?php echo $form->labelEx($model,'thanks_date'); ?>
-			<div class="desc">
-				<?php
-				!$model->isNewRecord ? (!in_array($model->receipt_date, array('0000-00-00','1970-01-01')) ? $model->thanks_date = date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
-				//echo $form->textField($model,'thanks_date');
-				$this->widget('zii.widgets.jui.CJuiDatePicker',array(
-					'model'=>$model,
-					'attribute'=>'thanks_date',
-					//'mode'=>'datetime',
-					'options'=>array(
-						'dateFormat' => 'dd-mm-yy',
-					),
-					'htmlOptions'=>array(
-						'class' => 'span-4',
-					 ),
-				)); ?>
-				<?php echo $form->error($model,'thanks_date'); ?>
-				<?php /*<div class="small-px silent"></div>*/?>
-			</div>
-		</div>
-	<?php }?>
 
 	<div class="clearfix">
 		<?php echo $form->labelEx($model,'publish'); ?>

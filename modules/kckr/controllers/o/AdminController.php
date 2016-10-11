@@ -151,57 +151,71 @@ class AdminController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 		
-		$model->attributes=$_POST['Kckrs'];
+		if(!$model->getErrors()) {
+			$thanks_document = $model->thanks_document;
+		}
 		
-		if(Yii::app()->request->isPostRequest && ($condition == false || ($condition == true && $model->regenerate_input == 1))) {
-			ini_set('max_execution_time', 0);
-			ob_start();
+		if(isset($_POST['Kckrs'])) {
+			$model->attributes=$_POST['Kckrs'];
+			$model->scenario = 'generateDocument';
 			
-			$documentArray = array();
+			if($model->save() && ($condition == false || ($condition == true && $model->regenerate_input == 1))) {
+				ini_set('max_execution_time', 0);
+				ob_start();
 			
-			$letter_template = 'document_letter';
-			$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
-			$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
-			
-			$letters = new KckrUtility();
-			$fileName = $letters->getPdf($model, false, $letter_template, $letter_path, $letter_documentName, null, false);
-			array_push($documentArray, $fileName);
-			
-			$attachment = $model->media_publish;
-			if(!empty($attachment)) {
-				$attachment_template = 'document_lampiran';
-				$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
-				$attachment_documentName = Utility::getUrlTitle($model->kckr_id.' lampiran '.$model->publisher->publisher_name.' '.$model->receipt_date);
+				$documentArray = array();
 				
-				$attachments = new KckrUtility();
-				$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
+				$letter_template = 'document_letter';
+				$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+				$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
+				
+				$letters = new KckrUtility();
+				$fileName = $letters->getPdf($model, false, $letter_template, $letter_path, $letter_documentName, null, false);
 				array_push($documentArray, $fileName);
-			}
-			
-			$model->thanks_date = date('Y-m-d');
-			$model->thanks_document = serialize($documentArray);
-			$model->thanks_user_id = Yii::app()->user->id;
 				
-			if($model->save()) {
+				$attachment = $model->media_publish;
+				if(!empty($attachment)) {
+					$attachment_template = 'document_lampiran';
+					$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+					$attachment_documentName = Utility::getUrlTitle($model->kckr_id.' lampiran '.$model->publisher->publisher_name.' '.$model->receipt_date);
+					
+					$attachments = new KckrUtility();
+					$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
+					array_push($documentArray, $fileName);
+				}
+				if(Kckrs::model()->updateByPk($model->kckr_id, array(
+					'thanks_document'=>serialize($documentArray),
+					'thanks_user_id'=>Yii::app()->user->id,
+				))) {
+					$letter_path = 'public/kckr/document_pdf';		
+					$data = unserialize($thanks_document);
+					
+					if(!empty($data)) {
+						foreach($data as $key => $val) {
+							if(file_exists($letter_path.'/'.$val))
+								rename($letter_path.'/'.$val, 'public/kckr/verwijderen/'.$model->kckr_id.'_'.$val);
+						}
+					}
+				}
+				
 				Yii::app()->user->setFlash('success', 'Generate document print success.');
 				$this->redirect(Yii::app()->controller->createUrl('print', array('id'=>$model->kckr_id)));
-			}
 	
-			ob_end_flush();
-			
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = $condition == false ? 350 : 500;
-
-			$this->pageTitle = Yii::t('phrase', 'Print Kckrs');
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('admin_print',array(
-				'model'=>$model,
-				'condition'=>$condition,
-			));			
+				ob_end_flush();
+			}
 		}
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 550;
+
+		$this->pageTitle = Yii::t('phrase', 'Print Kckrs');
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_print',array(
+			'model'=>$model,
+			'condition'=>$condition,
+		));
 	}
 	
 	/**

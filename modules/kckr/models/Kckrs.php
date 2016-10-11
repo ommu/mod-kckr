@@ -86,12 +86,12 @@ class Kckrs extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('letter_number', 'required'),
+			array('letter_number, send_type, send_date, receipt_date', 'required'),
+			array('thanks_date', 'required', 'on'=>'generateDocument'),
 			array('publish, pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
 			array('pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('letter_number', 'length', 'max'=>64),
-			array('pic_id, publisher_id, thanks_date, photos, 
-				send_type, send_date, receipt_date,
+			array('pic_id, publisher_id, thanks_date, photos,
 				photo_old_input, regenerate_input', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

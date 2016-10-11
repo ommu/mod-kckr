@@ -94,9 +94,7 @@
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Untuk Bidang DPBP (Subbid Deposit)
 			</td>
 			<td style="vertical-align: top; width: 40%;">
-				<?php $data = $model->thanks_date;
-				if($model[0]->kckr->thanks_date == '' || in_array($model[0]->kckr->thanks_date, array('0000-00-00','1970-01-01')))
-					$data = date('Y-m-d');?>
+				<?php $data = $model[0]->kckr->thanks_date;?>
 				Yogyakarta, <?php echo date('d', strtotime($data)).' '.Utility::getLocalMonthName($data).' '.date('Y', strtotime($data));?><br/>
 				<?php echo $model[0]->kckr->pic->pic_position?>
 				<br/><br/><br/><br/><br/><br/>

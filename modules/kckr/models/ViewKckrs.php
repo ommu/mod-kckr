@@ -26,6 +26,7 @@
  * @property string $kckr_id
  * @property string $publisher_id
  * @property string $medias
+ * @property string $media_total
  */
 class ViewKckrs extends CActiveRecord
 {
@@ -68,10 +69,10 @@ class ViewKckrs extends CActiveRecord
 		return array(
 			array('publisher_id', 'required'),
 			array('kckr_id, publisher_id', 'length', 'max'=>11),
-			array('medias', 'length', 'max'=>21),
+			array('medias, media_total', 'length', 'max'=>21),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('kckr_id, publisher_id, medias', 'safe', 'on'=>'search'),
+			array('kckr_id, publisher_id, medias, media_total', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,6 +96,7 @@ class ViewKckrs extends CActiveRecord
 			'kckr_id' => Yii::t('attribute', 'Kckr'),
 			'publisher_id' => Yii::t('attribute', 'Publisher'),
 			'medias' => Yii::t('attribute', 'Medias'),
+			'media_total' => Yii::t('attribute', 'Media Total'),
 		);
 		/*
 			'Kckr' => 'Kckr',
@@ -125,6 +127,7 @@ class ViewKckrs extends CActiveRecord
 		$criteria->compare('t.kckr_id',strtolower($this->kckr_id),true);
 		$criteria->compare('t.publisher_id',strtolower($this->publisher_id),true);
 		$criteria->compare('t.medias',strtolower($this->medias),true);
+		$criteria->compare('t.media_total',strtolower($this->media_total),true);
 
 		if(!isset($_GET['ViewKckrs_sort']))
 			$criteria->order = 't.kckr_id DESC';
@@ -158,6 +161,7 @@ class ViewKckrs extends CActiveRecord
 			$this->defaultColumns[] = 'kckr_id';
 			$this->defaultColumns[] = 'publisher_id';
 			$this->defaultColumns[] = 'medias';
+			$this->defaultColumns[] = 'media_total';
 		}
 
 		return $this->defaultColumns;
@@ -175,6 +179,7 @@ class ViewKckrs extends CActiveRecord
 			//$this->defaultColumns[] = 'kckr_id';
 			$this->defaultColumns[] = 'publisher_id';
 			$this->defaultColumns[] = 'medias';
+			$this->defaultColumns[] = 'media_total';
 		}
 		parent::afterConstruct();
 	}

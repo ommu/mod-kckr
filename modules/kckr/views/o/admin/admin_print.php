@@ -30,21 +30,25 @@
 )); ?>
 
 	<div class="dialog-content">
-		<?php if($condition == false)
-			echo Yii::t('phrase', 'Are you sure you want to generated document print?');
-		else {?>
-			<fieldset>
-				<?php //begin.Messages ?>
-				<div id="ajax-message">
-				<?php
-				if(Yii::app()->user->hasFlash('error'))
-					echo Utility::flashError(Yii::app()->user->getFlash('error'));
-				if(Yii::app()->user->hasFlash('success'))
-					echo Utility::flashSuccess(Yii::app()->user->getFlash('success'));
-				?>
+		<fieldset>
+			<?php //begin.Messages ?>
+			<div id="ajax-message">
+			<?php
+			if(Yii::app()->user->hasFlash('error'))
+				echo Utility::flashError(Yii::app()->user->getFlash('error'));
+			if(Yii::app()->user->hasFlash('success'))
+				echo Utility::flashSuccess(Yii::app()->user->getFlash('success'));
+			?>
+			</div>
+			<?php //begin.Messages ?>
+			
+			<?php if($condition == false) {?>
+				<div class="mb-15">
+					<?php echo Yii::t('phrase', 'Are you sure you want to generated document print?');?>
 				</div>
-				<?php //begin.Messages ?>
+			<?php }?>
 				
+			<?php if($condition == true) {?>
 				<div class="clearfix publish">
 					<?php echo $form->labelEx($model,'thanks_document'); ?>
 					<div class="desc">
@@ -68,8 +72,33 @@
 						<?php echo $form->error($model,'regenerate_input'); ?>
 					</div>
 				</div>
-			</fieldset>
-		<?php }?>
+			<?php }?>
+			
+			<div class="clearfix">
+				<?php echo $form->labelEx($model,'thanks_date'); ?>
+				<div class="desc">
+					<?php
+					if(isset($_POST['Kckrs']) && trim($model->thanks_date) == '')
+						$model->thanks_date = '';
+					else
+						$model->thanks_date = !$model->isNewRecord ? (!in_array($model->thanks_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
+					//echo $form->textField($model,'thanks_date');
+					$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+						'model'=>$model,
+						'attribute'=>'thanks_date',
+						//'mode'=>'datetime',
+						'options'=>array(
+							'dateFormat' => 'dd-mm-yy',
+						),
+						'htmlOptions'=>array(
+							'class' => 'span-4',
+						 ),
+					)); ?>
+					<?php echo $form->error($model,'thanks_date'); ?>
+					<?php /*<div class="small-px silent"></div>*/?>
+				</div>
+			</div>
+		</fieldset>
 	</div>
 	<div class="dialog-submit">
 		<?php echo CHtml::submitButton(Yii::t('phrase', 'Generated'), array('onclick' => 'setEnableSave()')); ?>
