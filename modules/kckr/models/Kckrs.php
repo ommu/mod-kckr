@@ -25,6 +25,7 @@
  * The followings are the available columns in table 'ommu_kckrs':
  * @property string $kckr_id
  * @property integer $publish
+ * @property string $article_id
  * @property integer $pic_id
  * @property string $publisher_id
  * @property string $letter_number
@@ -88,14 +89,14 @@ class Kckrs extends CActiveRecord
 		return array(
 			array('letter_number, send_type, send_date, receipt_date', 'required'),
 			array('thanks_date', 'required', 'on'=>'generateDocument'),
-			array('publish, pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
-			array('pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'length', 'max'=>11),
+			array('publish, article_id, pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('article_id, pic_id, publisher_id, thanks_user_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('letter_number', 'length', 'max'=>64),
-			array('pic_id, publisher_id, thanks_date, photos,
+			array('article_id, pic_id, publisher_id, thanks_date, photos,
 				photo_old_input, regenerate_input', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('kckr_id, publish, pic_id, publisher_id, letter_number, send_type, send_date, receipt_date, thanks_date, thanks_document, thanks_user_id, photos, creation_date, creation_id, modified_date, modified_id, 
+			array('kckr_id, publish, article_id, pic_id, publisher_id, letter_number, send_type, send_date, receipt_date, thanks_date, thanks_document, thanks_user_id, photos, creation_date, creation_id, modified_date, modified_id, 
 				pic_search, publisher_search, creation_search, modified_search, media_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -127,6 +128,7 @@ class Kckrs extends CActiveRecord
 		return array(
 			'kckr_id' => Yii::t('attribute', 'Kckr'),
 			'publish' => Yii::t('attribute', 'Publish'),
+			'article_id' => Yii::t('attribute', 'Article'),
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'publisher_id' => Yii::t('attribute', 'Publisher'),
 			'letter_number' => Yii::t('attribute', 'Letter Number'),
@@ -195,6 +197,7 @@ class Kckrs extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1));
 			$criteria->compare('t.publish',$this->publish);
 		}
+		$criteria->compare('t.article_id',strtolower($this->article_id),true);
 		if(isset($_GET['pic']))
 			$criteria->compare('t.pic_id',$_GET['pic']);
 		else
@@ -289,6 +292,7 @@ class Kckrs extends CActiveRecord
 		} else {
 			//$this->defaultColumns[] = 'kckr_id';
 			$this->defaultColumns[] = 'publish';
+			$this->defaultColumns[] = 'article_id';
 			$this->defaultColumns[] = 'pic_id';
 			$this->defaultColumns[] = 'publisher_id';
 			$this->defaultColumns[] = 'letter_number';
@@ -417,8 +421,16 @@ class Kckrs extends CActiveRecord
 				);
 			}
 			$this->defaultColumns[] = array(
-				'header' => 'Print',
-				'value' =>  'CHtml::link(!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : \'Print\', Yii::app()->controller->createUrl("print",array(\'id\'=>$data->kckr_id)))',
+				'header' => Yii::t('phrase', 'Print'),
+				'value' =>  'CHtml::link(!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Yii::t(\'phrase\', \'Print\'), Yii::app()->controller->createUrl("print",array(\'id\'=>$data->kckr_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'article_id',
+				'value' =>  'CHtml::link($data->article_id != 0 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Yii::t(\'phrase\', \'Article\'), $data->article_id != 0 ? Yii::app()->controller->createUrl(\'article\',array(\'id\'=>$data->kckr_id, \'aid\'=>$data->article_id)) : Yii::app()->controller->createUrl(\'article\',array(\'id\'=>$data->kckr_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

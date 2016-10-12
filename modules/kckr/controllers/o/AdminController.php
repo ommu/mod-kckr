@@ -12,6 +12,7 @@
  *	Manage
  *	Print
  *	Generate
+ *	Article
  *	Add
  *	Edit
  *	View
@@ -88,7 +89,7 @@ class AdminController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','print','generate','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','print','generate','article','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level == 1)',
 			),
@@ -280,6 +281,67 @@ class AdminController extends Controller
 		echo Yii::t('phrase', 'Generated document print success.');
 
 		ob_end_flush();
+	}
+	
+	/**
+	 * Lists all models.
+	 */
+	public function actionArticle() 
+	{
+		Yii::import('application.modules.article.models.ArticleCategory');
+		Yii::import('application.modules.article.models.ArticleMedia');
+		Yii::import('application.modules.article.models.Articles');
+		Yii::import('application.modules.article.models.ArticleSetting');
+		Yii::import('application.modules.article.models.ArticleTag');
+		Yii::import('application.modules.article.models.ViewArticleCategory');
+		
+		$id = $_GET['id'];
+		$articleId = $_GET['aid'];
+		
+		if(!isset($articleId))
+			$model=new Articles;
+		else {
+			$model = Articles::model()->findByPk($articleId);
+			$tag = ArticleTag::model()->findAll(array(
+				'condition' => 'article_id = :id',
+				'params' => array(
+					':id' => $model->article_id,
+				),
+			));
+		}
+		$setting = ArticleSetting::model()->findByPk(1,array(
+			'select' => 'type_active, media_limit, meta_keyword',
+		));
+		$kckr = $this->loadModel($id);
+
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($model);
+
+		if(isset($_POST['Articles'])) {
+			$model->attributes=$_POST['Articles'];
+
+			if($model->save()) {
+				if($model->isNewRecord)
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Article success created.'));
+				else
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Article success updated.'));
+				
+				Kckrs::model()->updateByPk($kckr->kckr_id, array(
+					'article_id'=>$model->article_id,
+				));
+				$this->redirect(array('article','id'=>$kckr->kckr_id,'aid'=>$model->article_id));
+			}
+		}
+
+		$this->pageTitle = $model->isNewRecord ? Yii::t('phrase', 'Create Article: {title}', array('{title}'=>$kckr->publisher->publisher_name)) : Yii::t('phrase', 'Update Article: {title}', array('{title}'=>$model->title));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_article',array(
+			'model'=>$model,
+			'setting'=>$setting,
+			'tag'=>$tag,
+			'kckr'=>$kckr,
+		));		
 	}
 	
 	/**

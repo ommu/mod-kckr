@@ -1,0 +1,306 @@
+<?php
+	$url = Yii::app()->controller->createUrl('article/o/media/ajaxmanage', array('id'=>$model->article_id,'type'=>'admin'));
+	$cs = Yii::app()->getClientScript();
+$js=<<<EOP
+	$.ajax({
+		type: 'get',
+		url: '$url',
+		dataType: 'json',
+		//data: { id: '$id' },
+		success: function(render) {
+			$('.horizontal-data #media-render #upload').before(render.data);
+		}
+	});
+EOP;
+	(!$model->isNewRecord && ($model->article_type == 1 && $setting->media_limit != 1)) ? $cs->registerScript('ajaxmanage', $js, CClientScript::POS_END) : '';
+?>
+
+<div class="form" <?php //echo ($model->article_type == 1 && $setting->media_limit != 1) ? 'name="post-on"' : ''; ?>>
+	<?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
+		'id'=>'articles-form',
+		'enableAjaxValidation'=>$validation,
+		'htmlOptions' => array('enctype' => 'multipart/form-data')
+	)); ?>
+
+		<?php //begin.Messages ?>
+		<div id="ajax-message">
+			<?php 
+			echo $form->errorSummary($model);
+			if(Yii::app()->user->hasFlash('error'))
+				echo Utility::flashError(Yii::app()->user->getFlash('error'));
+			if(Yii::app()->user->hasFlash('success'))
+				echo Utility::flashSuccess(Yii::app()->user->getFlash('success'));
+			?>
+		</div>
+		<?php //begin.Messages ?>
+
+		<fieldset class="clearfix">
+			<div class="clear">
+				<div class="left">
+					<?php 
+					$model->article_type = 1;
+					echo $form->hiddenField($model,'article_type');
+					$model->cat_id = KckrSetting::getInfo(1, 'article_cat_id');
+					echo $form->hiddenField($model,'cat_id');?>
+		
+					<div class="clearfix">
+						<label><?php echo $model->getAttributeLabel('title');?> <span class="required">*</span></label>
+						<div class="desc">
+							<?php 
+							if($model->isNewRecord && !$model->getErrors())
+								$model->title = 'Penyerahan Bahan Pustaka Karya Cetak Dari '.$kckr->publisher->publisher_name;
+							echo $form->textField($model,'title',array('maxlength'=>128,'class'=>'span-8')); ?>
+							<?php echo $form->error($model,'title'); ?>
+						</div>
+					</div>
+		
+					<?php if(!$model->isNewRecord && ($model->article_type == 1 && $setting->media_limit == 1)) {
+						$model->old_media = $model->cover->media;
+						echo $form->hiddenField($model,'old_media');
+						if($model->media_id != 0) {
+							$file = Yii::app()->request->baseUrl.'/public/article/'.$model->article_id.'/'.$model->cover->media;
+							if($model->article_type == 1) {
+								$media = '<img src="'.Utility::getTimThumb($file, 320, 150, 1).'" alt="">';
+							} elseif($model->article_type == 3) {
+								$media = '<audio src="'.$file.'" controls="true" loop="true" autoplay="false"></audio>';
+							}
+							echo '<div class="clearfix">';
+							echo $form->labelEx($model,'old_media');
+							echo '<div class="desc">'.$media.'</div>';
+							echo '</div>';
+						}
+					}?>
+
+					<?php if($model->isNewRecord || (!$model->isNewRecord && ($model->article_type == 1 && $setting->media_limit == 1))) {?>
+					<div id="media" class="clearfix filter">
+						<?php echo $form->labelEx($model,'media'); ?>
+						<div class="desc">
+							<?php echo $form->fileField($model,'media'); ?>
+							<?php echo $form->error($model,'media'); ?>
+						</div>
+					</div>
+					<?php }?>
+			
+					<?php if(!$model->isNewRecord || ($model->isNewRecord && $setting->meta_keyword != '')) {?>
+					<div class="clearfix">
+						<?php echo $form->labelEx($model,'keyword'); ?>
+						<div class="desc">
+							<?php 
+							if(!$model->isNewRecord) {
+								//echo $form->textField($model,'keyword',array('maxlength'=>32,'class'=>'span-6'));
+								$url = Yii::app()->controller->createUrl('article/o/tag/add', array('type'=>'article'));
+								$article = $model->article_id;
+								$tagId = 'Articles_keyword';
+								$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+									'model' => $model,
+									'attribute' => 'keyword',
+									'source' => Yii::app()->createUrl('globaltag/suggest'),
+									'options' => array(
+										//'delay '=> 50,
+										'minLength' => 1,
+										'showAnim' => 'fold',
+										'select' => "js:function(event, ui) {
+											$.ajax({
+												type: 'post',
+												url: '$url',
+												data: { article_id: '$article', tag_id: ui.item.id, tag: ui.item.value },
+												dataType: 'json',
+												success: function(response) {
+													$('form #$tagId').val('');
+													$('form #keyword-suggest').append(response.data);
+												}
+											});
+
+										}"
+									),
+									'htmlOptions' => array(
+										'class'	=> 'span-6',
+									),
+								));
+								echo $form->error($model,'keyword');
+							}?>
+							<div id="keyword-suggest" class="suggest clearfix">
+								<?php 
+								$arrKeyword = explode(',', $setting->meta_keyword);
+								foreach($arrKeyword as $row) {?>
+									<div class="d"><?php echo $row;?></div>
+								<?php }
+								if(!$model->isNewRecord) {
+									if($tag != null) {
+										foreach($tag as $key => $val) {?>
+										<div><?php echo $val->tag_TO->body;?><a href="<?php echo Yii::app()->controller->createUrl('article/o/tag/delete',array('id'=>$val->id,'type'=>'article'));?>" title="<?php echo Yii::t('phrase', 'Delete');?>"><?php echo Yii::t('phrase', 'Delete');?></a></div>
+									<?php }
+									}
+								}?>
+							</div>
+						</div>
+					</div>
+					<?php }?>
+		
+				</div>
+		
+				<div class="right">
+					<?php
+					if(!$model->isNewRecord) {
+						$model->old_file = $model->media_file;
+						echo $form->hiddenField($model,'old_file');
+						if($model->media_file != '') {
+							$file = Yii::app()->request->baseUrl.'/public/article/'.$model->article_id.'/'.$model->media_file;
+							echo '<div class="clearfix">';
+							echo $form->labelEx($model,'old_file');
+							echo '<div class="desc"><a href="'.$file.'" title="'.$model->media_file.'">'.$model->media_file.'</a></div>';
+							echo '</div>';
+						}
+					}?>
+					<div class="clearfix">
+						<?php echo $form->labelEx($model,'file'); ?>
+						<div class="desc">
+							<?php echo $form->fileField($model,'file'); ?>
+							<?php echo $form->error($model,'file'); ?>
+						</div>
+					</div>
+		
+					<div class="clearfix">
+						<?php echo $form->labelEx($model,'published_date'); ?>
+						<div class="desc">
+							<?php 
+							$model->published_date = $model->isNewRecord && $model->published_date == '' ? date('d-m-Y') : date('d-m-Y', strtotime($model->published_date));
+							//echo $form->textField($model,'published_date', array('class'=>'span-7'));
+							$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+								'model'=>$model, 
+								'attribute'=>'published_date',
+								//'mode'=>'datetime',
+								'options'=>array(
+									'dateFormat' => 'dd-mm-yy',
+								),
+								'htmlOptions'=>array(
+									'class' => 'span-7',
+								 ),
+							));	?>
+							<?php echo $form->error($model,'published_date'); ?>
+						</div>
+					</div>
+		
+					<?php if(OmmuSettings::getInfo('site_type') == 1) {?>
+					<div class="clearfix publish">
+						<?php echo $form->labelEx($model,'comment_code'); ?>
+						<div class="desc">
+							<?php echo $form->checkBox($model,'comment_code'); ?><?php echo $form->labelEx($model,'comment_code'); ?>
+							<?php echo $form->error($model,'comment_code'); ?>
+						</div>
+					</div>
+					<?php } else {
+						$model->comment_code = 0;
+						echo $form->hiddenField($model,'comment_code');
+					}?>
+		
+					<?php if(OmmuSettings::getInfo('site_headline') == 1) {?>
+					<div class="clearfix publish">
+						<?php echo $form->labelEx($model,'headline'); ?>
+						<div class="desc">
+							<?php echo $form->checkBox($model,'headline'); ?><?php echo $form->labelEx($model,'headline'); ?>
+							<?php echo $form->error($model,'headline'); ?>
+						</div>
+					</div>
+					<?php } else {
+						$model->headline = 0;
+						echo $form->hiddenField($model,'headline');
+					}?>
+		
+					<div class="clearfix publish">
+						<?php echo $form->labelEx($model,'publish'); ?>
+						<div class="desc">
+							<?php echo $form->checkBox($model,'publish'); ?><?php echo $form->labelEx($model,'publish'); ?>
+							<?php echo $form->error($model,'publish'); ?>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<div class="clearfix" id="quote">
+				<?php echo $form->labelEx($model,'quote'); ?>
+				<div class="desc">
+					<?php 
+					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
+					$this->widget('application.extensions.imperavi.ImperaviRedactorWidget', array(
+						'model'=>$model,
+						'attribute'=>quote,
+						// Redactor options
+						'options'=>array(
+							//'lang'=>'fi',
+							'buttons'=>array(
+								'html', '|', 
+								'bold', 'italic', 'deleted', '|',
+							),
+						),
+						'plugins' => array(
+							'fontcolor' => array('js' => array('fontcolor.js')),
+							'fullscreen' => array('js' => array('fullscreen.js')),
+						),
+					)); ?>
+					<?php if($model->isNewRecord || (!$model->isNewRecord && $model->article_type != 4)) {?>
+						<span class="small-px"><?php echo Yii::t('phrase', 'Note : add {$quote} in description article');?></span>
+					<?php }?>
+					<?php echo $form->error($model,'quote'); ?>
+				</div>
+			</div>
+
+			<div class="clearfix">
+				<?php echo $form->labelEx($model,'body'); ?>
+				<div class="desc">
+					<?php 
+					if($model->isNewRecord && !$model->getErrors()) {
+						$template = 'kckr_article';
+						$message = $this->renderPartial('webroot.externals.kckr.template.'.$template, array('kckr'=>$kckr), true, false);
+						$model->body = $message;			
+					}
+					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
+					$this->widget('application.extensions.imperavi.ImperaviRedactorWidget', array(
+						'model'=>$model,
+						'attribute'=>body,
+						// Redactor options
+						'options'=>array(
+							//'lang'=>'fi',
+							'buttons'=>array(
+								'html', 'formatting', '|', 
+								'bold', 'italic', 'deleted', '|',
+								'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
+								'link', '|',
+							),
+						),
+						'plugins' => array(
+							'fontcolor' => array('js' => array('fontcolor.js')),
+							'table' => array('js' => array('table.js')),
+							'fullscreen' => array('js' => array('fullscreen.js')),
+						),
+					)); ?>
+					<?php echo $form->error($model,'body'); ?>
+				</div>
+			</div>
+
+			<div class="submit clearfix">
+				<label>&nbsp;</label>
+				<div class="desc">
+					<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save'), array('onclick' => 'setEnableSave()')); ?>
+				</div>
+			</div>
+		</fieldset>
+	<?php $this->endWidget(); ?>
+</div>
+
+<?php if(!$model->isNewRecord && ($model->article_type == 1 && $setting->media_limit != 1)) {?>
+<div class="boxed mt-15">
+	<h3><?php echo Yii::t('phrase', 'Article Photo'); ?></h3>
+	<div class="clearfix horizontal-data" name="four">
+		<ul id="media-render">
+			<li id="upload" <?php echo (count(ArticleMedia::getPhoto($model->article_id)) == $setting->media_limit) ? 'class="hide"' : '' ?>>
+				<a id="upload-gallery" href="<?php echo Yii::app()->controller->createUrl('article/o/media/ajaxadd', array('id'=>$model->article_id,'type'=>'admin'));?>" title="<?php echo Yii::t('phrase', 'Upload Photo'); ?>"><?php echo Yii::t('phrase', 'Upload Photo'); ?></a>
+				<img src="<?php echo Utility::getTimThumb(Yii::app()->request->baseUrl.'/public/article/article_default.png', 320, 250, 1);?>" alt="" />
+			</li>
+		</ul>
+	</div>
+</div>
+<?php }?>
