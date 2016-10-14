@@ -9,6 +9,7 @@ if(!empty($attachment)) {?>
         <tr>
             <th>NO</th>
             <th>JUDUL</th>
+            <th>PENULIS</th>
             <th>JUMLAH</th>
         </tr>
 		<?php 
@@ -18,6 +19,7 @@ if(!empty($attachment)) {?>
 			<tr>
 				<td><?php echo $i;?></td>
 				<td><?php echo $val->media_title;?></td>
+				<td><?php echo $val->media_author != '' ? $val->media_author : '-';?></td>
 				<td><?php echo $val->media_total;?></td>
 			</tr>
 		<?php }?>
