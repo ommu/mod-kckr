@@ -83,16 +83,25 @@
 				<td style="vertical-align: top; width: 50%;"></td>
 				<td style="vertical-align: top; width: 50%;">
 					<?php echo $model->pic->pic_position?>
-					<br/><br/><br/><br/><br/><br/>
+					<?php if($model->pic->pic_signature != '') {
+						$images = YiiBase::getPathOfAlias('webroot.public.kckr.pic').'/'.$model->pic->pic_signature;?>
+						<br/><br/>
+						<img src="<?php echo $images;?>" style="height: 100px;">
+						<br/><br/>
+					<?php } else {?>
+						<br/><br/><br/><br/><br/><br/>
+					<?php }?>
 					<?php echo $model->pic->pic_name?><br/>
 					NIP. <?php echo $model->pic->pic_nip?>
 				</td>
 			</tr>
 		</table>
 	</div>
-		
+	
+	<?php /*
 	<div class="copyright">
 		Generate by <a href="http://company.ommu.co" title="Ommu Platform">Ommu Platform</a> website: http://company.ommu.co
-	</div>	
+	</div>
+	*/?>
 </div>
 </page>

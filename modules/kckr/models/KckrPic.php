@@ -28,6 +28,7 @@
  * @property string $pic_name
  * @property string $pic_nip
  * @property string $pic_position
+ * @property string $pic_signature
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
@@ -39,6 +40,7 @@
 class KckrPic extends CActiveRecord
 {
 	public $defaultColumns = array();
+	public $old_pic_signature;
 	
 	// Variable Search
 	public $creation_search;
@@ -78,10 +80,11 @@ class KckrPic extends CActiveRecord
 			array('creation_id, modified_id', 'length', 'max'=>11),
 			array('pic_nip', 'length', 'max'=>32),
 			array('pic_name, pic_position', 'length', 'max'=>64),
-			array('pic_nip, pic_position', 'safe'),
+			array('pic_nip, pic_position, pic_signature,
+				old_pic_signature', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('pic_id, publish, default, pic_name, pic_nip, pic_position, creation_date, creation_id, modified_date, modified_id, 
+			array('pic_id, publish, default, pic_name, pic_nip, pic_position, pic_signature, creation_date, creation_id, modified_date, modified_id, 
 				creation_search, modified_search, kckr_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -110,13 +113,15 @@ class KckrPic extends CActiveRecord
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'publish' => Yii::t('attribute', 'Publish'),
 			'default' => Yii::t('attribute', 'Default'),
-			'pic_name' => Yii::t('attribute', 'Name'),
+			'pic_name' => Yii::t('attribute', 'Person in Charge'),
 			'pic_nip' => Yii::t('attribute', 'NIP'),
 			'pic_position' => Yii::t('attribute', 'Position'),
+			'pic_signature' => Yii::t('attribute', 'Signature'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'old_pic_signature' => Yii::t('attribute', 'Old Signature'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 			'kckr_search' => Yii::t('attribute', 'KCKR'),
@@ -168,6 +173,7 @@ class KckrPic extends CActiveRecord
 		$criteria->compare('t.pic_name',strtolower($this->pic_name),true);
 		$criteria->compare('t.pic_nip',strtolower($this->pic_nip),true);
 		$criteria->compare('t.pic_position',strtolower($this->pic_position),true);
+		$criteria->compare('t.pic_signature',strtolower($this->pic_signature),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -234,6 +240,7 @@ class KckrPic extends CActiveRecord
 			$this->defaultColumns[] = 'pic_name';
 			$this->defaultColumns[] = 'pic_nip';
 			$this->defaultColumns[] = 'pic_position';
+			$this->defaultColumns[] = 'pic_signature';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'modified_date';
@@ -381,8 +388,99 @@ class KckrPic extends CActiveRecord
 				$this->creation_id = Yii::app()->user->id;
 			else
 				$this->modified_id = Yii::app()->user->id;
+			
+			$pic_signature = CUploadedFile::getInstance($this, 'pic_signature');
+			if($pic_signature->name != '') {
+				$extension = pathinfo($pic_signature->name, PATHINFO_EXTENSION);
+				$size = getimagesize($pic_signature->tempName);
+				
+				if(!in_array(strtolower($extension), array('bmp','gif','jpg','png')))
+					$this->addError('photos', 'The file "'.$pic_signature->name.'" cannot be uploaded. Only files with these extensions are allowed: bmp, gif, jpg, png.');
+				else {
+					if($size[0] != 250 && $size[1] != 150)
+						$this->addError('pic_signature', 'The file "'.$pic_signature->name.'" cannot be uploaded. ukuran tanta tangan ('.$size[0].' x '.$size[1].') tidak sesuai seharusnya (250 x 150)');
+				}
+			}
 		}
 		return true;
+	}
+	
+	/**
+	 * before save attributes
+	 */
+	protected function beforeSave() {
+		if(parent::beforeSave()) {			
+			$action = strtolower(Yii::app()->controller->action->id);
+			if(!$this->isNewRecord && $action == 'edit') {
+				//Update kckr photo
+				$pic_path = 'public/kckr/pic';
+
+				// Generate kckr path directory
+				if(!file_exists($pic_path)) {
+					@mkdir($pic_path, 0755, true);
+
+					// Add File in Article Folder (index.php)
+					$newFile = $pic_path.'/index.php';
+					$FileHandle = fopen($newFile, 'w');
+				} else
+					@chmod($pic_path, 0755, true);
+				
+				$this->pic_signature = CUploadedFile::getInstance($this, 'pic_signature');
+				if($this->pic_signature instanceOf CUploadedFile) {
+					$fileName = $this->pic_id.'_'.time().'_'.Utility::getUrlTitle($this->pic_name).'.'.strtolower($this->pic_signature->extensionName);
+					if($this->pic_signature->saveAs($pic_path.'/'.$fileName)) {
+						if($this->old_pic_signature != '' && file_exists($pic_path.'/'.$this->old_pic_signature))
+							rename($pic_path.'/'.$this->old_pic_signature, 'public/kckr/verwijderen/'.$this->old_pic_signature);
+						$this->pic_signature = $fileName;
+					} else
+						$this->pic_signature = '';
+				}
+					
+				if($this->pic_signature == '')
+					$this->pic_signature = $this->old_pic_signature;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * After save attributes
+	 */
+	protected function afterSave() {
+		parent::afterSave();
+		
+		if($this->isNewRecord) {
+			$pic_path = 'public/kckr/pic';
+
+			// Generate kckr path directory
+			if(!file_exists($pic_path)) {
+				@mkdir($pic_path, 0755, true);
+
+				// Add File in Article Folder (index.php)
+				$newFile = $pic_path.'/index.php';
+				$FileHandle = fopen($newFile, 'w');
+			} else
+				@chmod($pic_path, 0755, true);
+			
+			$this->pic_signature = CUploadedFile::getInstance($this, 'pic_signature');
+			if($this->pic_signature instanceOf CUploadedFile) {
+				$fileName = $this->pic_id.'_'.time().'_'.Utility::getUrlTitle($this->pic_name).'.'.strtolower($this->pic_signature->extensionName);
+				if($this->pic_signature->saveAs($pic_path.'/'.$fileName)) {
+					self::model()->updateByPk($this->pic_id, array('pic_signature'=>$fileName));
+				}
+			}
+		}
+	}
+
+	/**
+	 * After delete attributes
+	 */
+	protected function afterDelete() {
+		parent::afterDelete();
+		//delete kckr image
+		$pic_path = 'public/kckr/pic';
+		if($this->pic_signature != '' && file_exists($pic_path.'/'.$this->pic_signature))
+			rename($pic_path.'/'.$this->pic_signature, 'public/kckr/verwijderen/'.$this->pic_signature);
 	}
 
 }

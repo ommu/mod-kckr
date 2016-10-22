@@ -97,7 +97,14 @@
 				<?php $data = $model[0]->kckr->thanks_date;?>
 				Yogyakarta, <?php echo date('d', strtotime($data)).' '.Utility::getLocalMonthName($data).' '.date('Y', strtotime($data));?><br/>
 				<?php echo $model[0]->kckr->pic->pic_position?>
-				<br/><br/><br/><br/><br/><br/>
+				<?php if($model[0]->kckr->pic->pic_signature != '') {
+					$images = YiiBase::getPathOfAlias('webroot.public.kckr.pic').'/'.$model[0]->kckr->pic->pic_signature;?>
+					<br/><br/>
+					<img src="<?php echo $images;?>" style="height: 100px;">
+					<br/><br/>
+				<?php } else {?>
+					<br/><br/><br/><br/><br/><br/>
+				<?php }?>
 				<?php echo $model[0]->kckr->pic->pic_name?><br/>
 				NIP. <?php echo $model[0]->kckr->pic->pic_nip?>
 			</td>
