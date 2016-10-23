@@ -414,12 +414,11 @@ class KckrPic extends CActiveRecord
 			if(!$this->isNewRecord && $action == 'edit') {
 				//Update kckr photo
 				$pic_path = 'public/kckr/pic';
-
 				// Generate kckr path directory
 				if(!file_exists($pic_path)) {
 					@mkdir($pic_path, 0755, true);
 
-					// Add File in Article Folder (index.php)
+					// Add file in directory (index.php)
 					$newFile = $pic_path.'/index.php';
 					$FileHandle = fopen($newFile, 'w');
 				} else
@@ -451,12 +450,11 @@ class KckrPic extends CActiveRecord
 		
 		if($this->isNewRecord) {
 			$pic_path = 'public/kckr/pic';
-
 			// Generate kckr path directory
 			if(!file_exists($pic_path)) {
 				@mkdir($pic_path, 0755, true);
 
-				// Add File in Article Folder (index.php)
+				// Add file in directory (index.php)
 				$newFile = $pic_path.'/index.php';
 				$FileHandle = fopen($newFile, 'w');
 			} else

@@ -501,12 +501,11 @@ class Kckrs extends CActiveRecord
 			if(!$this->isNewRecord && $action == 'edit') {
 				//Update kckr photo
 				$kckr_path = 'public/kckr';
-
 				// Generate kckr path directory
 				if(!file_exists($kckr_path)) {
 					@mkdir($kckr_path, 0755, true);
 
-					// Add File in Article Folder (index.php)
+					// Add file in directory (index.php)
 					$newFile = $kckr_path.'/index.php';
 					$FileHandle = fopen($newFile, 'w');
 				} else
@@ -544,6 +543,15 @@ class Kckrs extends CActiveRecord
 		
 		if($this->isNewRecord) {
 			$kckr_path = 'public/kckr';
+			// Generate kckr path directory
+			if(!file_exists($kckr_path)) {
+				@mkdir($kckr_path, 0755, true);
+
+				// Add file in directory (index.php)
+				$newFile = $kckr_path.'/index.php';
+				$FileHandle = fopen($newFile, 'w');
+			} else
+				@chmod($kckr_path, 0755, true);
 			
 			$this->photos = CUploadedFile::getInstance($this, 'photos');
 			if($this->photos instanceOf CUploadedFile) {

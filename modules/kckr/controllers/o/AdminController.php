@@ -169,6 +169,14 @@ class AdminController extends Controller
 					
 					$letter_template = 'document_letter';
 					$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+					// Add directory
+					if(!file_exists($letter_path)) {
+						@mkdir($letter_path, 0755, true);
+
+						// Add file in directory (index.php)
+						$newFile = $letter_path.'/index.php';
+						$FileHandle = fopen($newFile, 'w');
+					}
 					$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
 					
 					$letters = new KckrUtility();
@@ -254,6 +262,14 @@ class AdminController extends Controller
 				if(!empty($attachment)) {
 					$attachment_template = 'document_lampiran';
 					$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
+					// Add directory
+					if(!file_exists($attachment_path)) {
+						@mkdir($attachment_path, 0755, true);
+
+						// Add file in directory (index.php)
+						$newFile = $attachment_path.'/index.php';
+						$FileHandle = fopen($newFile, 'w');
+					}
 					$attachment_documentName = Utility::getUrlTitle($item->kckr_id.' lampiran '.$item->publisher->publisher_name.' '.$item->receipt_date);
 					
 					$attachments = new KckrUtility();
