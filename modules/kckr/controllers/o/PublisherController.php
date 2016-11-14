@@ -114,26 +114,31 @@ class PublisherController extends Controller
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionSuggest($limit=10) {
-		if(isset($_GET['term'])) {
-			$criteria = new CDbCriteria;
-			$criteria->condition = 'publisher_name LIKE :publisher_name';
-			$criteria->select	= "publisher_id, publisher_name";
-			$criteria->limit = $limit;
-			$criteria->order = "publisher_id ASC";
-			$criteria->params = array(':publisher_name' => '%' . strtolower($_GET['term']) . '%');
-			$model = KckrPublisher::model()->findAll($criteria);
+	public function actionSuggest($limit=10) 
+	{
+		if(Yii::app()->request->isAjaxRequest) {
+			if(isset($_GET['term'])) {
+				$criteria = new CDbCriteria;
+				$criteria->condition = 'publisher_name LIKE :publisher_name';
+				$criteria->select	= "publisher_id, publisher_name";
+				$criteria->limit = $limit;
+				$criteria->order = "publisher_id ASC";
+				$criteria->params = array(':publisher_name' => '%' . strtolower($_GET['term']) . '%');
+				$model = KckrPublisher::model()->findAll($criteria);
 
-			if($model) {
-				foreach($model as $items) {
-					$result[] = array('id' => $items->publisher_id, 'value' => $items->publisher_name);
+				if($model) {
+					foreach($model as $items) {
+						$result[] = array('id' => $items->publisher_id, 'value' => $items->publisher_name);
+					}
+				} else {
+					$result[] = array('id' => 0, 'value' => $_GET['term']);
 				}
-			} else {
-				$result[] = array('id' => 0, 'value' => $_GET['term']);
 			}
-		}
-		echo CJSON::encode($result);
-		Yii::app()->end();
+			echo CJSON::encode($result);
+			Yii::app()->end();
+			
+		} else
+			throw new CHttpException(404, Yii::t('phrase', 'The requested page does not exist.'));
 	}
 
 	/**
