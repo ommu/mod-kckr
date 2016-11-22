@@ -176,7 +176,9 @@ class AdminController extends Controller
 						// Add file in directory (index.php)
 						$newFile = $letter_path.'/index.php';
 						$FileHandle = fopen($newFile, 'w');
-					}
+					} else
+						@chmod($letter_path, 0755, true);
+					
 					$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
 					
 					$letters = new KckrUtility();
@@ -269,7 +271,9 @@ class AdminController extends Controller
 						// Add file in directory (index.php)
 						$newFile = $attachment_path.'/index.php';
 						$FileHandle = fopen($newFile, 'w');
-					}
+					} else
+						@chmod($attachment_path, 0755, true);
+					
 					$attachment_documentName = Utility::getUrlTitle($item->kckr_id.' lampiran '.$item->publisher->publisher_name.' '.$item->receipt_date);
 					
 					$attachments = new KckrUtility();
