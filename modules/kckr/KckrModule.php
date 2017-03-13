@@ -13,6 +13,11 @@
 class KckrModule extends CWebModule
 {
 	public $defaultController = 'site';
+	
+	// getAssetsUrl()
+	//	return the URL for this module's assets, performing the publish operation
+	//	the first time, and caching the result for subsequent use.
+	private $_assetsUrl;
 
 	public function init() 
 	{
@@ -25,7 +30,16 @@ class KckrModule extends CWebModule
 			'kckr.components.*',
 			'kckr.components.extensions.*',
 			'kckr.components.system.*',
+			'kckr.components.templates.*',
 		));
+	}
+ 
+	public function getAssetsUrl()
+	{
+		if ($this->_assetsUrl === null)
+			$this->_assetsUrl = Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('kckr.assets'));
+		
+		return $this->_assetsUrl;
 	}
 
 	public function beforeControllerAction($controller, $action)

@@ -29,7 +29,8 @@ class KckrUtility
 		Yii::import('application.modules.kckr.components.extensions.html2pdf.parsingHTML');		// classe de parsing HTML
 		Yii::import('application.modules.kckr.components.extensions.html2pdf.styleHTML');		// classe de gestion des styles
 		
-		include(YiiBase::getPathOfAlias('webroot.externals.kckr.template').'/'.$template.'.php');		
+		include(YiiBase::getPathOfAlias('application.modules.kckr.components.templates').'/'.$template.'.php');	
+		
 		$content  = ob_get_clean();
 		$fileName = '';
 		

@@ -254,7 +254,7 @@ EOP;
 					<?php 
 					if($model->isNewRecord && !$model->getErrors()) {
 						$template = 'kckr_article';
-						$message = $this->renderPartial('webroot.externals.kckr.template.'.$template, array('kckr'=>$kckr), true, false);
+						$message = $this->renderPartial('application.modules.kckr.components.templates.'.$template, array('kckr'=>$kckr), true, false);
 						$model->body = $message;			
 					}
 					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
