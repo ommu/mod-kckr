@@ -21,7 +21,7 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 July 2016, 07:40 WIB
  * @link http://company.ommu.co
  * @contect (+62)856-299-4114

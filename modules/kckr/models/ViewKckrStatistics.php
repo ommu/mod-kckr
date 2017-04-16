@@ -4,7 +4,7 @@
  * version: 0.0.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 24 September 2016, 22:38 WIB
  * @link http://company.ommu.co
  * @contact (+62)856-299-4114
@@ -262,7 +262,7 @@ class ViewKckrStatistics extends CActiveRecord
 					'model'=>$this,
 					'attribute'=>'date_key',
 					'language' => 'en',
-					'i18nScriptFile' => 'jquery-ui-i18n.min.js'
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'date_key_filter',
