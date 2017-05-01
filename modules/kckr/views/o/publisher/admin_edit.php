@@ -10,7 +10,7 @@
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 July 2016, 07:41 WIB
  * @link http://company.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  */
 
