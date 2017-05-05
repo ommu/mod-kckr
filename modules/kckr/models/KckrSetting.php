@@ -168,7 +168,7 @@ class KckrSetting extends CActiveRecord
 				'select'=>'displayname',
 			),
 		);
-		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['KckrSetting_sort']))
 			$criteria->order = 't.id DESC';

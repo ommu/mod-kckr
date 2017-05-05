@@ -16,7 +16,7 @@
  
 	$cs = Yii::app()->getClientScript();
 $js=<<<EOP
-	$('input[name="KckrSetting[photo_resize]"]').live('change', function() {
+	$('input[name="KckrSetting[photo_resize]"]').on('change', function() {
 		var id = $(this).val();
 		if(id == '1') {
 			$('div#resize_size').slideDown();
@@ -24,7 +24,7 @@ $js=<<<EOP
 			$('div#resize_size').slideUp();
 		}
 	});
-	$('input[name="KckrSetting[article_sync]"]').live('change', function() {
+	$('input[name="KckrSetting[article_sync]"]').on('change', function() {
 		var id = $(this).val();
 		if(id == '1') {
 			$('div#article_sync').slideDown();
