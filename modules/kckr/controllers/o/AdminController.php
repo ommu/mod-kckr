@@ -633,20 +633,23 @@ class AdminController extends Controller
 		$id = $_GET['id'];
 		$articleId = $_GET['aid'];
 		
+		$articleSetting = ArticleSetting::model()->findByPk(1,array(
+			'select' => 'meta_keyword, type_active, headline, media_limit, media_file_type, upload_file_type',
+		));
+		$media_file_type = unserialize($articleSetting->media_file_type);
+		if(empty($media_file_type))
+			$media_file_type = array();
+		$upload_file_type = unserialize($articleSetting->upload_file_type);
+		if(empty($upload_file_type))
+			$upload_file_type = array();
+		$kckrSetting = KckrSetting::model()->findByPk(1,array(
+			'select' => 'article_cat_id',
+		));
+		
 		if(!isset($articleId))
 			$model=new Articles;
-		else {
-			$model = Articles::model()->findByPk($articleId);
-			$tag = ArticleTag::model()->findAll(array(
-				'condition' => 'article_id = :id',
-				'params' => array(
-					':id' => $model->article_id,
-				),
-			));
-		}
-		$setting = ArticleSetting::model()->findByPk(1,array(
-			'select' => 'type_active, headline, media_limit, meta_keyword',
-		));
+		else
+			$model = Articles::model()->findByPk($articleId);		
 		$kckr = $this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
@@ -654,12 +657,13 @@ class AdminController extends Controller
 
 		if(isset($_POST['Articles'])) {
 			$model->attributes=$_POST['Articles'];
+			$model->scenario = 'formStandard';
 
 			if($model->save()) {
 				if($model->isNewRecord)
-					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Article success created.'));
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'KCKR Article success created.'));
 				else
-					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Article success updated.'));
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'KCKR Article success updated.'));
 				
 				Kckrs::model()->updateByPk($kckr->kckr_id, array(
 					'article_id'=>$model->article_id,
@@ -673,9 +677,11 @@ class AdminController extends Controller
 		$this->pageMeta = '';
 		$this->render('admin_article',array(
 			'model'=>$model,
-			'setting'=>$setting,
-			'tag'=>$tag,
 			'kckr'=>$kckr,
+			'articleSetting'=>$articleSetting,
+			'kckrSetting'=>$kckrSetting,
+			'media_file_type'=>$media_file_type,
+			'upload_file_type'=>$upload_file_type,
 		));		
 	}
 
