@@ -271,7 +271,7 @@ class KckrCategory extends CActiveRecord
 			$this->defaultColumns[] = 'category_desc';
 			$this->defaultColumns[] = array(
 				'name' => 'media_search',
-				'value' => 'CHtml::link($data->view->medias, Yii::app()->controller->createUrl("o/media/manage",array(\'category\'=>$data->category_id)))',
+				'value' => 'CHtml::link($data->view->medias ? $data->view->medias : 0, Yii::app()->controller->createUrl("o/media/manage",array(\'category\'=>$data->category_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

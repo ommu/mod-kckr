@@ -278,7 +278,7 @@ class KckrPublisher extends CActiveRecord
 			$this->defaultColumns[] = 'publisher_phone';
 			$this->defaultColumns[] = array(
 				'name' => 'kckr_search',
-				'value' => 'CHtml::link($data->view->kckrs, Yii::app()->controller->createUrl("o/admin/manage",array(\'publisher\'=>$data->publisher_id)))',
+				'value' => 'CHtml::link($data->view->kckrs ? $data->view->kckrs : 0, Yii::app()->controller->createUrl("o/admin/manage",array(\'publisher\'=>$data->publisher_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -286,7 +286,7 @@ class KckrPublisher extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'media_search',
-				'value' => 'CHtml::link($data->view->medias, Yii::app()->controller->createUrl("o/media/manage",array(\'publisher\'=>$data->publisher_id)))',
+				'value' => 'CHtml::link($data->view->medias ? $data->view->medias : 0, Yii::app()->controller->createUrl("o/media/manage",array(\'publisher\'=>$data->publisher_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

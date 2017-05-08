@@ -272,7 +272,7 @@ class KckrPic extends CActiveRecord
 			$this->defaultColumns[] = 'pic_position';
 			$this->defaultColumns[] = array(
 				'name' => 'kckr_search',
-				'value' => 'CHtml::link($data->view->kckrs, Yii::app()->controller->createUrl("o/admin/manage",array(\'pic\'=>$data->pic_id)))',
+				'value' => 'CHtml::link($data->view->kckrs ? $data->view->kckrs : 0, Yii::app()->controller->createUrl("o/admin/manage",array(\'pic\'=>$data->pic_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
