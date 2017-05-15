@@ -629,6 +629,7 @@ class AdminController extends Controller
 		Yii::import('application.modules.article.models.ArticleSetting');
 		Yii::import('application.modules.article.models.ArticleTag');
 		Yii::import('application.modules.article.models.ViewArticleCategory');
+		Yii::import('application.modules.article.models.ViewArticles');
 		
 		$id = $_GET['id'];
 		$articleId = $_GET['aid'];

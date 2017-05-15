@@ -143,6 +143,14 @@ class KckrSetting extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		// Custom Search
+		$criteria->with = array(
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname',
+			),
+		);
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.license',strtolower($this->license),true);
@@ -161,13 +169,6 @@ class KckrSetting extends CActiveRecord
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
 		
-		// Custom Search
-		$criteria->with = array(
-			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname',
-			),
-		);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['KckrSetting_sort']))
@@ -266,6 +267,33 @@ class KckrSetting extends CActiveRecord
 			$model = self::model()->findByPk($id);
 			return $model;			
 		}
+	}
+
+	/**
+	 * get Module License
+	 */
+	public static function getLicense($source='1234567890', $length=16, $char=4)
+	{
+		$mod = $length%$char;
+		if($mod == 0)
+			$sep = ($length/$char);
+		else
+			$sep = (int)($length/$char)+1;
+		
+		$sourceLength = strlen($source);
+		$random = '';
+		for ($i = 0; $i < $length; $i++)
+			$random .= $source[rand(0, $sourceLength - 1)];
+		
+		$license = '';
+		for ($i = 0; $i < $sep; $i++) {
+			if($i != $sep-1)
+				$license .= substr($random,($i*$char),$char).'-';
+			else
+				$license .= substr($random,($i*$char),$char);
+		}
+
+		return $license;
 	}
 
 	/**

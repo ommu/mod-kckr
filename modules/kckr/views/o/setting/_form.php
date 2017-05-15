@@ -56,7 +56,11 @@ EOP;
 				<span><?php echo Yii::t('phrase', 'Enter the your license key that is provided to you when you purchased this plugin. If you do not know your license key, please contact support team.');?></span>
 			</label>
 			<div class="desc">
-				<?php if($model->isNewRecord)
+				<?php 
+				if($model->isNewRecord || (!$model->isNewRecord && $model->license == ''))
+					$model->license = KckrSetting::getLicense();
+			
+				if($model->isNewRecord || (!$model->isNewRecord && $model->license == ''))
 					echo $form->textField($model,'license',array('maxlength'=>32,'class'=>'span-4'));
 				else
 					echo $form->textField($model,'license',array('maxlength'=>32,'class'=>'span-4','disabled'=>'disabled'));?>
@@ -97,7 +101,10 @@ EOP;
 			<label><?php echo Yii::t('phrase', 'Photo Setting');?> <span class="required">*</span></label>
 			<div class="desc">
 				<p><?php echo $model->getAttributeLabel('photo_resize');?></p>
-				<?php echo $form->radioButtonList($model, 'photo_resize', array(
+				<?php 
+				if($model->isNewRecord && !$model->getErrors())
+					$model->photo_resize = 0;
+				echo $form->radioButtonList($model, 'photo_resize', array(
 					0 => Yii::t('phrase', 'No, not resize photo after upload.'),
 					1 => Yii::t('phrase', 'Yes, resize photo after upload.'),
 				)); ?>
