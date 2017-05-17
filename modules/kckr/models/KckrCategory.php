@@ -349,9 +349,9 @@ class KckrCategory extends CActiveRecord
 	{		
 		$criteria=new CDbCriteria;
 		if($publish != null)
-			$criteria->compare('t.publish',$publish);
+			$criteria->compare('publish',$publish);
 		if($category_type != null)
-			$criteria->compare('t.category_type',$category_type);
+			$criteria->compare('category_type',$category_type);
 		$model = self::model()->findAll($criteria);
 
 		if($data_type == null) {
