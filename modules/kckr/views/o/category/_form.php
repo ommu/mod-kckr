@@ -43,6 +43,15 @@
 		</div>
 
 		<div class="clearfix">
+			<?php echo $form->labelEx($model,'category_code'); ?>
+			<div class="desc">
+				<?php echo $form->textField($model,'category_code',array('maxlength'=>8)); ?>
+				<?php echo $form->error($model,'category_code'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
+			</div>
+		</div>
+
+		<div class="clearfix">
 			<?php echo $form->labelEx($model,'category_name'); ?>
 			<div class="desc">
 				<?php echo $form->textField($model,'category_name',array('maxlength'=>32)); ?>

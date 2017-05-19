@@ -669,6 +669,7 @@ class AdminController extends Controller
 				Kckrs::model()->updateByPk($kckr->kckr_id, array(
 					'article_id'=>$model->article_id,
 				));
+					
 				$this->redirect(array('article','id'=>$kckr->kckr_id,'aid'=>$model->article_id));
 			}
 		}

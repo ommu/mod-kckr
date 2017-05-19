@@ -16,22 +16,26 @@ plugin_menu		:
 		urlRules: {siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
 
-	- urlTitle: Setting
+	- urlTitle: Datas
 		urlRules: {siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/setting/index, attr: -, icon: -}
+		urlPath: {url: -, attr: -, icon: -}
 		submenu :
-			- urlTitle: Category
+			- urlTitle: Categories
 				urlRules: {siteType: "0,1", userLevel: "1,2"}
 				urlPath: {url: o/category/manage, attr: -, icon: -}
 			- urlTitle: PIC
 				urlRules: {siteType: "0,1", userLevel: "1,2"}
 				urlPath: {url: o/pic/manage, attr: -, icon: -}
-			- urlTitle: Publisher
+			- urlTitle: Publishers
 				urlRules: {siteType: "0,1", userLevel: "1,2"}
 				urlPath: {url: o/publisher/manage, attr: -, icon: -}
-			- urlTitle: Media
+			- urlTitle: Medias
 				urlRules: {siteType: "0,1", userLevel: "1,2"}
 				urlPath: {url: o/media/manage, attr: -, icon: -}
+        
+	- urlTitle: Settings
+		urlRules: {siteType: "0,1", userLevel: 1}
+		urlPath: {url: o/setting/edit, attr: -, icon: -}
 
 content_menu	:
 # controller o/admin
@@ -40,15 +44,15 @@ content_menu	:
 		urlPath: {url: add, attr: -, icon: -}
 		
 	- urlTitle: Back to manage
-		urlRules: {kckr, o/admin, "add,edit,view", siteType: "0,1", userLevel: "1,2"}
+		urlRules: {kckr, o/admin, "add,edit,view,article", siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: manage, attr: -, icon: -}
         
 	- urlTitle: Update KCKR
-		urlRules: {kckr, o/admin, view, siteType: "0,1", userLevel: "1,2"}
+		urlRules: {kckr, o/admin, "view,article", siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: edit, attr: id=$_GET*id, icon: -}
         
 	- urlTitle: Detail KCKR
-		urlRules: {kckr, o/admin, edit, siteType: "0,1", userLevel: "1,2"}
+		urlRules: {kckr, o/admin, "edit,article", siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: view, attr: id=$_GET*id, icon: -}
         
 	- urlTitle: Add Media

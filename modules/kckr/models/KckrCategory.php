@@ -26,6 +26,7 @@
  * @property integer $category_id
  * @property integer $publish
  * @property string $category_type
+ * @property string $category_code
  * @property string $category_name
  * @property string $category_desc
  * @property string $creation_date
@@ -73,15 +74,16 @@ class KckrCategory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('category_type, category_name, category_desc', 'required'),
+			array('category_type, category_code, category_name, category_desc', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('category_type', 'length', 'max'=>6),
-			array('category_name', 'length', 'max'=>32),
+			array('category_code', 'length', 'max'=>8),
+			array('category_code, category_name', 'length', 'max'=>32),
 			array('creation_id, modified_id', 'length', 'max'=>11),
 			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('category_id, publish, category_type, category_name, category_desc, creation_date, creation_id, modified_date, modified_id, 
+			array('category_id, publish, category_type, category_code, category_name, category_desc, creation_date, creation_id, modified_date, modified_id, 
 				creation_search, modified_search, media_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -111,7 +113,8 @@ class KckrCategory extends CActiveRecord
 			'category_id' => Yii::t('attribute', 'Category'),
 			'publish' => Yii::t('attribute', 'Publish'),
 			'category_type' => Yii::t('attribute', 'Type'),
-			'category_name' => Yii::t('attribute', 'Name'),
+			'category_code' => Yii::t('attribute', 'Code'),
+			'category_name' => Yii::t('attribute', 'Category'),
 			'category_desc' => Yii::t('attribute', 'Description'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
@@ -165,6 +168,7 @@ class KckrCategory extends CActiveRecord
 			$criteria->compare('t.publish',$this->publish);
 		}
 		$criteria->compare('t.category_type',$this->category_type);
+		$criteria->compare('t.category_code',strtolower($this->category_code),true);
 		$criteria->compare('t.category_name',strtolower($this->category_name),true);
 		$criteria->compare('t.category_desc',strtolower($this->category_desc),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -230,6 +234,7 @@ class KckrCategory extends CActiveRecord
 			//$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'category_type';
+			$this->defaultColumns[] = 'category_code';
 			$this->defaultColumns[] = 'category_name';
 			$this->defaultColumns[] = 'category_desc';
 			$this->defaultColumns[] = 'creation_date';
@@ -266,6 +271,13 @@ class KckrCategory extends CActiveRecord
 					'record'=>Yii::t('phrase', 'Record'),
 				),
 				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'category_code',
+				'value' => '$data->category_code',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
 			);
 			$this->defaultColumns[] = 'category_name';
 			$this->defaultColumns[] = 'category_desc';

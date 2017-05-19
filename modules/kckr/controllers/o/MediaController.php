@@ -172,16 +172,24 @@ class MediaController extends Controller
 					$xls = new OExcelReader($path.'/'.$file);
 					
 					for ($row = 2; $row <= $xls->sheets[0]['numRows']; $row++) {
-						$category_id			= trim($xls->sheets[0]['cells'][$row][1]);
+						$category_code			= trim($xls->sheets[0]['cells'][$row][1]);
 						$media_title			= trim($xls->sheets[0]['cells'][$row][2]);
 						$media_desc				= trim($xls->sheets[0]['cells'][$row][3]);
 						$media_publish_year		= trim($xls->sheets[0]['cells'][$row][4]);
 						$media_author			= trim($xls->sheets[0]['cells'][$row][5]);
 						$media_total			= trim($xls->sheets[0]['cells'][$row][6]);
 						
+						$category_id = 1;
+						if($category_code) {
+							$category = KckrCategory::model()->findByAttributes(array('category_code' => $category_code), array(
+								'select' => 'category_id',
+							));
+							$category_id = $category->category_id;
+						}
+						
 						$model=new KckrMedia;
 						$model->kckr_id = $kckrID;
-						$model->category_id = $category_id != '' ? $category_id : 1;
+						$model->category_id = $category_id;
 						$model->media_title = $media_title;
 						$model->media_desc = $media_desc;
 						$model->media_publish_year = $media_publish_year;
@@ -218,12 +226,11 @@ class MediaController extends Controller
 	public function actionAdd() 
 	{
 		$kckrID = $_GET['id'];
-		if(isset($_GET['type']) && $_GET['type'] == 'update')
+		if(isset($kckrID))
 			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$kckrID));
 		else
 			$url = Yii::app()->controller->createUrl('manage');
-
-		$category = KckrCategory::getCategory();		
+		
 		$model=new KckrMedia;
 
 		// Uncomment the following line if AJAX validation is needed
@@ -264,7 +271,6 @@ class MediaController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
-			'category'=>$category,
 			'model'=>$model,
 		));
 	}
@@ -276,7 +282,6 @@ class MediaController extends Controller
 	 */
 	public function actionEdit($id) 
 	{
-		$category = KckrCategory::getCategory();
 		$model=$this->loadModel($id);
 		if(isset($_GET['type']) && $_GET['type'] == 'update')
 			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$model->kckr_id));
@@ -317,7 +322,6 @@ class MediaController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
-			'category'=>$category,
 			'model'=>$model,
 		));
 	}

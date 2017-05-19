@@ -25,6 +25,7 @@
  * The followings are the available columns in table '_view_kckr_category':
  * @property integer $category_id
  * @property string $medias
+ * @property string $media_all
  */
 class ViewKckrCategory extends CActiveRecord
 {
@@ -66,10 +67,10 @@ class ViewKckrCategory extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('category_id', 'numerical', 'integerOnly'=>true),
-			array('medias', 'length', 'max'=>21),
+			array('medias, media_all', 'length', 'max'=>21),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('category_id, medias', 'safe', 'on'=>'search'),
+			array('category_id, medias, media_all', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,6 +93,7 @@ class ViewKckrCategory extends CActiveRecord
 		return array(
 			'category_id' => Yii::t('attribute', 'Category'),
 			'medias' => Yii::t('attribute', 'Medias'),
+			'media_all' => Yii::t('attribute', 'Media All'),
 		);
 		/*
 			'Category' => 'Category',
@@ -119,7 +121,8 @@ class ViewKckrCategory extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.category_id',$this->category_id);
-		$criteria->compare('t.medias',strtolower($this->medias),true);
+		$criteria->compare('t.medias',$this->medias);
+		$criteria->compare('t.media_all',$this->media_all);
 
 		if(!isset($_GET['ViewKckrCategory_sort']))
 			$criteria->order = 't.category_id DESC';
@@ -152,6 +155,7 @@ class ViewKckrCategory extends CActiveRecord
 		} else {
 			$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'medias';
+			$this->defaultColumns[] = 'media_all';
 		}
 
 		return $this->defaultColumns;
@@ -168,6 +172,7 @@ class ViewKckrCategory extends CActiveRecord
 			);
 			//$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'medias';
+			$this->defaultColumns[] = 'media_all';
 		}
 		parent::afterConstruct();
 	}

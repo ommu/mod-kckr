@@ -13,20 +13,21 @@
  *
  */
 
-	$url = Yii::app()->controller->createUrl('article/o/media/ajaxmanage', array('id'=>$model->article_id,'type'=>'admin'));
-	$cs = Yii::app()->getClientScript();
-$js=<<<EOP
-	$.ajax({
-		type: 'get',
-		url: '$url',
-		dataType: 'json',
-		//data: { id: '$id' },
-		success: function(render) {
-			$('.horizontal-data #media-render #upload').before(render.data);
-		}
-	});
-EOP;
-	(!$model->isNewRecord && ($model->article_type == 1 && $articleSetting->media_limit != 1)) ? $cs->registerScript('ajaxmanage', $js, CClientScript::POS_END) : '';
+	$this->breadcrumbs=array(
+		'Kckrs'=>array('manage'),
+		'Add Article',
+	);
+
+	$medias = $model->medias;
+	$media_limit = $articleSetting->media_limit;
+	$condition = 0;
+	if($media_limit != 1 && $model->cat->single_photo == 0)
+		$condition = 1;
+
+	if($model->isNewRecord || (!$model->isNewRecord && $condition == 0))
+		$validation = false;
+	else
+		$validation = true;
 ?>
 
 <div class="form" <?php //echo ($model->article_type == 1 && $articleSetting->media_limit != 1) ? 'name="post-on"' : ''; ?>>
@@ -68,7 +69,7 @@ EOP;
 						</div>
 					</div>
 		
-					<?php if(!$model->isNewRecord && $articleSetting->media_limit == 1) {
+					<?php if(!$model->isNewRecord && $condition == 0) {
 						$medias = $model->medias;
 						if(!empty($medias)) {
 							$media = $model->view->media_cover ? $model->view->media_cover : $medias[0]->media;
@@ -84,8 +85,8 @@ EOP;
 						}
 					}?>
 
-					<?php if($model->isNewRecord || (!$model->isNewRecord && $articleSetting->media_limit == 1)) {?>
-					<div id="media" class="<?php echo (($model->isNewRecord && !$model->getErrors()) || (($model->isNewRecord && $model->getErrors()) || (!$model->isNewRecord && $articleSetting->media_limit == 1))) ? '' : 'hide';?> clearfix filter">
+					<?php if($model->isNewRecord || (!$model->isNewRecord && $condition == 0)) {?>
+					<div id="media" class="<?php echo (($model->isNewRecord && !$model->getErrors()) || (($model->isNewRecord && $model->getErrors()) || (!$model->isNewRecord && ($articleSetting->media_limit == 1 || ($articleSetting->media_limit != 1 && $model->cat->single_photo == 1))))) ? '' : 'hide';?> clearfix filter">
 						<?php echo $form->labelEx($model,'media_input'); ?>
 						<div class="desc">
 							<?php echo $form->fileField($model,'media_input'); ?>
@@ -172,7 +173,7 @@ EOP;
 						}
 					}?>
 					
-					<div id="file" class="<?php echo (($model->isNewRecord && !$model->getErrors()) || (($model->isNewRecord && $model->getErrors()) || !$model->isNewRecord)) ? '' : 'hide';?> clearfix">
+					<div id="file" class="clearfix">
 						<?php echo $form->labelEx($model,'media_file'); ?>
 						<div class="desc">
 							<?php echo $form->fileField($model,'media_file'); ?>
@@ -276,7 +277,7 @@ EOP;
 					if($model->isNewRecord && !$model->getErrors()) {
 						$template = 'kckr_article';
 						$message = $this->renderPartial('application.modules.kckr.components.templates.'.$template, array('kckr'=>$kckr), true, false);
-						$model->body = $message;			
+						$model->body = $message;
 					}
 					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
 					$this->widget('application.extensions.imperavi.ImperaviRedactorWidget', array(
@@ -312,15 +313,17 @@ EOP;
 	<?php $this->endWidget(); ?>
 </div>
 
-<?php if(!$model->isNewRecord && ($model->article_type == 1 && $articleSetting->media_limit != 1)) {?>
+<?php if($condition == 1) {?>
 <div class="boxed mt-15">
 	<h3><?php echo Yii::t('phrase', 'Article Photo'); ?></h3>
 	<div class="clearfix horizontal-data" name="four">
 		<ul id="media-render">
-			<li id="upload" <?php echo (count(ArticleMedia::getPhoto($model->article_id)) == $articleSetting->media_limit) ? 'class="hide"' : '' ?>>
-				<a id="upload-gallery" href="<?php echo Yii::app()->controller->createUrl('article/o/media/ajaxadd', array('id'=>$model->article_id,'type'=>'admin'));?>" title="<?php echo Yii::t('phrase', 'Upload Photo'); ?>"><?php echo Yii::t('phrase', 'Upload Photo'); ?></a>
-				<img src="<?php echo Utility::getTimThumb(Yii::app()->request->baseUrl.'/public/article/article_default.png', 320, 250, 1);?>" alt="" />
-			</li>
+			<?php 
+			$this->renderPartial('_form_cover', array('model'=>$model, 'medias'=>$medias, 'media_limit'=>$media_limit));
+			if(!empty($medias)) {
+				foreach($medias as $key => $data)
+					$this->renderPartial('_form_view_covers', array('data'=>$data));
+			}?>
 		</ul>
 	</div>
 </div>

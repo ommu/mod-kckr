@@ -25,6 +25,7 @@
  * The followings are the available columns in table '_view_kckr_pic':
  * @property integer $pic_id
  * @property string $kckrs
+ * @property string $kckr_all
  */
 class ViewKckrPic extends CActiveRecord
 {
@@ -66,10 +67,10 @@ class ViewKckrPic extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('pic_id', 'numerical', 'integerOnly'=>true),
-			array('kckrs', 'length', 'max'=>21),
+			array('kckrs, kckr_all', 'length', 'max'=>21),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('pic_id, kckrs', 'safe', 'on'=>'search'),
+			array('pic_id, kckrs, kckr_all', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,6 +93,7 @@ class ViewKckrPic extends CActiveRecord
 		return array(
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'kckrs' => Yii::t('attribute', 'Kckrs'),
+			'kckr_all' => Yii::t('attribute', 'Kckr All'),
 		);
 		/*
 			'Pic' => 'Pic',
@@ -119,7 +121,8 @@ class ViewKckrPic extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.pic_id',$this->pic_id);
-		$criteria->compare('t.kckrs',strtolower($this->kckrs),true);
+		$criteria->compare('t.kckrs',$this->kckrs);
+		$criteria->compare('t.kckr_all',$this->kckr_all);
 
 		if(!isset($_GET['ViewKckrPic_sort']))
 			$criteria->order = 't.pic_id DESC';
@@ -152,6 +155,7 @@ class ViewKckrPic extends CActiveRecord
 		} else {
 			$this->defaultColumns[] = 'pic_id';
 			$this->defaultColumns[] = 'kckrs';
+			$this->defaultColumns[] = 'kckr_all';
 		}
 
 		return $this->defaultColumns;
@@ -168,6 +172,7 @@ class ViewKckrPic extends CActiveRecord
 			);
 			//$this->defaultColumns[] = 'pic_id';
 			$this->defaultColumns[] = 'kckrs';
+			$this->defaultColumns[] = 'kckr_all';
 		}
 		parent::afterConstruct();
 	}

@@ -25,7 +25,9 @@
  * The followings are the available columns in table '_view_kckr_publisher':
  * @property string $publisher_id
  * @property string $kckrs
+ * @property string $kckr_all
  * @property string $medias
+ * @property string $media_all
  */
 class ViewKckrPublisher extends CActiveRecord
 {
@@ -67,11 +69,11 @@ class ViewKckrPublisher extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publisher_id', 'length', 'max'=>11),
-			array('kckrs', 'length', 'max'=>21),
-			array('medias', 'length', 'max'=>42),
+			array('kckrs, kckr_all', 'length', 'max'=>21),
+			array('medias, media_all', 'length', 'max'=>42),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('publisher_id, kckrs, medias', 'safe', 'on'=>'search'),
+			array('publisher_id, kckrs, kckr_all, medias, media_all', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -94,7 +96,9 @@ class ViewKckrPublisher extends CActiveRecord
 		return array(
 			'publisher_id' => Yii::t('attribute', 'Publisher'),
 			'kckrs' => Yii::t('attribute', 'Kckrs'),
+			'kckr_all' => Yii::t('attribute', 'Kckr All'),
 			'medias' => Yii::t('attribute', 'Medias'),
+			'media_all' => Yii::t('attribute', 'Media All'),
 		);
 		/*
 			'Publisher' => 'Publisher',
@@ -122,9 +126,11 @@ class ViewKckrPublisher extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.publisher_id',strtolower($this->publisher_id),true);
-		$criteria->compare('t.kckrs',strtolower($this->kckrs),true);
-		$criteria->compare('t.medias',strtolower($this->medias),true);
+		$criteria->compare('t.publisher_id',$this->publisher_id);
+		$criteria->compare('t.kckrs',$this->kckrs);
+		$criteria->compare('t.kckr_all',$this->kckr_all);
+		$criteria->compare('t.medias',$this->medias);
+		$criteria->compare('t.media_all',$this->media_all);
 
 		if(!isset($_GET['ViewKckrPublisher_sort']))
 			$criteria->order = 't.publisher_id DESC';
@@ -157,7 +163,9 @@ class ViewKckrPublisher extends CActiveRecord
 		} else {
 			$this->defaultColumns[] = 'publisher_id';
 			$this->defaultColumns[] = 'kckrs';
+			$this->defaultColumns[] = 'kckr_all';
 			$this->defaultColumns[] = 'medias';
+			$this->defaultColumns[] = 'media_all';
 		}
 
 		return $this->defaultColumns;
@@ -174,7 +182,9 @@ class ViewKckrPublisher extends CActiveRecord
 			);
 			//$this->defaultColumns[] = 'publisher_id';
 			$this->defaultColumns[] = 'kckrs';
+			$this->defaultColumns[] = 'kckr_all';
 			$this->defaultColumns[] = 'medias';
+			$this->defaultColumns[] = 'media_all';
 		}
 		parent::afterConstruct();
 	}
