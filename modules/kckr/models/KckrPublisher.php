@@ -46,6 +46,7 @@ class KckrPublisher extends CActiveRecord
 	public $modified_search;
 	public $kckr_search;
 	public $media_search;
+	public $item_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -83,7 +84,7 @@ class KckrPublisher extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('publisher_id, publish, publisher_name, publisher_area, publisher_address, publisher_phone, creation_date, creation_id, modified_date, modified_id, 
-				creation_search, modified_search, kckr_search, media_search', 'safe', 'on'=>'search'),
+				creation_search, modified_search, kckr_search, media_search, item_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -122,6 +123,7 @@ class KckrPublisher extends CActiveRecord
 			'modified_search' => Yii::t('attribute', 'Modified'),
 			'kckr_search' => Yii::t('attribute', 'KCKR'),
 			'media_search' => Yii::t('attribute', 'Karya'),
+			'item_search' => Yii::t('attribute', 'Item'),
 		);
 		/*
 			'Publisher' => 'Publisher',
@@ -155,8 +157,23 @@ class KckrPublisher extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		// Custom Search
+		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
 
-		$criteria->compare('t.publisher_id',strtolower($this->publisher_id),true);
+		$criteria->compare('t.publisher_id',$this->publisher_id);
 		if(isset($_GET['type']) && $_GET['type'] == 'publish')
 			$criteria->compare('t.publish',1);
 		elseif(isset($_GET['type']) && $_GET['type'] == 'unpublish')
@@ -184,24 +201,11 @@ class KckrPublisher extends CActiveRecord
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
 		
-		// Custom Search
-		$criteria->with = array(
-			'view' => array(
-				'alias'=>'view',
-			),
-			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
-			),
-			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
-			),
-		);
-		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
-		$criteria->compare('view.kckrs',strtolower($this->kckr_search), true);
-		$criteria->compare('view.medias',strtolower($this->media_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search),true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
+		$criteria->compare('view.kckrs',$this->kckr_search);
+		$criteria->compare('view.medias',$this->media_search);
+		$criteria->compare('view.media_items',$this->item_search);
 
 		if(!isset($_GET['KckrPublisher_sort']))
 			$criteria->order = 't.publisher_id DESC';
@@ -274,8 +278,8 @@ class KckrPublisher extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
-			$this->defaultColumns[] = 'publisher_address';
-			$this->defaultColumns[] = 'publisher_phone';
+			//$this->defaultColumns[] = 'publisher_address';
+			//$this->defaultColumns[] = 'publisher_phone';
 			$this->defaultColumns[] = array(
 				'name' => 'kckr_search',
 				'value' => 'CHtml::link($data->view->kckrs ? $data->view->kckrs : 0, Yii::app()->controller->createUrl("o/admin/manage",array(\'publisher\'=>$data->publisher_id)))',
@@ -287,6 +291,14 @@ class KckrPublisher extends CActiveRecord
 			$this->defaultColumns[] = array(
 				'name' => 'media_search',
 				'value' => 'CHtml::link($data->view->medias ? $data->view->medias : 0, Yii::app()->controller->createUrl("o/media/manage",array(\'publisher\'=>$data->publisher_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'item_search',
+				'value' => '$data->view->media_items ? $data->view->media_items : 0',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

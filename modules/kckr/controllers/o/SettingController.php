@@ -113,6 +113,9 @@ class SettingController extends Controller
 	 */
 	public function actionEdit() 
 	{
+		if(Yii::app()->user->level != 1)
+			throw new CHttpException(404, Yii::t('phrase', 'The requested page does not exist.'));
+		
 		$model = KckrSetting::model()->findByPk(1);
 		if($model == null)
 			$model=new KckrSetting;
@@ -158,7 +161,7 @@ class SettingController extends Controller
 			Yii::app()->end();
 		}
 
-		$this->pageTitle = Yii::t('phrase', 'Update Kckr Settings');
+		$this->pageTitle = Yii::t('phrase', 'Settings');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(

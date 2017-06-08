@@ -21,7 +21,7 @@ plugin_menu		:
 		urlPath: {url: -, attr: -, icon: -}
 		submenu :
 			- urlTitle: Categories
-				urlRules: {siteType: "0,1", userLevel: "1,2"}
+				urlRules: {siteType: "0,1", userLevel: 1}
 				urlPath: {url: o/category/manage, attr: -, icon: -}
 			- urlTitle: PIC
 				urlRules: {siteType: "0,1", userLevel: "1,2"}
@@ -36,32 +36,36 @@ plugin_menu		:
 	- urlTitle: Settings
 		urlRules: {siteType: "0,1", userLevel: 1}
 		urlPath: {url: o/setting/edit, attr: -, icon: -}
+                
+	- urlTitle: KCKR Manual Book
+		urlRules: {siteType: "0,1", userLevel: 2}
+		urlPath: {url: o/setting/manual, attr: -, icon: -}
 
 content_menu	:
 # controller o/admin
 	- urlTitle: Add KCKR
 		urlRules: {kckr, o/admin, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: add, attr: -, icon: -}
-		
+		urlPath: {url: add, attr: -, icon: -}		
 	- urlTitle: Back to manage
 		urlRules: {kckr, o/admin, "add,edit,view,article", siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: manage, attr: -, icon: -}
-        
+		urlPath: {url: manage, attr: -, icon: -}        
 	- urlTitle: Update KCKR
 		urlRules: {kckr, o/admin, "view,article", siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: edit, attr: id=$_GET*id, icon: -}
-        
+		urlPath: {url: edit, attr: id=$_GET*id, icon: -}        
 	- urlTitle: Detail KCKR
 		urlRules: {kckr, o/admin, "edit,article", siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: view, attr: id=$_GET*id, icon: -}
-        
+		urlPath: {url: view, attr: id=$_GET*id, icon: -}        
 	- urlTitle: Add Media
 		urlRules: {kckr, o/admin, edit, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/media/add, attr: id=$_GET*id,type=update, icon: -}
-        
+		urlPath: {url: o/media/add, attr: id=$_GET*id,type=update, icon: -}        
 	- urlTitle: Import Media
 		urlRules: {kckr, o/admin, edit, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: import, attr: id=$_GET*id,type=update, icon: -}
+		
+# controller o/category		
+	- urlTitle: Add Category
+		urlRules: {kckr, o/category, manage, siteType: "0,1", userLevel: 1}
+		urlPath: {url: add, attr: -, icon: -}
 		
 # controller o/pic
 	- urlTitle: Add PIC
@@ -73,12 +77,12 @@ content_menu	:
 		urlRules: {kckr, o/publisher, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: add, attr: -, icon: -}
 		
-# controller o/category		
-	- urlTitle: Add Category
-		urlRules: {kckr, o/category, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: add, attr: -, icon: -}
-		
 # controller o/media		
 	- urlTitle: Back to manage
 		urlRules: {kckr, o/media, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
+
+# controller o/setting
+	- urlTitle: KCKR Manual Book
+		urlRules: {kckr, o/setting, edit, siteType: "0,1", userLevel: 1}
+		urlPath: {url: manual, attr: -, icon: -}

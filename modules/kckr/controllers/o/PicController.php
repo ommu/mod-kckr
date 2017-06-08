@@ -155,7 +155,7 @@ class PicController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'PICs Manage');
+		$this->pageTitle = Yii::t('phrase', 'PICs');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(

@@ -160,7 +160,7 @@ class PublisherController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Kckr Publishers Manage');
+		$this->pageTitle = Yii::t('phrase', 'Publishers');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -195,7 +195,7 @@ class PublisherController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-kckr-publisher',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrPublisher success created.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr publisher success created.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -209,7 +209,7 @@ class PublisherController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'Create Kckr Publishers');
+		$this->pageTitle = Yii::t('phrase', 'Create Publisher');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
@@ -244,7 +244,7 @@ class PublisherController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-kckr-publisher',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrPublisher success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr publisher success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -258,7 +258,7 @@ class PublisherController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Kckr Publishers');
+		$this->pageTitle = Yii::t('phrase', 'Update Publisher: $publisher_name', array('$publisher_name'=>$model->publisher_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -278,7 +278,7 @@ class PublisherController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'View Kckr Publishers');
+		$this->pageTitle = Yii::t('phrase', 'View Publisher: $publisher_name', array('$publisher_name'=>$model->publisher_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -339,7 +339,7 @@ class PublisherController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckr-publisher',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrPublisher success deleted.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr publisher success deleted.').'</strong></div>',
 					));
 				}
 			}
@@ -349,7 +349,7 @@ class PublisherController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'KckrPublisher Delete.');
+			$this->pageTitle = Yii::t('phrase', 'Delete Publisher: $publisher_name', array('$publisher_name'=>$model->publisher_name));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -372,6 +372,7 @@ class PublisherController extends Controller
 			$title = Yii::t('phrase', 'Publish');
 			$replace = 1;
 		}
+		$pageTitle = Yii::t('phrase', '$title Category: $publisher_name', array ('$title'=>$title, '$publisher_name'=>$model->publisher_name));
 
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
@@ -384,7 +385,7 @@ class PublisherController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckr-publisher',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrPublisher success updated.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr publisher success updated.').'</strong></div>',
 					));
 				}
 			}
@@ -394,7 +395,7 @@ class PublisherController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = $title;
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(

@@ -28,6 +28,8 @@
  * @property string $kckr_all
  * @property string $medias
  * @property string $media_all
+ * @property string $media_items
+ * @property string $media_item_all
  */
 class ViewKckrPublisher extends CActiveRecord
 {
@@ -71,9 +73,10 @@ class ViewKckrPublisher extends CActiveRecord
 			array('publisher_id', 'length', 'max'=>11),
 			array('kckrs, kckr_all', 'length', 'max'=>21),
 			array('medias, media_all', 'length', 'max'=>42),
+			array('media_items, media_item_all', 'length', 'max'=>49),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('publisher_id, kckrs, kckr_all, medias, media_all', 'safe', 'on'=>'search'),
+			array('publisher_id, kckrs, kckr_all, medias, media_all, media_items, media_item_all', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -99,6 +102,8 @@ class ViewKckrPublisher extends CActiveRecord
 			'kckr_all' => Yii::t('attribute', 'Kckr All'),
 			'medias' => Yii::t('attribute', 'Medias'),
 			'media_all' => Yii::t('attribute', 'Media All'),
+			'media_items' => Yii::t('attribute', 'Media Items'),
+			'media_item_all' => Yii::t('attribute', 'Media Item All'),
 		);
 		/*
 			'Publisher' => 'Publisher',
@@ -131,6 +136,8 @@ class ViewKckrPublisher extends CActiveRecord
 		$criteria->compare('t.kckr_all',$this->kckr_all);
 		$criteria->compare('t.medias',$this->medias);
 		$criteria->compare('t.media_all',$this->media_all);
+		$criteria->compare('t.media_items',$this->media_items);
+		$criteria->compare('t.media_item_all',$this->media_item_all);
 
 		if(!isset($_GET['ViewKckrPublisher_sort']))
 			$criteria->order = 't.publisher_id DESC';
@@ -166,6 +173,8 @@ class ViewKckrPublisher extends CActiveRecord
 			$this->defaultColumns[] = 'kckr_all';
 			$this->defaultColumns[] = 'medias';
 			$this->defaultColumns[] = 'media_all';
+			$this->defaultColumns[] = 'media_items';
+			$this->defaultColumns[] = 'media_item_all';
 		}
 
 		return $this->defaultColumns;
@@ -185,6 +194,8 @@ class ViewKckrPublisher extends CActiveRecord
 			$this->defaultColumns[] = 'kckr_all';
 			$this->defaultColumns[] = 'medias';
 			$this->defaultColumns[] = 'media_all';
+			$this->defaultColumns[] = 'media_items';
+			$this->defaultColumns[] = 'media_item_all';
 		}
 		parent::afterConstruct();
 	}
