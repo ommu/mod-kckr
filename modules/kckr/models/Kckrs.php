@@ -59,6 +59,7 @@ class Kckrs extends CActiveRecord
 	public $creation_search;
 	public $modified_search;
 	public $media_search;
+	public $item_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -97,7 +98,7 @@ class Kckrs extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('kckr_id, publish, article_id, pic_id, publisher_id, letter_number, send_type, send_date, receipt_date, thanks_date, thanks_document, thanks_user_id, photos, creation_date, creation_id, modified_date, modified_id, 
-				pic_search, publisher_search, creation_search, modified_search, media_search', 'safe', 'on'=>'search'),
+				pic_search, publisher_search, creation_search, modified_search, media_search, item_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -117,6 +118,7 @@ class Kckrs extends CActiveRecord
 			'medias' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id'),
 			'media_publish' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id', 'on'=>'media_publish.publish = 1'),
 			'media_unpublish' => array(self::HAS_MANY, 'KckrMedia', 'kckr_id', 'on'=>'media_unpublish.publish = 0'),
+			'article' => array(self::BELONGS_TO, 'Articles', 'article_id'),
 		);
 	}
 
@@ -150,6 +152,7 @@ class Kckrs extends CActiveRecord
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 			'media_search' => Yii::t('attribute', 'Karya'),
+			'item_search' => Yii::t('attribute', 'Item'),
 		);
 		/*
 			'Kckr' => 'Kckr',
@@ -185,6 +188,29 @@ class Kckrs extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		// Custom Search
+		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
+			'pic' => array(
+				'alias'=>'pic',
+				'select'=>'pic_name'
+			),
+			'publisher' => array(
+				'alias'=>'publisher',
+				'select'=>'publisher_name'
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
 
 		$criteria->compare('t.kckr_id',strtolower($this->kckr_id),true);
 		if(isset($_GET['type']) && $_GET['type'] == 'publish')
@@ -197,7 +223,7 @@ class Kckrs extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1));
 			$criteria->compare('t.publish',$this->publish);
 		}
-		$criteria->compare('t.article_id',strtolower($this->article_id),true);
+		$criteria->compare('t.article_id',$this->article_id);
 		if(isset($_GET['pic']))
 			$criteria->compare('t.pic_id',$_GET['pic']);
 		else
@@ -233,33 +259,12 @@ class Kckrs extends CActiveRecord
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
 		
-		// Custom Search
-		$criteria->with = array(
-			'view' => array(
-				'alias'=>'view',
-			),
-			'pic' => array(
-				'alias'=>'pic',
-				'select'=>'pic_name'
-			),
-			'publisher' => array(
-				'alias'=>'publisher',
-				'select'=>'publisher_name'
-			),
-			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
-			),
-			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
-			),
-		);
-		$criteria->compare('pic.pic_name',strtolower($this->pic_search), true);
-		$criteria->compare('publisher.publisher_name',strtolower($this->publisher_search), true);
-		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
-		$criteria->compare('view.medias',strtolower($this->media_search), true);
+		$criteria->compare('pic.pic_name',strtolower($this->pic_search),true);
+		$criteria->compare('publisher.publisher_name',strtolower($this->publisher_search),true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search),true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
+		$criteria->compare('view.medias',$this->media_search);
+		$criteria->compare('view.item_search',$this->item_search);
 
 		if(!isset($_GET['Kckrs_sort']))
 			$criteria->order = 't.kckr_id DESC';
@@ -315,7 +320,15 @@ class Kckrs extends CActiveRecord
 	/**
 	 * Set default columns to display
 	 */
-	protected function afterConstruct() {
+	protected function afterConstruct() 
+	{
+		$setting = KckrSetting::model()->findByPk(1, array(
+			'select' => 'gridview_column',
+		));
+		$gridview_column = unserialize($setting->gridview_column);		
+		if(empty($gridview_column))
+			$gridview_column = array();
+		
 		if(count($this->defaultColumns) == 0) {
 			/*
 			$this->defaultColumns[] = array(
@@ -333,7 +346,12 @@ class Kckrs extends CActiveRecord
 				'name' => 'publisher_search',
 				'value' => '$data->publisher->publisher_name',
 			);
-			$this->defaultColumns[] = 'letter_number';
+			if(in_array('letter_number', $gridview_column)) {
+				$this->defaultColumns[] = array(
+					'name' => 'letter_number',
+					'value' => '$data->letter_number',
+				);
+			}
 			$this->defaultColumns[] = array(
 				'name' => 'send_type',
 				'value' => '$data->send_type == \'\' ? \'-\' : ($data->send_type == \'pos\' ? Yii::t(\'phrase\', \'Pos\') : Yii::t(\'phrase\', \'Langsung\'))',				
@@ -398,14 +416,60 @@ class Kckrs extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'media_search',
-				'value' => 'CHtml::link($data->view->medias ? $data->view->medias : 0, Yii::app()->controller->createUrl("o/media/manage",array(\'kckr\'=>$data->kckr_id)))',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'type' => 'raw',
-			);
+			if(in_array('creation_search', $gridview_column)) {
+				$this->defaultColumns[] = array(
+					'name' => 'creation_search',
+					'value' => '$data->creation->displayname',
+				);
+			}
+			if(in_array('creation_date', $gridview_column)) {
+				$this->defaultColumns[] = array(
+					'name' => 'creation_date',
+					'value' => 'Utility::dateFormat($data->creation_date)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
+						'model'=>$this,
+						'attribute'=>'creation_date',
+						'language' => 'en',
+						'i18nScriptFile' => 'jquery-ui-i18n.min.js',
+						//'mode'=>'datetime',
+						'htmlOptions' => array(
+							'id' => 'creation_date_filter',
+						),
+						'options'=>array(
+							'showOn' => 'focus',
+							'dateFormat' => 'dd-mm-yy',
+							'showOtherMonths' => true,
+							'selectOtherMonths' => true,
+							'changeMonth' => true,
+							'changeYear' => true,
+							'showButtonPanel' => true,
+						),
+					), true),
+				);
+			}
+			if(in_array('media_search', $gridview_column)) {
+				$this->defaultColumns[] = array(
+					'name' => 'media_search',
+					'value' => 'CHtml::link($data->view->medias ? $data->view->medias : 0, Yii::app()->controller->createUrl("o/media/manage",array(\'kckr\'=>$data->kckr_id)))',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			}
+			if(in_array('item_search', $gridview_column)) {
+				$this->defaultColumns[] = array(
+					'name' => 'item_search',
+					'value' => '$data->view->media_items ? $data->view->media_items : 0',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			}
 			$this->defaultColumns[] = array(
 				'header' => Yii::t('phrase', 'Print'),
 				'value' =>  'CHtml::link(!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Yii::t(\'phrase\', \'Print\'), Yii::app()->controller->createUrl("print",array(\'id\'=>$data->kckr_id)))',

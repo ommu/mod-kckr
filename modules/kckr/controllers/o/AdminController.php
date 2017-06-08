@@ -112,8 +112,18 @@ class AdminController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionManage() 
+	public function actionManage($pic=null, $publisher=null) 
 	{
+		$pageTitle = Yii::t('phrase', 'KCKRs');
+		if($pic != null) {
+			$data = KckrPic::model()->findByPk($pic);
+			$pageTitle = Yii::t('phrase', 'KCKRs: PIC $pic_name', array ('$pic_name'=>$data->pic_name));
+		}
+		if($publisher != null) {
+			$data = KckrPublisher::model()->findByPk($publisher);
+			$pageTitle = Yii::t('phrase', 'KCKRs: Publisher $publisher_name', array ('$publisher_name'=>$data->publisher_name));
+		}
+		
 		$model=new Kckrs('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Kckrs'])) {
@@ -130,7 +140,7 @@ class AdminController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Kckrs Manage');
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -195,7 +205,7 @@ class AdminController extends Controller
 				//}
 				
 				if($model->save()) {
-					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Kckrs success created.'));
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'KCKR success created.'));
 					$this->redirect(array('edit','id'=>$model->kckr_id));
 				}
 				
@@ -206,7 +216,7 @@ class AdminController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Create Kckrs');
+		$this->pageTitle = Yii::t('phrase', 'Create KCKR');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
@@ -304,13 +314,17 @@ class AdminController extends Controller
 				}
 				
 				if($model->save()) {
-					Yii::app()->user->setFlash('success', Yii::t('phrase', 'Kckrs success updated.'));
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'KCKR success updated.'));
 					$this->redirect(array('manage'));
 				}				
 			}
 		}
+		
+		$pageTitle = Yii::t('phrase', 'Update Kckr: Publisher $publisher_name', array ('$publisher_name'=>$model->publisher->publisher_name));
+		if($model->letter_number && $model->letter_number != '-')
+			$pageTitle = Yii::t('phrase', 'Update Kckr: Publisher $publisher_name Leter Number $letter_number', array ('$publisher_name'=>$model->publisher->publisher_name, '$letter_number'=>$model->letter_number));
 
-		$this->pageTitle = Yii::t('phrase', 'Update Kckrs');
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -327,12 +341,16 @@ class AdminController extends Controller
 	 * @param integer $id the ID of the model to be displayed
 	 */
 	public function actionView($id) 
-	{
+	{		
 		$model=$this->loadModel($id);
+		
+		$pageTitle = Yii::t('phrase', 'View Kckr: Publisher $publisher_name', array ('$publisher_name'=>$model->publisher->publisher_name));
+		if($model->letter_number && $model->letter_number != '-')
+			$pageTitle = Yii::t('phrase', 'View Kckr: Publisher $publisher_name Leter Number $letter_number', array ('$publisher_name'=>$model->publisher->publisher_name, '$letter_number'=>$model->letter_number));
 
-		$this->pageTitle = Yii::t('phrase', 'View Kckrs');
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
-		$this->pageMeta = $setting->meta_keyword;
+		$this->pageMeta = '';
 		$this->render('admin_view',array(
 			'model'=>$model,
 		));
@@ -383,6 +401,10 @@ class AdminController extends Controller
 	{
 		$model=$this->loadModel($id);
 		
+		$pageTitle = Yii::t('phrase', 'Delete Kckr: Publisher $publisher_name', array ('$publisher_name'=>$model->publisher->publisher_name));
+		if($model->letter_number && $model->letter_number != '-')
+			$pageTitle = Yii::t('phrase', 'Delete Kckr: Publisher $publisher_name Leter Number $letter_number', array ('$publisher_name'=>$model->publisher->publisher_name, '$letter_number'=>$model->letter_number));
+		
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			if(isset($id)) {
@@ -391,7 +413,7 @@ class AdminController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckrs',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckrs success deleted.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KCKR success deleted.').'</strong></div>',
 					));
 				}
 			}
@@ -401,7 +423,7 @@ class AdminController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'Kckrs Delete.');
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -423,7 +445,10 @@ class AdminController extends Controller
 		} else {
 			$title = Yii::t('phrase', 'Publish');
 			$replace = 1;
-		}
+		}		
+		$pageTitle = Yii::t('phrase', '$title Kckr: Publisher $publisher_name', array ('$title'=>$title, '$publisher_name'=>$model->publisher->publisher_name));
+		if($model->letter_number && $model->letter_number != '-')
+			$pageTitle = Yii::t('phrase', '$title Kckr: Publisher $publisher_name Leter Number $letter_number', array ('$title'=>$title, '$publisher_name'=>$model->publisher->publisher_name, '$letter_number'=>$model->letter_number));
 
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
@@ -436,7 +461,7 @@ class AdminController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckrs',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckrs success updated.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KCKR success updated.').'</strong></div>',
 					));
 				}
 			}
@@ -446,7 +471,7 @@ class AdminController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = $title;
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(
@@ -462,6 +487,11 @@ class AdminController extends Controller
 	public function actionPrint($id) 
 	{
 		$model=$this->loadModel($id);
+		
+		$pageTitle = Yii::t('phrase', 'Print Kckr: Publisher $publisher_name', array ('$publisher_name'=>$model->publisher->publisher_name));
+		if($model->letter_number && $model->letter_number != '-')
+			$pageTitle = Yii::t('phrase', 'Print Kckr: Publisher $publisher_name Leter Number $letter_number', array ('$publisher_name'=>$model->publisher->publisher_name, '$letter_number'=>$model->letter_number));
+		
 		$condition = in_array($model->thanks_date, array('0000-00-00', '1970-01-01')) && $model->thanks_document == '' ? false : true;
 
 		// Uncomment the following line if AJAX validation is needed
@@ -538,7 +568,7 @@ class AdminController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'Print Kckrs');
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_print',array(
@@ -674,7 +704,14 @@ class AdminController extends Controller
 			}
 		}
 
-		$this->pageTitle = $model->isNewRecord ? Yii::t('phrase', 'Create Article: {title}', array('{title}'=>$kckr->publisher->publisher_name)) : Yii::t('phrase', 'Update Article: {title}', array('{title}'=>$model->title));
+		if($model->isNewRecord) {
+			$pageTitle = Yii::t('phrase', 'Create Kckr Article: Publisher $publisher_name', array ('$publisher_name'=>$kckr->publisher->publisher_name));
+			if($kckr->letter_number && $kckr->letter_number != '-')
+				$pageTitle = Yii::t('phrase', 'Create Kckr Article: Publisher $publisher_name Leter Number $letter_number', array ('$publisher_name'=>$kckr->publisher->publisher_name, '$letter_number'=>$kckr->letter_number));			
+		} else
+			$pageTitle = Yii::t('phrase', 'Update Kckr Article: Publisher $article_title', array ('$article_title'=>$model->title));
+		
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_article',array(
