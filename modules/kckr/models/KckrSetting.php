@@ -28,6 +28,7 @@
  * @property integer $permission
  * @property string $meta_keyword
  * @property string $meta_description
+ * @property string $gridview_column
  * @property integer $photo_resize 
  * @property string $photo_resize_size
  * @property string $photo_view_size
@@ -70,14 +71,14 @@ class KckrSetting extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('license, permission, meta_keyword, meta_description, photo_resize, article_sync, article_cat_id', 'required'),
+			array('license, permission, meta_keyword, meta_description, gridview_column, photo_resize, article_sync, article_cat_id', 'required'),
 			array('permission, photo_resize, article_sync', 'numerical', 'integerOnly'=>true),
 			array('license', 'length', 'max'=>32),
 			array('modified_id', 'length', 'max'=>11),
 			array('photo_resize_size, photo_view_size', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, license, permission, meta_keyword, meta_description, photo_resize, photo_resize_size, photo_view_size, article_sync, article_cat_id, modified_date, modified_id,
+			array('id, license, permission, meta_keyword, meta_description, gridview_column, photo_resize, photo_resize_size, photo_view_size, article_sync, article_cat_id, modified_date, modified_id,
 				modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -105,6 +106,7 @@ class KckrSetting extends CActiveRecord
 			'permission' => Yii::t('attribute', 'Permission'),
 			'meta_keyword' => Yii::t('attribute', 'Meta Keyword'),
 			'meta_description' => Yii::t('attribute', 'Meta Description'),
+			'gridview_column' => Yii::t('attribute', 'Gridview Column'),
 			'photo_resize' => Yii::t('attribute', 'Photo Resize'),
 			'photo_resize_size' => Yii::t('attribute', 'Photo Resize Size'),
 			'photo_view_size' => Yii::t('attribute', 'Photo View Size'),
@@ -157,9 +159,10 @@ class KckrSetting extends CActiveRecord
 		$criteria->compare('t.permission',$this->permission);
 		$criteria->compare('t.meta_keyword',strtolower($this->meta_keyword),true);
 		$criteria->compare('t.meta_description',strtolower($this->meta_description),true);
+		$criteria->compare('t.gridview_column',$this->gridview_column,true);
 		$criteria->compare('t.photo_resize',$this->photo_resize);
-		$criteria->compare('t.photo_resize_size',$this->photo_resize_size);
-		$criteria->compare('t.photo_view_size',$this->photo_view_size);
+		$criteria->compare('t.photo_resize_size',$this->photo_resize_size,true);
+		$criteria->compare('t.photo_view_size',$this->photo_view_size,true);
 		$criteria->compare('t.article_sync',$this->article_sync);
 		$criteria->compare('t.article_cat_id',$this->article_cat_id);
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -169,7 +172,7 @@ class KckrSetting extends CActiveRecord
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
 		
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
 
 		if(!isset($_GET['KckrSetting_sort']))
 			$criteria->order = 't.id DESC';
@@ -205,6 +208,7 @@ class KckrSetting extends CActiveRecord
 			$this->defaultColumns[] = 'permission';
 			$this->defaultColumns[] = 'meta_keyword';
 			$this->defaultColumns[] = 'meta_description';
+			$this->defaultColumns[] = 'gridview_column';
 			$this->defaultColumns[] = 'photo_resize';
 			$this->defaultColumns[] = 'photo_resize_size';
 			$this->defaultColumns[] = 'photo_view_size';
@@ -222,14 +226,6 @@ class KckrSetting extends CActiveRecord
 	 */
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
-			/*
-			$this->defaultColumns[] = array(
-				'class' => 'CCheckBoxColumn',
-				'name' => 'id',
-				'selectableRows' => 2,
-				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
-			);
-			*/
 			$this->defaultColumns[] = array(
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
@@ -238,6 +234,7 @@ class KckrSetting extends CActiveRecord
 			$this->defaultColumns[] = 'permission';
 			$this->defaultColumns[] = 'meta_keyword';
 			$this->defaultColumns[] = 'meta_description';
+			$this->defaultColumns[] = 'gridview_column';
 			$this->defaultColumns[] = 'photo_resize';
 			$this->defaultColumns[] = 'photo_resize_size';
 			$this->defaultColumns[] = 'photo_view_size';
@@ -324,6 +321,7 @@ class KckrSetting extends CActiveRecord
 	protected function beforeSave() {
 		$controller = strtolower(Yii::app()->controller->id);
 		if(parent::beforeSave()) {
+			$this->gridview_column = serialize($this->gridview_column);
 			$this->photo_resize_size = serialize($this->photo_resize_size);
 			$this->photo_view_size = serialize($this->photo_view_size);
 		}
