@@ -113,7 +113,7 @@ class KckrPic extends CActiveRecord
 			'pic_id' => Yii::t('attribute', 'Pic'),
 			'publish' => Yii::t('attribute', 'Publish'),
 			'default' => Yii::t('attribute', 'Default'),
-			'pic_name' => Yii::t('attribute', 'Person in Charge'),
+			'pic_name' => Yii::t('attribute', 'PIC Name'),
 			'pic_nip' => Yii::t('attribute', 'NIP'),
 			'pic_position' => Yii::t('attribute', 'Position'),
 			'pic_signature' => Yii::t('attribute', 'Signature'),
@@ -157,6 +157,21 @@ class KckrPic extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		// Custom Search
+		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
 
 		$criteria->compare('t.pic_id',$this->pic_id);
 		if(isset($_GET['type']) && $_GET['type'] == 'publish')
@@ -187,23 +202,9 @@ class KckrPic extends CActiveRecord
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
 		
-		// Custom Search
-		$criteria->with = array(
-			'view' => array(
-				'alias'=>'view',
-			),
-			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
-			),
-			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
-			),
-		);
-		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
-		$criteria->compare('view.kckrs',strtolower($this->kckr_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search),true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
+		$criteria->compare('view.kckrs',$this->kckr_search);
 
 		if(!isset($_GET['KckrPic_sort']))
 			$criteria->order = 't.pic_id DESC';
@@ -270,6 +271,32 @@ class KckrPic extends CActiveRecord
 			$this->defaultColumns[] = 'pic_name';
 			$this->defaultColumns[] = 'pic_nip';
 			$this->defaultColumns[] = 'pic_position';
+				$this->defaultColumns[] = array(
+					'name' => 'creation_date',
+					'value' => 'Utility::dateFormat($data->creation_date)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
+						'model'=>$this,
+						'attribute'=>'creation_date',
+						'language' => 'en',
+						'i18nScriptFile' => 'jquery-ui-i18n.min.js',
+						//'mode'=>'datetime',
+						'htmlOptions' => array(
+							'id' => 'creation_date_filter',
+						),
+						'options'=>array(
+							'showOn' => 'focus',
+							'dateFormat' => 'dd-mm-yy',
+							'showOtherMonths' => true,
+							'selectOtherMonths' => true,
+							'changeMonth' => true,
+							'changeYear' => true,
+							'showButtonPanel' => true,
+						),
+					), true),
+				);
 			$this->defaultColumns[] = array(
 				'name' => 'kckr_search',
 				'value' => 'CHtml::link($data->view->kckrs ? $data->view->kckrs : 0, Yii::app()->controller->createUrl("o/admin/manage",array(\'pic\'=>$data->pic_id)))',
@@ -277,36 +304,6 @@ class KckrPic extends CActiveRecord
 					'class' => 'center',
 				),
 				'type' => 'raw',
-			);
-			$this->defaultColumns[] = array(
-				'name' => 'creation_search',
-				'value' => '$data->creation->displayname',
-			);
-			$this->defaultColumns[] = array(
-				'name' => 'creation_date',
-				'value' => 'Utility::dateFormat($data->creation_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'creation_date',
-					'language' => 'en',
-					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
-					//'mode'=>'datetime',
-					'htmlOptions' => array(
-						'id' => 'creation_date_filter',
-					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
-					),
-				), true),
 			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(

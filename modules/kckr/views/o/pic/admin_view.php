@@ -23,23 +23,36 @@
 	<?php $this->widget('application.components.system.FDetailView', array(
 		'data'=>$model,
 		'attributes'=>array(
-			/*
 			array(
 				'name'=>'pic_id',
 				'value'=>$model->pic_id,
 			),
-			*/
+			array(
+				'name'=>'publish',
+				'value'=>$model->publish == '1' ? Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
+				'type'=>'raw',
+			),
+			array(
+				'name'=>'default',
+				'value'=>$model->default == '1' ? Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
+				'type'=>'raw',
+			),
 			array(
 				'name'=>'pic_name',
-				'value'=>$model->pic_name != '' ? $model->pic_name : '-',
+				'value'=>$model->pic_name ? $model->pic_name : '-',
 			),
 			array(
 				'name'=>'pic_nip',
-				'value'=>$model->pic_nip != '' ? $model->pic_nip : '-',
+				'value'=>$model->pic_nip ? $model->pic_nip : '-',
 			),
 			array(
 				'name'=>'pic_position',
-				'value'=>$model->pic_position != '' ? $model->pic_position : '-',
+				'value'=>$model->pic_position ? $model->pic_position : '-',
+			),
+			array(
+				'name'=>'photos',
+				'value'=>$model->pic_signature ? CHtml::link($model->pic_signature, Yii::app()->request->baseUrl.'/public/kckr/pic/'.$model->pic_signature, array('target' => '_blank')) : '-',
+				'type' => 'raw',
 			),
 			array(
 				'name'=>'creation_date',
@@ -47,7 +60,7 @@
 			),
 			array(
 				'name'=>'creation_id',
-				'value'=>$model->creation_id != 0 ? $model->creation->displayname : '-',
+				'value'=>$model->creation_id ? $model->creation->displayname : '-',
 			),
 			array(
 				'name'=>'modified_date',
@@ -55,11 +68,7 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified_id != 0 ? $model->modified->displayname : '-',
-			),
-			array(
-				'name'=>'publish',
-				'value'=>$model->publish == 1 ? Yii::t('phrase', 'Publish') : Yii::t('phrase', 'Unpublish'),
+				'value'=>$model->modified_id ? $model->modified->displayname : '-',
 			),
 		),
 	)); ?>

@@ -31,18 +31,28 @@
 		</li>
 
 		<li>
+			<?php echo $model->getAttributeLabel('default'); ?><br/>
+			<?php echo $form->textField($model,'default'); ?>
+		</li>
+
+		<li>
 			<?php echo $model->getAttributeLabel('pic_name'); ?><br/>
-			<?php echo $form->textField($model,'pic_name',array('size'=>60,'maxlength'=>64)); ?>
+			<?php echo $form->textField($model,'pic_name'); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('pic_nip'); ?><br/>
-			<?php echo $form->textField($model,'pic_nip',array('size'=>32,'maxlength'=>32)); ?>
+			<?php echo $form->textField($model,'pic_nip'); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('pic_position'); ?><br/>
-			<?php echo $form->textField($model,'pic_position',array('size'=>32,'maxlength'=>32)); ?>
+			<?php echo $form->textField($model,'pic_position'); ?>
+		</li>
+
+		<li>
+			<?php echo $model->getAttributeLabel('pic_signature'); ?><br/>
+			<?php echo $form->textField($model,'pic_signature'); ?>
 		</li>
 
 		<li>
@@ -52,7 +62,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('creation_id'); ?><br/>
-			<?php echo $form->textField($model,'creation_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'creation_id'); ?>
 		</li>
 
 		<li>
@@ -62,7 +72,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('modified_id'); ?><br/>
-			<?php echo $form->textField($model,'modified_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'modified_id'); ?>
 		</li>
 
 		<li class="submit">

@@ -155,7 +155,7 @@ class PicController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Kckr Pics Manage');
+		$this->pageTitle = Yii::t('phrase', 'PICs Manage');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -180,7 +180,7 @@ class PicController extends Controller
 			$model->scenario = 'adminAdd';
 
 			if($model->save()) {
-				Yii::app()->user->setFlash('success', Yii::t('phrase', 'KckrPic success created.'));
+				Yii::app()->user->setFlash('success', Yii::t('phrase', 'Person in charge success created.'));
 				$this->redirect(array('manage'));
 			}
 		}
@@ -189,7 +189,7 @@ class PicController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'Create Kckr Pics');
+		$this->pageTitle = Yii::t('phrase', 'Create PIC');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
@@ -214,7 +214,7 @@ class PicController extends Controller
 			$model->scenario = 'adminEdit';
 
 			if($model->save()) {
-				Yii::app()->user->setFlash('success', Yii::t('phrase', 'KckrPic success updated.'));
+				Yii::app()->user->setFlash('success', Yii::t('phrase', 'Person in charge success updated.'));
 				$this->redirect(array('manage'));
 			}
 		}
@@ -223,7 +223,7 @@ class PicController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Kckr Pics');
+		$this->pageTitle = Yii::t('phrase', 'Update PIC: $pic_name', array('$pic_name'=>$model->pic_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -243,7 +243,7 @@ class PicController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'View Kckr Pics');
+		$this->pageTitle = Yii::t('phrase', 'View PIC: $pic_name', array('$pic_name'=>$model->pic_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -304,7 +304,7 @@ class PicController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckr-pic',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrPic success deleted.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Person in charge success deleted.').'</strong></div>',
 					));
 				}
 			}
@@ -314,7 +314,7 @@ class PicController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'KckrPic Delete.');
+			$this->pageTitle = Yii::t('phrase', 'Delete PIC: $pic_name', array('$pic_name'=>$model->pic_name));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -337,6 +337,7 @@ class PicController extends Controller
 			$title = Yii::t('phrase', 'Publish');
 			$replace = 1;
 		}
+		$pageTitle = Yii::t('phrase', '$title PIC: $pic_name', array ('$title'=>$title, '$pic_name'=>$model->pic_name));
 
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
@@ -349,7 +350,7 @@ class PicController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckr-pic',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrPic success updated.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Person in charge success updated.').'</strong></div>',
 					));
 				}
 			}
@@ -359,7 +360,7 @@ class PicController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = $title;
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(
