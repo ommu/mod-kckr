@@ -10,13 +10,13 @@
  * TOC :
  *	Index
  *	Manage
- *	Import
  *	Add
  *	Edit
  *	View
  *	RunAction
  *	Delete
  *	Publish
+ *	Import
  *
  *	LoadModel
  *	performAjaxValidation
@@ -110,8 +110,24 @@ class MediaController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionManage() 
+	public function actionManage($kckr=null, $category=null, $publisher=null) 
 	{
+		$pageTitle = Yii::t('phrase', 'Medias');
+		if($kckr != null) {
+			$data = Kckrs::model()->findByPk($kckr);
+			$pageTitle = Yii::t('phrase', 'Medias: Publisher $publisher_name Letter Number "-"', array ('$publisher_name'=>$data->publisher->publisher_name));
+			if($data->letter_number && $data->letter_number != '-')
+				$pageTitle = Yii::t('phrase', 'Medias: Publisher $publisher_name Letter Number $letter_number', array ('$publisher_name'=>$data->publisher->publisher_name, '$letter_number'=>$data->letter_number));
+		}
+		if($category != null) {
+			$data = KckrCategory::model()->findByPk($category);
+			$pageTitle = Yii::t('phrase', 'Medias: Category $category_name', array ('$category_name'=>$data->category_name));
+		}
+		if($publisher != null) {
+			$data = KckrPublisher::model()->findByPk($publisher);
+			$pageTitle = Yii::t('phrase', 'Medias: Publisher $publisher_name', array ('$publisher_name'=>$data->publisher_name));
+		}
+		
 		$model=new KckrMedia('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['KckrMedia'])) {
@@ -128,96 +144,14 @@ class MediaController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Kckr Medias Manage');
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionImport() 
-	{
-		ini_set('max_execution_time', 0);
-		ob_start();
-		
-		$path = 'public/kckr/import_xls';
-		// Generate path directory
-		if(!file_exists($path)) {
-			@mkdir($path, 0755, true);
-
-			// Add file in directory (index.php)
-			$newFile = $path.'/index.php';
-			$FileHandle = fopen($newFile, 'w');
-		} else
-			@chmod($path, 0755, true);
-		
-		$error = array();
-		
-		$kckrID = $_GET['id'];
-		if(isset($_GET['type']) && $_GET['type'] == 'update')
-			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$kckrID));
-		else
-			$url = Yii::app()->controller->createUrl('manage');
-		
-		if(isset($_FILES['importExcel'])) {
-			$fileName = CUploadedFile::getInstanceByName('importExcel');
-			if(in_array(strtolower($fileName->extensionName), array('xls','xlsx'))) {
-				$file = time().'_archive_'.$fileName->name;
-				if($fileName->saveAs($path.'/'.$file)) {
-					Yii::import('ext.excel_reader.OExcelReader');
-					$xls = new OExcelReader($path.'/'.$file);
-					
-					for ($row = 2; $row <= $xls->sheets[0]['numRows']; $row++) {
-						$category_code			= trim($xls->sheets[0]['cells'][$row][1]);
-						$media_title			= trim($xls->sheets[0]['cells'][$row][2]);
-						$media_desc				= trim($xls->sheets[0]['cells'][$row][3]);
-						$media_publish_year		= trim($xls->sheets[0]['cells'][$row][4]);
-						$media_author			= trim($xls->sheets[0]['cells'][$row][5]);
-						$media_total			= trim($xls->sheets[0]['cells'][$row][6]);
-						
-						$category_id = 1;
-						if($category_code) {
-							$category = KckrCategory::model()->findByAttributes(array('category_code' => $category_code), array(
-								'select' => 'category_id',
-							));
-							$category_id = $category->category_id;
-						}
-						
-						$model=new KckrMedia;
-						$model->kckr_id = $kckrID;
-						$model->category_id = $category_id;
-						$model->media_title = $media_title;
-						$model->media_desc = $media_desc;
-						$model->media_publish_year = $media_publish_year;
-						$model->media_author = $media_author;
-						$model->media_total = $media_total;
-						$model->save();
-					}
-					
-					Yii::app()->user->setFlash('success', 'Import Daftar Karya Success.');
-					$this->redirect($url);
-					
-				} else
-					Yii::app()->user->setFlash('errorFile', 'Gagal menyimpan file.');
-			} else
-				Yii::app()->user->setFlash('errorFile', 'Hanya file .xls dan .xlsx yang dibolehkan.');
-		}
-
-		ob_end_flush();
-		
-		$this->dialogDetail = true;
-		$this->dialogGroundUrl = $url;
-		$this->dialogWidth = 600;
-
-		$this->pageTitle = 'Import Archive';
-		$this->pageDescription = '';
-		$this->pageMeta = '';
-		$this->render('admin_import');
-	}
+	}	
 	
 	/**
 	 * Creates a new model.
@@ -226,10 +160,16 @@ class MediaController extends Controller
 	public function actionAdd() 
 	{
 		$kckrID = $_GET['id'];
-		if(isset($kckrID))
-			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$kckrID));
-		else
-			$url = Yii::app()->controller->createUrl('manage');
+		if(isset($kckrID)) {
+			$kckr=Kckrs::model()->findByPk($kckrID);
+			$pageTitle = Yii::t('phrase', 'Create Media: Publisher $publisher_name Letter Number "-"', array ('$publisher_name'=>$kckr->publisher->publisher_name));
+			if($kckr->letter_number && $kckr->letter_number != '-')
+				$pageTitle = Yii::t('phrase', 'Create Media: Publisher $publisher_name Letter Number $letter_number', array ('$publisher_name'=>$kckr->publisher->publisher_name, '$letter_number'=>$kckr->letter_number));
+			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$kckrID));			
+		} else {
+			$pageTitle = Yii::t('phrase', 'Create Media');
+			$url = Yii::app()->controller->createUrl('manage');			
+		}
 		
 		$model=new KckrMedia;
 
@@ -253,7 +193,7 @@ class MediaController extends Controller
 							'type' => 5,
 							'get' => $url,
 							'id' => 'partial-kckr-media',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrMedia success created.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr media success created.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -267,7 +207,7 @@ class MediaController extends Controller
 		$this->dialogGroundUrl = $url;
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Create Kckr Medias');
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
@@ -304,7 +244,7 @@ class MediaController extends Controller
 							'type' => 5,
 							'get' => $url,
 							'id' => 'partial-kckr-media',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrMedia success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr media success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -318,7 +258,7 @@ class MediaController extends Controller
 		$this->dialogGroundUrl = $url;
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Kckr Medias');
+		$this->pageTitle = Yii::t('phrase', 'Update Media: $media_title Publisher $publisher_name', array('$media_title'=>$model->media_title, '$publisher_name'=>$model->kckr->publisher->publisher_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -342,7 +282,7 @@ class MediaController extends Controller
 		$this->dialogGroundUrl = $url;
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'View Kckr Medias');
+		$this->pageTitle = Yii::t('phrase', 'View Media: $media_title Publisher $publisher_name', array('$media_title'=>$model->media_title, '$publisher_name'=>$model->kckr->publisher->publisher_name));
 		$this->pageDescription = '';
 		$this->pageMeta = $setting->meta_keyword;
 		$this->render('admin_view',array(
@@ -407,7 +347,7 @@ class MediaController extends Controller
 						'type' => 5,
 						'get' => $url,
 						'id' => 'partial-kckr-media',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrMedia success deleted.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr media success deleted.').'</strong></div>',
 					));
 				}
 			}
@@ -417,7 +357,7 @@ class MediaController extends Controller
 			$this->dialogGroundUrl = $url;
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'KckrMedia Delete.');
+			$this->pageTitle = Yii::t('phrase', 'Delete Media: $media_title Publisher $publisher_name', array('$media_title'=>$model->media_title, '$publisher_name'=>$model->kckr->publisher->publisher_name));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -444,6 +384,7 @@ class MediaController extends Controller
 			$title = Yii::t('phrase', 'Publish');
 			$replace = 1;
 		}
+		$pageTitle = Yii::t('phrase', '{title} Media: $media_title Publisher $publisher_name', array('{title}'=>$title, '$media_title'=>$model->media_title, '$publisher_name'=>$model->kckr->publisher->publisher_name));
 
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
@@ -456,7 +397,7 @@ class MediaController extends Controller
 						'type' => 5,
 						'get' => $url,
 						'id' => 'partial-kckr-media',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrMedia success updated.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr media success updated.').'</strong></div>',
 					));
 				}
 			}
@@ -466,7 +407,7 @@ class MediaController extends Controller
 			$this->dialogGroundUrl = $url;
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = $title;
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(
@@ -474,6 +415,96 @@ class MediaController extends Controller
 				'model'=>$model,
 			));
 		}
+	}
+	
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionImport() 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		$path = 'public/kckr/import_xls';
+		// Generate path directory
+		if(!file_exists($path)) {
+			@mkdir($path, 0755, true);
+
+			// Add file in directory (index.php)
+			$newFile = $path.'/index.php';
+			$FileHandle = fopen($newFile, 'w');
+		} else
+			@chmod($path, 0755, true);
+		
+		$error = array();
+		
+		$kckrID = $_GET['id'];
+		if(isset($kckrID)) {
+			$kckr=Kckrs::model()->findByPk($kckrID);
+			$pageTitle = Yii::t('phrase', 'Import Media: Publisher $publisher_name Letter Number "-"', array ('$publisher_name'=>$kckr->publisher->publisher_name));
+			if($kckr->letter_number && $kckr->letter_number != '-')
+				$pageTitle = Yii::t('phrase', 'Import Media: Publisher $publisher_name Letter Number $letter_number', array ('$publisher_name'=>$kckr->publisher->publisher_name, '$letter_number'=>$kckr->letter_number));
+			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$kckrID));			
+		} else {
+			$pageTitle = Yii::t('phrase', 'Import Media');
+			$url = Yii::app()->controller->createUrl('manage');			
+		}
+		
+		if(isset($_FILES['importExcel'])) {
+			$fileName = CUploadedFile::getInstanceByName('importExcel');
+			if(in_array(strtolower($fileName->extensionName), array('xls','xlsx'))) {
+				$file = time().'_archive_'.$fileName->name;
+				if($fileName->saveAs($path.'/'.$file)) {
+					Yii::import('ext.excel_reader.OExcelReader');
+					$xls = new OExcelReader($path.'/'.$file);
+					
+					for ($row = 2; $row <= $xls->sheets[0]['numRows']; $row++) {
+						$category_code			= trim($xls->sheets[0]['cells'][$row][1]);
+						$media_title			= trim($xls->sheets[0]['cells'][$row][2]);
+						$media_desc				= trim($xls->sheets[0]['cells'][$row][3]);
+						$media_publish_year		= trim($xls->sheets[0]['cells'][$row][4]);
+						$media_author			= trim($xls->sheets[0]['cells'][$row][5]);
+						$media_total			= trim($xls->sheets[0]['cells'][$row][6]);
+						
+						$category_id = 1;
+						if($category_code) {
+							$category = KckrCategory::model()->findByAttributes(array('category_code' => $category_code), array(
+								'select' => 'category_id',
+							));
+							$category_id = $category->category_id;
+						}
+						
+						$model=new KckrMedia;
+						$model->kckr_id = $kckrID;
+						$model->category_id = $category_id;
+						$model->media_title = $media_title;
+						$model->media_desc = $media_desc;
+						$model->media_publish_year = $media_publish_year;
+						$model->media_author = $media_author;
+						$model->media_total = $media_total;
+						$model->save();
+					}
+					
+					Yii::app()->user->setFlash('success', 'Import Daftar Karya Success.');
+					$this->redirect($url);
+					
+				} else
+					Yii::app()->user->setFlash('errorFile', 'Gagal menyimpan file.');
+			} else
+				Yii::app()->user->setFlash('errorFile', 'Hanya file .xls dan .xlsx yang dibolehkan.');
+		}
+
+		ob_end_flush();
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = $url;
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = $pageTitle;
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_import');
 	}
 
 	/**

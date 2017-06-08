@@ -60,7 +60,7 @@ content_menu	:
 		urlPath: {url: o/media/add, attr: id=$_GET*id,type=update, icon: -}        
 	- urlTitle: Import Media
 		urlRules: {kckr, o/admin, edit, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: import, attr: id=$_GET*id,type=update, icon: -}
+		urlPath: {url: o/media/import, attr: id=$_GET*id,type=update, icon: -}
 		
 # controller o/category		
 	- urlTitle: Add Category

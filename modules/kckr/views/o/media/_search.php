@@ -22,7 +22,7 @@
 	<ul>
 		<li>
 			<?php echo $model->getAttributeLabel('media_id'); ?><br/>
-			<?php echo $form->textField($model,'media_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'media_id'); ?>
 		</li>
 
 		<li>
@@ -32,7 +32,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('kckr_id'); ?><br/>
-			<?php echo $form->textField($model,'kckr_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'kckr_id'); ?>
 		</li>
 
 		<li>
@@ -42,22 +42,22 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('media_title'); ?><br/>
-			<?php echo $form->textField($model,'media_title',array('size'=>32,'maxlength'=>32)); ?>
+			<?php echo $form->textField($model,'media_title'); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('media_desc'); ?><br/>
-			<?php echo $form->textArea($model,'media_desc',array('rows'=>6, 'cols'=>50)); ?>
+			<?php echo $form->textArea($model,'media_desc'); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('media_publish_year'); ?><br/>
-			<?php echo $form->textField($model,'media_publish_year',array('size'=>4,'maxlength'=>4)); ?>
+			<?php echo $form->textField($model,'media_publish_year'); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('media_author'); ?><br/>
-			<?php echo $form->textArea($model,'media_author',array('rows'=>6, 'cols'=>50)); ?>
+			<?php echo $form->textArea($model,'media_author'); ?>
 		</li>
 
 		<li>
@@ -72,7 +72,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('creation_id'); ?><br/>
-			<?php echo $form->textField($model,'creation_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'creation_id'); ?>
 		</li>
 
 		<li>
@@ -82,7 +82,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('modified_id'); ?><br/>
-			<?php echo $form->textField($model,'modified_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'modified_id'); ?>
 		</li>
 
 		<li class="submit">

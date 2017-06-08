@@ -342,10 +342,12 @@ class Kckrs extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'publisher_search',
-				'value' => '$data->publisher->publisher_name',
-			);
+			if(!isset($_GET['publisher'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publisher_search',
+					'value' => '$data->publisher->publisher_name',
+				);
+			}
 			if(in_array('letter_number', $gridview_column)) {
 				$this->defaultColumns[] = array(
 					'name' => 'letter_number',

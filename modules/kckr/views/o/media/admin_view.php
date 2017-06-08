@@ -23,39 +23,46 @@
 	<?php $this->widget('application.components.system.FDetailView', array(
 		'data'=>$model,
 		'attributes'=>array(
-			/*
 			array(
 				'name'=>'media_id',
 				'value'=>$model->media_id,
 			),
-			*/
 			array(
-				'name'=>'kckr_id',
-				'value'=>$model->kckr_id != '' ? $model->kckr->publisher->publisher_name : '-',
+				'name'=>'publish',
+				'value'=>$model->publish == '1' ? Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
+				'type'=>'raw',
+			),
+			array(
+				'name'=>'publisher_search',
+				'value'=>$model->kckr_id ? $model->kckr->publisher->publisher_name : '-',
+			),
+			array(
+				'name'=>'letter_search',
+				'value'=>$model->kckr->letter_number ? $model->kckr->letter_number : '-',
 			),
 			array(
 				'name'=>'category_id',
-				'value'=>$model->category_id != '' ? $model->category->category_name : '-',
+				'value'=>$model->category_id ? $model->category->category_name : '-',
 			),
 			array(
 				'name'=>'media_title',
-				'value'=>$model->media_title != '' ? $model->media_title : '-',
+				'value'=>$model->media_title ? $model->media_title : '-',
 			),
 			array(
 				'name'=>'media_desc',
-				'value'=>$model->media_desc != '' ? $model->media_desc : '-',
+				'value'=>$model->media_desc ? $model->media_desc : '-',
 			),
 			array(
 				'name'=>'media_publish_year',
-				'value'=>$model->media_publish_year != '' ? $model->media_publish_year : '-',
+				'value'=>$model->media_publish_year ? $model->media_publish_year : '-',
 			),
 			array(
 				'name'=>'media_author',
-				'value'=>$model->media_author != '' ? $model->media_author : '-',
+				'value'=>$model->media_author ? $model->media_author : '-',
 			),
 			array(
 				'name'=>'media_total',
-				'value'=>$model->media_total != 0 ? $model->media_total : '-',
+				'value'=>$model->media_total ? $model->media_total : '-',
 			),
 			array(
 				'name'=>'creation_date',
@@ -63,7 +70,7 @@
 			),
 			array(
 				'name'=>'creation_id',
-				'value'=>$model->creation_id != 0 ? $model->creation->displayname : '-',
+				'value'=>$model->creation_id ? $model->creation->displayname : '-',
 			),
 			array(
 				'name'=>'modified_date',
@@ -71,11 +78,7 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified_id != 0 ? $model->modified->displayname : '-',
-			),
-			array(
-				'name'=>'publish',
-				'value'=>$model->publish == 1 ? Yii::t('phrase', 'Publish') : Yii::t('phrase', 'Unpublish'),
+				'value'=>$model->modified_id ? $model->modified->displayname : '-',
 			),
 		),
 	)); ?>
