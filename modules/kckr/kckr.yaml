@@ -37,7 +37,7 @@ plugin_menu		:
 		urlRules: {siteType: "0,1", userLevel: 1}
 		urlPath: {url: o/setting/edit, attr: -, icon: -}
                 
-	- urlTitle: KCKR Manual Book
+	- urlTitle: KCKR Manual
 		urlRules: {siteType: "0,1", userLevel: 2}
 		urlPath: {url: o/setting/manual, attr: -, icon: -}
 
@@ -83,6 +83,6 @@ content_menu	:
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
 
 # controller o/setting
-	- urlTitle: KCKR Manual Book
+	- urlTitle: KCKR Manual
 		urlRules: {kckr, o/setting, edit, siteType: "0,1", userLevel: 1}
 		urlPath: {url: manual, attr: -, icon: -}

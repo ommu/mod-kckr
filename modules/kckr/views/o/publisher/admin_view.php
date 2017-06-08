@@ -38,7 +38,6 @@
 			),
 			array(
 				'name'=>'publisher_area',
-				'value'=>$model->publisher_area,
 				'value'=>$model->publisher_area ? Yii::t('phrase', 'Luar Yogyakarta') : Yii::t('phrase', 'Yogyakarta'),
 			),
 			array(
