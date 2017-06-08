@@ -32,6 +32,8 @@ class KckrModule extends CWebModule
 			'kckr.components.extensions.*',
 			'kckr.components.system.*',
 			'kckr.components.templates.*',
+			
+			'article.models.Articles',
 		));
 	}
  
