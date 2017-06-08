@@ -46,6 +46,7 @@ class KckrCategory extends CActiveRecord
 	public $creation_search;
 	public $modified_search;
 	public $media_search;
+	public $item_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -84,7 +85,7 @@ class KckrCategory extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('category_id, publish, category_type, category_code, category_name, category_desc, creation_date, creation_id, modified_date, modified_id, 
-				creation_search, modified_search, media_search', 'safe', 'on'=>'search'),
+				creation_search, modified_search, media_search, item_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -123,6 +124,7 @@ class KckrCategory extends CActiveRecord
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 			'media_search' => Yii::t('attribute', 'Karya'),
+			'item_search' => Yii::t('attribute', 'Item'),
 		);
 		/*
 			'Category' => 'Category',
@@ -155,6 +157,21 @@ class KckrCategory extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		// Custom Search
+		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
 
 		$criteria->compare('t.category_id',$this->category_id);
 		if(isset($_GET['type']) && $_GET['type'] == 'publish')
@@ -184,23 +201,10 @@ class KckrCategory extends CActiveRecord
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
 		
-		// Custom Search
-		$criteria->with = array(
-			'view' => array(
-				'alias'=>'view',
-			),
-			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
-			),
-			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
-			),
-		);
-		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
-		$criteria->compare('view.medias',strtolower($this->media_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search),true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
+		$criteria->compare('view.medias',$this->media_search);
+		$criteria->compare('view.media_items',$this->item_search);
 
 		if(!isset($_GET['KckrCategory_sort']))
 			$criteria->order = 't.category_id DESC';
@@ -273,22 +277,17 @@ class KckrCategory extends CActiveRecord
 				'type' => 'raw',
 			);
 			$this->defaultColumns[] = array(
+				'name' => 'category_name',
+				'value' => '$data->category_name',
+			);
+			$this->defaultColumns[] = array(
 				'name' => 'category_code',
 				'value' => '$data->category_code',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
 			);
-			$this->defaultColumns[] = 'category_name';
-			$this->defaultColumns[] = 'category_desc';
-			$this->defaultColumns[] = array(
-				'name' => 'media_search',
-				'value' => 'CHtml::link($data->view->medias ? $data->view->medias : 0, Yii::app()->controller->createUrl("o/media/manage",array(\'category\'=>$data->category_id)))',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'type' => 'raw',
-			);
+			//$this->defaultColumns[] = 'category_desc';
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
@@ -318,6 +317,22 @@ class KckrCategory extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'media_search',
+				'value' => 'CHtml::link($data->view->medias ? $data->view->medias : 0, Yii::app()->controller->createUrl("o/media/manage",array(\'category\'=>$data->category_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'item_search',
+				'value' => '$data->view->media_items ? $data->view->media_items : 0',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
 			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(

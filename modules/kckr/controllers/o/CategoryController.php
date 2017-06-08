@@ -127,7 +127,7 @@ class CategoryController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Kckr Categories Manage');
+		$this->pageTitle = Yii::t('phrase', 'Kckr Categories');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -161,7 +161,7 @@ class CategoryController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-kckr-category',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrCategory success created.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KCKR category success created.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -175,7 +175,7 @@ class CategoryController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'Create Kckr Categories');
+		$this->pageTitle = Yii::t('phrase', 'Create Category');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
@@ -209,7 +209,7 @@ class CategoryController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-kckr-category',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrCategory success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KCKR category success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -223,7 +223,7 @@ class CategoryController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Kckr Categories');
+		$this->pageTitle = Yii::t('phrase', 'Update Category: $category_name', array('$category_name'=>$model->category_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -243,7 +243,7 @@ class CategoryController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 550;
 
-		$this->pageTitle = Yii::t('phrase', 'View Kckr Categories');
+		$this->pageTitle = Yii::t('phrase', 'View Category: $category_name', array('$category_name'=>$model->category_name));
 		$this->pageDescription = '';
 		$this->pageMeta = $setting->meta_keyword;
 		$this->render('admin_view',array(
@@ -304,7 +304,7 @@ class CategoryController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckr-category',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrCategory success deleted.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KCKR category success deleted.').'</strong></div>',
 					));
 				}
 			}
@@ -314,7 +314,7 @@ class CategoryController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'KckrCategory Delete.');
+			$this->pageTitle = Yii::t('phrase', 'Delete Category: $category_name', array('$category_name'=>$model->category_name));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -337,6 +337,7 @@ class CategoryController extends Controller
 			$title = Yii::t('phrase', 'Publish');
 			$replace = 1;
 		}
+		$pageTitle = Yii::t('phrase', '$title Category: $category_name', array ('$title'=>$title, '$category_name'=>$model->category_name));
 
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
@@ -349,7 +350,7 @@ class CategoryController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-kckr-category',
-						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KckrCategory success updated.').'</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'KCKR category success updated.').'</strong></div>',
 					));
 				}
 			}
@@ -359,7 +360,7 @@ class CategoryController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = $title;
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(

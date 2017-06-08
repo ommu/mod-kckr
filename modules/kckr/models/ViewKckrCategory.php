@@ -26,6 +26,8 @@
  * @property integer $category_id
  * @property string $medias
  * @property string $media_all
+ * @property string $media_items
+ * @property string $media_item_all
  */
 class ViewKckrCategory extends CActiveRecord
 {
@@ -68,9 +70,10 @@ class ViewKckrCategory extends CActiveRecord
 		return array(
 			array('category_id', 'numerical', 'integerOnly'=>true),
 			array('medias, media_all', 'length', 'max'=>21),
+			array('media_items, media_item_all', 'length', 'max'=>27),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('category_id, medias, media_all', 'safe', 'on'=>'search'),
+			array('category_id, medias, media_all, media_items, media_item_all', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -94,6 +97,8 @@ class ViewKckrCategory extends CActiveRecord
 			'category_id' => Yii::t('attribute', 'Category'),
 			'medias' => Yii::t('attribute', 'Medias'),
 			'media_all' => Yii::t('attribute', 'Media All'),
+			'media_items' => Yii::t('attribute', 'Media Items'),
+			'media_item_all' => Yii::t('attribute', 'Media Item All'),
 		);
 		/*
 			'Category' => 'Category',
@@ -123,6 +128,8 @@ class ViewKckrCategory extends CActiveRecord
 		$criteria->compare('t.category_id',$this->category_id);
 		$criteria->compare('t.medias',$this->medias);
 		$criteria->compare('t.media_all',$this->media_all);
+		$criteria->compare('t.media_items',$this->media_items);
+		$criteria->compare('t.media_item_all',$this->media_item_all);
 
 		if(!isset($_GET['ViewKckrCategory_sort']))
 			$criteria->order = 't.category_id DESC';
@@ -156,6 +163,8 @@ class ViewKckrCategory extends CActiveRecord
 			$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'medias';
 			$this->defaultColumns[] = 'media_all';
+			$this->defaultColumns[] = 'media_items';
+			$this->defaultColumns[] = 'media_item_all';
 		}
 
 		return $this->defaultColumns;
@@ -173,6 +182,8 @@ class ViewKckrCategory extends CActiveRecord
 			//$this->defaultColumns[] = 'category_id';
 			$this->defaultColumns[] = 'medias';
 			$this->defaultColumns[] = 'media_all';
+			$this->defaultColumns[] = 'media_items';
+			$this->defaultColumns[] = 'media_item_all';
 		}
 		parent::afterConstruct();
 	}

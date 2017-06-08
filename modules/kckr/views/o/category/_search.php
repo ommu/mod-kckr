@@ -32,17 +32,22 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('category_type'); ?><br/>
-			<?php echo $form->textField($model,'category_type',array('size'=>6,'maxlength'=>6)); ?>
+			<?php echo $form->textField($model,'category_type'); ?>
+		</li>
+
+		<li>
+			<?php echo $model->getAttributeLabel('category_code'); ?><br/>
+			<?php echo $form->textField($model,'category_code'); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('category_name'); ?><br/>
-			<?php echo $form->textField($model,'category_name',array('size'=>32,'maxlength'=>32)); ?>
+			<?php echo $form->textField($model,'category_name'); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('category_desc'); ?><br/>
-			<?php echo $form->textArea($model,'category_desc',array('rows'=>6, 'cols'=>50)); ?>
+			<?php echo $form->textArea($model,'category_desc'); ?>
 		</li>
 
 		<li>
@@ -52,7 +57,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('creation_id'); ?><br/>
-			<?php echo $form->textField($model,'creation_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'creation_id'); ?>
 		</li>
 
 		<li>
@@ -62,7 +67,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('modified_id'); ?><br/>
-			<?php echo $form->textField($model,'modified_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $form->textField($model,'modified_id'); ?>
 		</li>
 
 		<li class="submit">

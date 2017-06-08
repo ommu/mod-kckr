@@ -264,7 +264,7 @@ class Kckrs extends CActiveRecord
 		$criteria->compare('creation.displayname',strtolower($this->creation_search),true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
 		$criteria->compare('view.medias',$this->media_search);
-		$criteria->compare('view.item_search',$this->item_search);
+		$criteria->compare('view.media_items',$this->item_search);
 
 		if(!isset($_GET['Kckrs_sort']))
 			$criteria->order = 't.kckr_id DESC';

@@ -103,8 +103,8 @@ class ViewKckrs extends CActiveRecord
 			'publisher_id' => Yii::t('attribute', 'Publisher'),
 			'medias' => Yii::t('attribute', 'Medias'),
 			'media_all' => Yii::t('attribute', 'Media All'),
-			'medias' => Yii::t('attribute', 'Media Items'),
-			'media_all' => Yii::t('attribute', 'Media Item All'),
+			'media_items' => Yii::t('attribute', 'Media Items'),
+			'media_item_all' => Yii::t('attribute', 'Media Item All'),
 		);
 		/*
 			'Kckr' => 'Kckr',
@@ -137,8 +137,8 @@ class ViewKckrs extends CActiveRecord
 		$criteria->compare('t.publisher_id',$this->publisher_id);
 		$criteria->compare('t.medias',$this->medias);
 		$criteria->compare('t.media_all',$this->media_all);
-		$criteria->compare('t.medias',$this->media_items);
-		$criteria->compare('t.media_all',$this->media_item_all);
+		$criteria->compare('t.media_items',$this->media_items);
+		$criteria->compare('t.media_item_all',$this->media_item_all);
 
 		if(!isset($_GET['ViewKckrs_sort']))
 			$criteria->order = 't.kckr_id DESC';
