@@ -1,14 +1,15 @@
 <?php
 /**
- * Articles (articles)
+ * Kckrs (kckrs)
  * @var $this AdminController
- * @var $model Articles
+ * @var $model Kckrs
+ * @var $form CActiveForm
  * version: 0.0.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
- * @created date 20 October 2016, 10:14 WIB
- * @link https://github.com/ommu/Articles
+ * @created date 1 July 2016, 07:42 WIB
+ * @link https://github.com/ommu/mod-kckr
  * @contact (+62)856-299-4114
  *
  */

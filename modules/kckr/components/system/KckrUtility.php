@@ -1,14 +1,14 @@
 <?php
 /**
  * KckrUtility class file
+ * version: 0.0.1
  *
  * Contains many function that most used :
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @created date 4 October 2016, 18:58 WIB
- * @version 1.0
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
- * @link http://company.ommu.co
+ * @link https://github.com/ommu/mod-kckr
  * @contact (+62)856-299-4114
  *
  */
