@@ -10,6 +10,7 @@
  * TOC :
  *	Index
  *	Edit
+ *	Manual
  *
  *	LoadModel
  *	performAjaxValidation
@@ -38,7 +39,7 @@ class SettingController extends Controller
 	public function init() 
 	{
 		if(!Yii::app()->user->isGuest) {
-			if(Yii::app()->user->level == 1) {
+			if(in_array(Yii::app()->user->level, array(1,2))) {
 				$arrThemes = Utility::getCurrentTemplate('admin');
 				Yii::app()->theme = $arrThemes['folder'];
 				$this->layout = $arrThemes['layout'];
@@ -82,6 +83,11 @@ class SettingController extends Controller
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level == 1)',
 			),
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('manual'),
+				'users'=>array('@'),
+				'expression'=>'isset(Yii::app()->user->level) && (in_array(Yii::app()->user->level, array(1,2)))',
+			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array(),
 				'users'=>array('admin'),
@@ -110,6 +116,7 @@ class SettingController extends Controller
 		$model = KckrSetting::model()->findByPk(1);
 		if($model == null)
 			$model=new KckrSetting;
+		$kckr=new Kckrs;
 		
 		$module = OmmuPlugins::model()->findByAttributes(array('folder'=>'article'), array(
 			'select' => 'install, actived',
@@ -124,7 +131,7 @@ class SettingController extends Controller
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				$errors = $model->getErrors();
-				$summary['msg'] = "<div class='errorSummary'><strong>Please fix the following input errors:</strong>";
+				$summary['msg'] = "<div class='errorSummary'><strong>".Yii::t('phrase', 'Please fix the following input errors:')."</strong>";
 				$summary['msg'] .= "<ul>";
 				foreach($errors as $key => $value) {
 					$summary['msg'] .= "<li>{$value[0]}</li>";
@@ -156,7 +163,27 @@ class SettingController extends Controller
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
 			'model'=>$model,
+			'kckr'=>$kckr,
 			'module'=>$module,
+		));
+	}
+	
+	/**
+	 * Lists all models.
+	 */
+	public function actionManual() 
+	{
+		$manual_path = $this->module->basePath.'/assets/manual';
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('o/admin/manage');
+		$this->dialogWidth = 400;
+		
+		$this->pageTitle = Yii::t('phrase', 'KCKR Manual Book');
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_manual', array(
+			'manual_path'=>$manual_path,			
 		));
 	}
 

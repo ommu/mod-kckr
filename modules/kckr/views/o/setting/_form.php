@@ -82,6 +82,14 @@ EOP;
 		</div>
 
 		<div class="clearfix">
+			<?php echo $form->labelEx($model,'meta_description'); ?>
+			<div class="desc">
+				<?php echo $form->textArea($model,'meta_description',array('rows'=>6, 'cols'=>50, 'class'=>'span-7 smaller')); ?>
+				<?php echo $form->error($model,'meta_description'); ?>
+			</div>
+		</div>
+
+		<div class="clearfix">
 			<?php echo $form->labelEx($model,'meta_keyword'); ?>
 			<div class="desc">
 				<?php echo $form->textArea($model,'meta_keyword',array('rows'=>6, 'cols'=>50, 'class'=>'span-7 smaller')); ?>
@@ -90,10 +98,20 @@ EOP;
 		</div>
 
 		<div class="clearfix">
-			<?php echo $form->labelEx($model,'meta_description'); ?>
+			<?php echo $form->labelEx($model,'gridview_column'); ?>
 			<div class="desc">
-				<?php echo $form->textArea($model,'meta_description',array('rows'=>6, 'cols'=>50, 'class'=>'span-7 smaller')); ?>
-				<?php echo $form->error($model,'meta_description'); ?>
+				<?php 
+				$customField = array(
+					'letter_number' => $kckr->getAttributeLabel('letter_number'),
+					'creation_search' => $kckr->getAttributeLabel('creation_search'),
+					'creation_date' => $kckr->getAttributeLabel('creation_date'),
+					'media_search' => $kckr->getAttributeLabel('media_search'),
+					'item_search' => $kckr->getAttributeLabel('item_search'),
+				);
+				if(!$model->getErrors())
+					$model->gridview_column = unserialize($model->gridview_column);
+				echo $form->checkBoxList($model,'gridview_column', $customField); ?>
+				<?php echo $form->error($model,'gridview_column'); ?>
 			</div>
 		</div>
 
