@@ -31,7 +31,7 @@
  * @property string $media_desc
  * @property string $media_publish_year
  * @property string $media_author
- * @property integer $media_total
+ * @property integer $media_item
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
@@ -78,14 +78,14 @@ class KckrMedia extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('kckr_id, category_id, media_title, media_total', 'required'),
-			array('publish, category_id, media_total', 'numerical', 'integerOnly'=>true),
+			array('kckr_id, category_id, media_title, media_item', 'required'),
+			array('publish, category_id, media_item', 'numerical', 'integerOnly'=>true),
 			array('media_publish_year', 'length', 'max'=>4),
 			array('kckr_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('media_desc, media_publish_year, media_author', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('media_id, publish, kckr_id, category_id, media_title, media_desc, media_publish_year, media_author, media_total, creation_date, creation_id, modified_date, modified_id, 
+			array('media_id, publish, kckr_id, category_id, media_title, media_desc, media_publish_year, media_author, media_item, creation_date, creation_id, modified_date, modified_id, 
 				publisher_search, letter_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -119,7 +119,7 @@ class KckrMedia extends CActiveRecord
 			'media_desc' => Yii::t('attribute', 'Description'),
 			'media_publish_year' => Yii::t('attribute', 'Publish Year'),
 			'media_author' => Yii::t('attribute', 'Author'),
-			'media_total' => Yii::t('attribute', 'Item'),
+			'media_item' => Yii::t('attribute', 'Item'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
@@ -225,7 +225,7 @@ class KckrMedia extends CActiveRecord
 		$criteria->compare('t.media_desc',strtolower($this->media_desc),true);
 		$criteria->compare('t.media_publish_year',strtolower($this->media_publish_year),true);
 		$criteria->compare('t.media_author',strtolower($this->media_author),true);
-		$criteria->compare('t.media_total',$this->media_total);
+		$criteria->compare('t.media_item',$this->media_item);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -308,7 +308,7 @@ class KckrMedia extends CActiveRecord
 		$criteria->compare('t.media_desc',strtolower($this->media_desc),true);
 		$criteria->compare('t.media_publish_year',strtolower($this->media_publish_year),true);
 		$criteria->compare('t.media_author',strtolower($this->media_author),true);
-		$criteria->compare('t.media_total',$this->media_total);
+		$criteria->compare('t.media_item',$this->media_item);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -361,7 +361,7 @@ class KckrMedia extends CActiveRecord
 			$this->defaultColumns[] = 'media_desc';
 			$this->defaultColumns[] = 'media_publish_year';
 			$this->defaultColumns[] = 'media_author';
-			$this->defaultColumns[] = 'media_total';
+			$this->defaultColumns[] = 'media_item';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'modified_date';
@@ -433,8 +433,8 @@ class KckrMedia extends CActiveRecord
 				),
 			);
 			$this->defaultColumns[] = array(
-				'name' => 'media_total',
-				'value' => '$data->media_total',
+				'name' => 'media_item',
+				'value' => '$data->media_item',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

@@ -78,7 +78,7 @@
 			<td style="vertical-align: middle; width: 180px;"><?php echo $val->kckr->publisher->publisher_name;?></td>
 			<td class="center" style="vertical-align: middle; width: 50px;"><?php echo $val->media_publish_year != '' && $val->media_publish_year != '0000' ? $val->media_publish_year : '';?></td>
 			<td class="center" style="vertical-align: middle; width: 90px;"><?php echo $val->kckr->send_type != '' ? ($val->kckr->send_type == 'pos' ? 'POS<br/>' : 'Langsung<br/>') : '';?><?php echo date('d', strtotime($val->kckr->send_date)).' '.Utility::getLocalMonthName($val->kckr->send_date).' '.date('Y', strtotime($val->kckr->send_date));?></td>
-			<td class="center" style="vertical-align: middle; width: 50px;"><?php echo $val->media_total;?></td>
+			<td class="center" style="vertical-align: middle; width: 50px;"><?php echo $val->media_item;?></td>
 			<td style="vertical-align: middle; width: 120px;"><?php echo $val->media_desc != '' ? $val->media_desc : '-';?></td>
 		</tr>
 		<?php }?>

@@ -71,7 +71,7 @@
 			<br/><br/>
 			Nomor&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo $model->letter_number?><br/>
 			Hari/Tanggal&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo !in_array($model->send_date, array('0000-00-00','1970-01-01')) ? Utility::getLocalDayName($model->send_date, false).', '.date('d', strtotime($model->send_date)).' '.Utility::getLocalMonthName($model->send_date).' '.date('Y', strtotime($model->send_date)) : '-';?><br/>
-			Sebanyak&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo $model->view->medias != 0 ? $model->view->medias.' judul '.$model->view->media_total.' eks.' : '-';?>
+			Sebanyak&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo $model->view->medias != 0 ? $model->view->medias.' judul '.$model->view->media_items.' eks.' : '-';?>
 			<br/><br/>
 			telah diterima dengan baik dan lengkap seperti daftar lampir.<br/>
 			Demikian atas perhatian dan kerjasama yang baik selama ini diucapkan terimakasih.	

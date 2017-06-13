@@ -465,7 +465,7 @@ class MediaController extends Controller
 						$media_desc				= trim($xls->sheets[0]['cells'][$row][3]);
 						$media_publish_year		= trim($xls->sheets[0]['cells'][$row][4]);
 						$media_author			= trim($xls->sheets[0]['cells'][$row][5]);
-						$media_total			= trim($xls->sheets[0]['cells'][$row][6]);
+						$media_item			= trim($xls->sheets[0]['cells'][$row][6]);
 						
 						$category_id = 1;
 						if($category_code) {
@@ -482,7 +482,7 @@ class MediaController extends Controller
 						$model->media_desc = $media_desc;
 						$model->media_publish_year = $media_publish_year;
 						$model->media_author = $media_author;
-						$model->media_total = $media_total;
+						$model->media_item = $media_item;
 						$model->save();
 					}
 					

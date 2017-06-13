@@ -20,7 +20,7 @@ if(!empty($attachment)) {?>
 				<td><?php echo $i;?></td>
 				<td><?php echo $val->media_title;?></td>
 				<td><?php echo $val->media_author != '' ? $val->media_author : '-';?></td>
-				<td><?php echo $val->media_total;?></td>
+				<td><?php echo $val->media_item;?></td>
 			</tr>
 		<?php }?>
     </tbody>

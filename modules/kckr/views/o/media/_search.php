@@ -61,8 +61,8 @@
 		</li>
 
 		<li>
-			<?php echo $model->getAttributeLabel('media_total'); ?><br/>
-			<?php echo $form->textField($model,'media_total'); ?>
+			<?php echo $model->getAttributeLabel('media_item'); ?><br/>
+			<?php echo $form->textField($model,'media_item'); ?>
 		</li>
 
 		<li>

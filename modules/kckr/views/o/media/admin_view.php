@@ -54,15 +54,15 @@
 			),
 			array(
 				'name'=>'media_publish_year',
-				'value'=>$model->media_publish_year ? $model->media_publish_year : '-',
+				'value'=>!in_array($model->media_publish_year, array('0000','1970')) ? $model->media_publish_year : '-',
 			),
 			array(
 				'name'=>'media_author',
 				'value'=>$model->media_author ? $model->media_author : '-',
 			),
 			array(
-				'name'=>'media_total',
-				'value'=>$model->media_total ? $model->media_total : '-',
+				'name'=>'media_item',
+				'value'=>$model->media_item ? $model->media_item : '-',
 			),
 			array(
 				'name'=>'creation_date',

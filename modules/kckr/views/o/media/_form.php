@@ -92,10 +92,10 @@
 		</div>
 
 		<div class="clearfix">
-			<?php echo $form->labelEx($model,'media_total'); ?>
+			<?php echo $form->labelEx($model,'media_item'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'media_total', array('class'=>'span-3')); ?>
-				<?php echo $form->error($model,'media_total'); ?>
+				<?php echo $form->textField($model,'media_item', array('class'=>'span-3')); ?>
+				<?php echo $form->error($model,'media_item'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>
