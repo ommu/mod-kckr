@@ -116,16 +116,6 @@ class KckrSetting extends CActiveRecord
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
-		/*
-			'ID' => 'ID',
-			'License' => 'License',
-			'Permission' => 'Permission',
-			'Meta Keyword' => 'Meta Keyword',
-			'Meta Description' => 'Meta Description',
-			'Modified Date' => 'Modified Date',
-			'Modified' => 'Modified',
-		
-		*/
 	}
 
 	/**

@@ -100,11 +100,6 @@ class ViewKckrCategory extends CActiveRecord
 			'media_items' => Yii::t('attribute', 'Media Items'),
 			'media_item_all' => Yii::t('attribute', 'Media Item All'),
 		);
-		/*
-			'Category' => 'Category',
-			'Medias' => 'Medias',
-		
-		*/
 	}
 
 	/**

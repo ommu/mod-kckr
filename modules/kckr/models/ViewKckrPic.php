@@ -95,11 +95,6 @@ class ViewKckrPic extends CActiveRecord
 			'kckrs' => Yii::t('attribute', 'Kckrs'),
 			'kckr_all' => Yii::t('attribute', 'Kckr All'),
 		);
-		/*
-			'Pic' => 'Pic',
-			'Kckrs' => 'Kckrs',
-		
-		*/
 	}
 
 	/**

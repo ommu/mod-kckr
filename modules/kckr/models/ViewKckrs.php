@@ -106,12 +106,6 @@ class ViewKckrs extends CActiveRecord
 			'media_items' => Yii::t('attribute', 'Media Items'),
 			'media_item_all' => Yii::t('attribute', 'Media Item All'),
 		);
-		/*
-			'Kckr' => 'Kckr',
-			'Publisher' => 'Publisher',
-			'Medias' => 'Medias',
-		
-		*/
 	}
 
 	/**

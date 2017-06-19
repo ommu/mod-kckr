@@ -125,19 +125,6 @@ class KckrPublisher extends CActiveRecord
 			'media_search' => Yii::t('attribute', 'Karya'),
 			'item_search' => Yii::t('attribute', 'Item'),
 		);
-		/*
-			'Publisher' => 'Publisher',
-			'Publish' => 'Publish',
-			'Publisher Name' => 'Publisher Name',
-			'Publisher Area' => 'Publisher Area',
-			'Publisher Address' => 'Publisher Address',
-			'Publisher Phone' => 'Publisher Phone',
-			'Creation Date' => 'Creation Date',
-			'Creation' => 'Creation',
-			'Modified Date' => 'Modified Date',
-			'Modified' => 'Modified',
-		
-		*/
 	}
 
 	/**

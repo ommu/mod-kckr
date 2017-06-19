@@ -126,18 +126,6 @@ class KckrCategory extends CActiveRecord
 			'media_search' => Yii::t('attribute', 'Karya'),
 			'item_search' => Yii::t('attribute', 'Item'),
 		);
-		/*
-			'Category' => 'Category',
-			'Publish' => 'Publish',
-			'Category Type' => 'Category Type',
-			'Category Name' => 'Category Name',
-			'Category Desc' => 'Category Desc',
-			'Creation Date' => 'Creation Date',
-			'Creation' => 'Creation',
-			'Modified Date' => 'Modified Date',
-			'Modified' => 'Modified',
-		
-		*/
 	}
 
 	/**

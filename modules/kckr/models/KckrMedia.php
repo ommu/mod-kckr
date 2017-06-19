@@ -129,22 +129,6 @@ class KckrMedia extends CActiveRecord
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
-		/*
-			'Media' => 'Media',
-			'Publish' => 'Publish',
-			'Kckr' => 'Kckr',
-			'Category' => 'Category',
-			'Media Title' => 'Media Title',
-			'Media Desc' => 'Media Desc',
-			'Media Publish Year' => 'Media Publish Year',
-			'Media Author' => 'Media Author',
-			'Media Total' => 'Media Total',
-			'Creation Date' => 'Creation Date',
-			'Creation' => 'Creation',
-			'Modified Date' => 'Modified Date',
-			'Modified' => 'Modified',
-		
-		*/
 	}
 
 	/**

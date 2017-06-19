@@ -126,18 +126,6 @@ class KckrPic extends CActiveRecord
 			'modified_search' => Yii::t('attribute', 'Modified'),
 			'kckr_search' => Yii::t('attribute', 'KCKR'),
 		);
-		/*
-			'Pic' => 'Pic',
-			'Publish' => 'Publish',
-			'Pic Name' => 'Pic Name',
-			'Pic Nip' => 'Pic Nip',
-			'Pic Position' => 'Pic Position',
-			'Creation Date' => 'Creation Date',
-			'Creation' => 'Creation',
-			'Modified Date' => 'Modified Date',
-			'Modified' => 'Modified',
-		
-		*/
 	}
 
 	/**
