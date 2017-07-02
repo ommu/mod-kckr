@@ -42,10 +42,10 @@
  * @property string $modified_id
  *
  * The followings are the available model relations:
- * @property OmmuKckrMedia[] $ommuKckrMedias
- * @property OmmuKckrPic $pic
- * @property OmmuKckrPublisher $publisher
- * @property OmmuKckrCategory $category
+ * @property KckrMedia[] $KckrMedias
+ * @property KckrPic $pic
+ * @property KckrPublisher $publisher
+ * @property KckrCategory $category
  */
 class Kckrs extends CActiveRecord
 {

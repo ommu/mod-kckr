@@ -38,8 +38,8 @@
  * @property string $modified_id
  *
  * The followings are the available model relations:
- * @property OmmuKckrs $kckr
- * @property OmmuKckrCategory $category
+ * @property Kckrs $kckr
+ * @property KckrCategory $category
  */
 class KckrMedia extends CActiveRecord
 {

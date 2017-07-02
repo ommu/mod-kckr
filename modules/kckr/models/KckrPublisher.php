@@ -35,7 +35,7 @@
  * @property string $modified_id
  *
  * The followings are the available model relations:
- * @property OmmuKckrs[] $ommuKckrs
+ * @property Kckrs[] $Kckrs
  */
 class KckrPublisher extends CActiveRecord
 {
