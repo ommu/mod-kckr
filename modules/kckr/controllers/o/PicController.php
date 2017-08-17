@@ -116,7 +116,7 @@ class PicController extends Controller
 		if(isset($_GET['term'])) {
 			$criteria = new CDbCriteria;
 			$criteria->condition = 'pic_name LIKE :pic_name';
-			$criteria->select	= "pic_id, pic_name";
+			$criteria->select = "pic_id, pic_name";
 			$criteria->limit = $limit;
 			$criteria->order = "pic_id ASC";
 			$criteria->params = array(':pic_name' => '%' . strtolower($_GET['term']) . '%');
