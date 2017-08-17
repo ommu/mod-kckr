@@ -17,6 +17,7 @@
  *	RunAction
  *	Delete
  *	Publish
+ *	Export
  *
  *	LoadModel
  *	performAjaxValidation
@@ -85,7 +86,7 @@ class PublisherController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','add','edit','view','runaction','delete','publish','export'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -118,7 +119,7 @@ class PublisherController extends Controller
 			if(isset($_GET['term'])) {
 				$criteria = new CDbCriteria;
 				$criteria->condition = 'publisher_name LIKE :publisher_name';
-				$criteria->select	= "publisher_id, publisher_name";
+				$criteria->select = "publisher_id, publisher_name";
 				$criteria->limit = $limit;
 				$criteria->order = "publisher_id ASC";
 				$criteria->params = array(':publisher_name' => '%' . strtolower($_GET['term']) . '%');
@@ -362,6 +363,55 @@ class PublisherController extends Controller
 	 * @param integer $id the ID of the model to be deleted
 	 */
 	public function actionPublish($id) 
+	{
+		$model=$this->loadModel($id);
+		
+		if($model->publish == 1) {
+			$title = Yii::t('phrase', 'Unpublish');
+			$replace = 0;
+		} else {
+			$title = Yii::t('phrase', 'Publish');
+			$replace = 1;
+		}
+		$pageTitle = Yii::t('phrase', '$title Category: $publisher_name', array ('$title'=>$title, '$publisher_name'=>$model->publisher_name));
+
+		if(Yii::app()->request->isPostRequest) {
+			// we only allow deletion via POST request
+			if(isset($id)) {
+				//change value active or publish
+				$model->publish = $replace;
+
+				if($model->update()) {
+					echo CJSON::encode(array(
+						'type' => 5,
+						'get' => Yii::app()->controller->createUrl('manage'),
+						'id' => 'partial-kckr-publisher',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Kckr publisher success updated.').'</strong></div>',
+					));
+				}
+			}
+
+		} else {
+			$this->dialogDetail = true;
+			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+			$this->dialogWidth = 350;
+
+			$this->pageTitle = $pageTitle;
+			$this->pageDescription = '';
+			$this->pageMeta = '';
+			$this->render('admin_publish',array(
+				'title'=>$title,
+				'model'=>$model,
+			));
+		}
+	}
+
+	/**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionExport($id=null) 
 	{
 		$model=$this->loadModel($id);
 		
