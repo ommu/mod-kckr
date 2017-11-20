@@ -15,7 +15,7 @@
  */
 ?>
 
-<?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
+<?php $form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
 	'id'=>'kckrs-form',
 	'enableAjaxValidation'=>true,
 	'htmlOptions' => array(
@@ -125,7 +125,7 @@
 			<?php
 			$model->send_date = !$model->isNewRecord ? (!in_array($model->send_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->send_date)) : '') : '';
 			//echo $form->textField($model,'send_date');
-			$this->widget('application.components.system.CJuiDatePicker',array(
+			$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
 				'model'=>$model,
 				'attribute'=>'send_date',
 				//'mode'=>'datetime',
@@ -147,7 +147,7 @@
 			<?php
 			$model->receipt_date = !$model->isNewRecord ? (!in_array($model->receipt_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->receipt_date)) : '') : '';
 			//echo $form->textField($model,'receipt_date');
-			$this->widget('application.components.system.CJuiDatePicker',array(
+			$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
 				'model'=>$model,
 				'attribute'=>'receipt_date',
 				//'mode'=>'datetime',

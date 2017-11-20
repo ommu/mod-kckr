@@ -20,7 +20,7 @@
 	);
 ?>
 
-<?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
+<?php $form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
 	'id'=>'kckrs-form',
 	'enableAjaxValidation'=>true,
 	'htmlOptions' => array(
@@ -83,7 +83,7 @@
 					else
 						$model->thanks_date = !$model->isNewRecord ? (!in_array($model->thanks_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
 					//echo $form->textField($model,'thanks_date');
-					$this->widget('application.components.system.CJuiDatePicker',array(
+					$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
 						'model'=>$model,
 						'attribute'=>'thanks_date',
 						//'mode'=>'datetime',

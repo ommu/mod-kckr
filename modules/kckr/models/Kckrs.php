@@ -357,7 +357,7 @@ class Kckrs extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'send_date',
 					'language' => 'en',
@@ -383,7 +383,7 @@ class Kckrs extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'receipt_date',
 					'language' => 'en',
@@ -416,7 +416,7 @@ class Kckrs extends CActiveRecord
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
-					'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
+					'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 						'model'=>$this,
 						'attribute'=>'creation_date',
 						'language' => 'en',
