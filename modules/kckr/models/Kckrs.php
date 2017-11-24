@@ -459,7 +459,7 @@ class Kckrs extends CActiveRecord
 			}
 			$this->defaultColumns[] = array(
 				'header' => Yii::t('phrase', 'Print'),
-				'value' =>  'CHtml::link(!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Yii::t(\'phrase\', \'Print\'), Yii::app()->controller->createUrl("print",array(\'id\'=>$data->kckr_id)))',
+				'value' =>  'CHtml::link(!in_array($data->thanks_date, array(\'0000-00-00\', \'1970-01-01\')) ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Yii::t(\'phrase\', \'Print\'), Yii::app()->controller->createUrl("print",array(\'id\'=>$data->kckr_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -467,7 +467,7 @@ class Kckrs extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'article_id',
-				'value' =>  'CHtml::link($data->article_id != 0 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Yii::t(\'phrase\', \'Article\'), $data->article_id != 0 ? Yii::app()->controller->createUrl(\'article\',array(\'id\'=>$data->kckr_id, \'aid\'=>$data->article_id)) : Yii::app()->controller->createUrl(\'article\',array(\'id\'=>$data->kckr_id)))',
+				'value' =>  'CHtml::link($data->article_id != 0 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Yii::t(\'phrase\', \'Article\'), $data->article_id != 0 ? Yii::app()->controller->createUrl(\'article\',array(\'id\'=>$data->kckr_id, \'aid\'=>$data->article_id)) : Yii::app()->controller->createUrl(\'article\',array(\'id\'=>$data->kckr_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
