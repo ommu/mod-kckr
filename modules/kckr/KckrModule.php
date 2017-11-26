@@ -5,7 +5,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
- * @link https://github.com/ommu/mod-kckr
+ * @link https://github.com/ommu/ommu-kckr
  * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
