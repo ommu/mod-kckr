@@ -248,7 +248,7 @@
 				<div class="desc">
 					<?php 
 					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
-					$this->widget('application.extensions.imperavi.ImperaviRedactorWidget', array(
+					$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 						'model'=>$model,
 						'attribute'=>quote,
 						// Redactor options
@@ -281,7 +281,7 @@
 						$model->body = $message;
 					}
 					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
-					$this->widget('application.extensions.imperavi.ImperaviRedactorWidget', array(
+					$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 						'model'=>$model,
 						'attribute'=>body,
 						// Redactor options
