@@ -29,7 +29,10 @@ class KckrUtility
 		Yii::import('application.modules.kckr.components.extensions.html2pdf.parsingHTML');		// classe de parsing HTML
 		Yii::import('application.modules.kckr.components.extensions.html2pdf.styleHTML');		// classe de gestion des styles
 		
-		include(YiiBase::getPathOfAlias('application.modules.kckr.components.templates').'/'.$template.'.php');	
+		$template_file = YiiBase::getPathOfAlias('application.modules.kckr.components.templates').'/'.$template.'.php';
+		if(!file_exists($template_file))
+			$template_file = YiiBase::getPathOfAlias('ommu.kckr.components.templates').'/'.$template.'.php';
+		include($template_file);
 		
 		$content  = ob_get_clean();
 		$fileName = '';
