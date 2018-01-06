@@ -4,9 +4,8 @@
  * @var $this AdminController
  * @var $model Kckrs
  * @var $form CActiveForm
- * version: 0.0.1
- * Reference start
  *
+ * Reference start
  * TOC :
  *	Index
  *	Manage
@@ -24,10 +23,10 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 July 2016, 07:42 WIB
  * @link https://github.com/ommu/ommu-kckr
- * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
