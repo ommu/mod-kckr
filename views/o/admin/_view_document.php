@@ -18,7 +18,7 @@
 	<?php 
 	foreach($thanks_document as $key => $val) {?>
 		<li><a target="_blank" href="<?php echo Yii::app()->request->baseUrl?>/public/kckr/document_pdf/<?php echo $val;?>" title="<?php echo $val;?>"><?php echo $val;?></a></li>
-	<?php }?>		
+	<?php }?>
 	</ul>
 <?php } else
 	echo '-';?>

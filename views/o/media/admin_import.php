@@ -28,7 +28,7 @@
 	),
 )); ?>
 <div class="dialog-content">
-	<fieldset>		
+	<fieldset>
 		<div class="clearfix">
 			<label>Excel <span class="required">*</span></label>
 			<div class="desc">

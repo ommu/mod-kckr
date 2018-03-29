@@ -22,6 +22,6 @@
 	<a id="set-delete" href="<?php echo Yii::app()->controller->createUrl('o/media/delete', array('id'=>$data->media_id,'hook'=>'admin'));?>" title="<?php echo Yii::t('phrase', 'Delete Photo');?>"><?php echo Yii::t('phrase', 'Delete Photo');?></a>
 	<?php 
 	$media = Yii::app()->request->baseUrl.'/public/article/'.$data->article_id.'/'.$data->media;?>
-	<img src="<?php echo Utility::getTimThumb($media, 320, 250, 1);?>" alt="<?php echo $data->article->title;?>" />	
+	<img src="<?php echo Utility::getTimThumb($media, 320, 250, 1);?>" alt="<?php echo $data->article->title;?>" />
 </li>
 <?php }?>

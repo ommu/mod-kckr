@@ -26,7 +26,7 @@
 )); ?>
 
 	<div class="dialog-content">
-		<?php echo Yii::t('phrase', 'Are you sure you want to delete this item?');?>	
+		<?php echo Yii::t('phrase', 'Are you sure you want to delete this item?');?>
 	</div>
 	<div class="dialog-submit">
 		<?php echo CHtml::submitButton(Yii::t('phrase', 'Delete'), array('onclick' => 'setEnableSave()')); ?>
