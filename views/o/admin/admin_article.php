@@ -136,6 +136,7 @@
 								));
 								echo $form->error($model,'keyword_i');							
 							}?>
+							<?php if($model->isNewRecord) {?><span class="small-px">tambahkan tanda koma (,) jika ingin menambahkan keyword lebih dari satu</span><?php }?>
 							<div id="keyword-suggest" class="suggest clearfix">
 								<?php 
 								if($articleSetting->meta_keyword && $articleSetting->meta_keyword != '-') {
@@ -153,7 +154,6 @@
 									}
 								}?>
 							</div>
-							<?php if($model->isNewRecord) {?><span class="small-px">tambahkan tanda koma (,) jika ingin menambahkan keyword lebih dari satu</span><?php }?>
 						</div>
 					</div>
 		
