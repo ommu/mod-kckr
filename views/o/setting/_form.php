@@ -155,7 +155,7 @@ EOP;
 		</div>
 
 		<?php if($module != null && $module->install == 1 && $module->actived == 1) {
-			Yii::import('application.modules.article.models.ArticleCategory');
+			Yii::import('application.vendor.ommu.article.models.ArticleCategory');
 			$parent = null;
 			$category = ArticleCategory::getCategory(null, $parent);
 		?>

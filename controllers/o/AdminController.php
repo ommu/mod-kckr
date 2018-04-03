@@ -652,26 +652,26 @@ class AdminController extends Controller
 	 */
 	public function actionArticle() 
 	{
-		Yii::import('application.modules.article.models.ArticleCategory');
-		Yii::import('application.modules.article.models.ArticleMedia');
-		Yii::import('application.modules.article.models.Articles');
-		Yii::import('application.modules.article.models.ArticleSetting');
-		Yii::import('application.modules.article.models.ArticleTag');
-		Yii::import('application.modules.article.models.ViewArticleCategory');
-		Yii::import('application.modules.article.models.ViewArticles');
+		Yii::import('application.vendor.ommu.article.models.ArticleCategory');
+		Yii::import('application.vendor.ommu.article.models.ArticleMedia');
+		Yii::import('application.vendor.ommu.article.models.Articles');
+		Yii::import('application.vendor.ommu.article.models.ArticleSetting');
+		Yii::import('application.vendor.ommu.article.models.ArticleTag');
+		Yii::import('application.vendor.ommu.article.models.ViewArticleCategory');
+		Yii::import('application.vendor.ommu.article.models.ViewArticles');
 		
 		$id = $_GET['id'];
 		$articleId = $_GET['aid'];
 		
 		$articleSetting = ArticleSetting::model()->findByPk(1,array(
-			'select' => 'meta_keyword, type_active, headline, media_limit, media_file_type, upload_file_type',
+			'select' => 'meta_keyword, headline, media_image_limit, media_image_type, media_file_type',
 		));
+		$media_image_type = unserialize($articleSetting->media_image_type);
+		if(empty($media_image_type))
+			$media_image_type = array();
 		$media_file_type = unserialize($articleSetting->media_file_type);
 		if(empty($media_file_type))
 			$media_file_type = array();
-		$upload_file_type = unserialize($articleSetting->upload_file_type);
-		if(empty($upload_file_type))
-			$upload_file_type = array();
 		$kckrSetting = KckrSetting::model()->findByPk(1,array(
 			'select' => 'article_cat_id',
 		));
@@ -718,8 +718,8 @@ class AdminController extends Controller
 			'kckr'=>$kckr,
 			'articleSetting'=>$articleSetting,
 			'kckrSetting'=>$kckrSetting,
+			'media_image_type'=>$media_image_type,
 			'media_file_type'=>$media_file_type,
-			'upload_file_type'=>$upload_file_type,
 		));		
 	}
 
