@@ -70,7 +70,7 @@
 			Dengan hormat kami beritahukan bahwa Karya Cetak/Karya Rekam yang saudara kirim, sebagai pelaksanaan Perda Prov. DIY No. 12 Tahun 2005 tentang Sejarah Simpan Karya Cetak dan Karya Rekam Provinsi DIY dengan surat pengantar :
 			<br/><br/>
 			Nomor&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo $model->letter_number?><br/>
-			Hari/Tanggal&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo !in_array($model->send_date, array('0000-00-00','1970-01-01')) ? Utility::getLocalDayName($model->send_date, false).', '.date('d', strtotime($model->send_date)).' '.Utility::getLocalMonthName($model->send_date).' '.date('Y', strtotime($model->send_date)) : '-';?><br/>
+			Hari/Tanggal&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo !in_array($model->send_date, array('0000-00-00','1970-01-01','0002-12-02','-0001-11-30')) ? Utility::getLocalDayName($model->send_date, false).', '.date('d', strtotime($model->send_date)).' '.Utility::getLocalMonthName($model->send_date).' '.date('Y', strtotime($model->send_date)) : '-';?><br/>
 			Sebanyak&nbsp;&nbsp;:&nbsp;&nbsp;<?php echo $model->view->medias != 0 ? $model->view->medias.' judul '.$model->view->media_items.' eks.' : '-';?>
 			<br/><br/>
 			telah diterima dengan baik dan lengkap seperti daftar lampir.<br/>

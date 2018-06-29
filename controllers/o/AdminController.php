@@ -491,7 +491,7 @@ class AdminController extends Controller
 		if($model->letter_number && $model->letter_number != '-')
 			$pageTitle = Yii::t('phrase', 'Print Kckr: Publisher $publisher_name Leter Number $letter_number', array ('$publisher_name'=>$model->publisher->publisher_name, '$letter_number'=>$model->letter_number));
 		
-		$condition = in_array($model->thanks_date, array('0000-00-00', '1970-01-01')) && $model->thanks_document == '' ? false : true;
+		$condition = in_array($model->thanks_date, array('0000-00-00','1970-01-01','0002-12-02','-0001-11-30')) && $model->thanks_document == '' ? false : true;
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -585,7 +585,7 @@ class AdminController extends Controller
 		ob_start();
 		
 		$criteria=new CDbCriteria;
-		$criteria->addNotInCondition('thanks_date', array('0000-00-00', '1970-01-01'));
+		$criteria->addNotInCondition('thanks_date', array('0000-00-00','1970-01-01','0002-12-02','-0001-11-30'));
 		$model = Kckrs::model()->findAll($criteria);
 		
 		if($model != null) {

@@ -80,7 +80,7 @@
 					if(isset($_POST['Kckrs']) && trim($model->thanks_date) == '')
 						$model->thanks_date = '';
 					else
-						$model->thanks_date = !$model->isNewRecord ? (!in_array($model->thanks_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
+						$model->thanks_date = !$model->isNewRecord ? (!in_array($model->thanks_date, array('0000-00-00','1970-01-01','0002-12-02','-0001-11-30')) ? date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
 					//echo $form->textField($model,'thanks_date');
 					$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
 						'model'=>$model,
