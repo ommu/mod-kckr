@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 24 September 2016, 22:37 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -119,13 +119,13 @@ class ViewKckrCategory extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.category_id',$this->category_id);
-		$criteria->compare('t.medias',$this->medias);
-		$criteria->compare('t.media_all',$this->media_all);
-		$criteria->compare('t.media_items',$this->media_items);
-		$criteria->compare('t.media_item_all',$this->media_item_all);
+		$criteria->compare('t.category_id', $this->category_id);
+		$criteria->compare('t.medias', $this->medias);
+		$criteria->compare('t.media_all', $this->media_all);
+		$criteria->compare('t.media_items', $this->media_items);
+		$criteria->compare('t.media_item_all', $this->media_item_all);
 
-		if(!isset($_GET['ViewKckrCategory_sort']))
+		if(!Yii::app()->getRequest()->getParam('ViewKckrCategory_sort'))
 			$criteria->order = 't.category_id DESC';
 
 		return new CActiveDataProvider($this, array(
@@ -188,7 +188,7 @@ class ViewKckrCategory extends CActiveRecord
 	public static function getInfo($id, $column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk($id,array(
+			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
  			if(count(explode(',', $column)) == 1)

@@ -7,7 +7,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:42 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -82,12 +82,12 @@
 					else
 						$model->thanks_date = !$model->isNewRecord ? (!in_array($model->thanks_date, array('0000-00-00','1970-01-01','0002-12-02','-0001-11-30')) ? date('d-m-Y', strtotime($model->thanks_date)) : '') : '';
 					//echo $form->textField($model,'thanks_date');
-					$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
+					$this->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 						'model'=>$model,
 						'attribute'=>'thanks_date',
 						//'mode'=>'datetime',
 						'options'=>array(
-							'dateFormat' => 'dd-mm-yy',
+							'dateFormat' => 'yy-mm-dd',
 						),
 						'htmlOptions'=>array(
 							'class' => 'span-4',

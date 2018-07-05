@@ -22,7 +22,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:41 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -112,13 +112,13 @@ class PicController extends Controller
 	 * @param integer $id the ID of the model to be updated
 	 */
 	public function actionSuggest($limit=10) {
-		if(isset($_GET['term'])) {
+		if(Yii::app()->getRequest()->getParam('term')) {
 			$criteria = new CDbCriteria;
 			$criteria->condition = 'pic_name LIKE :pic_name';
 			$criteria->select = "pic_id, pic_name";
 			$criteria->limit = $limit;
 			$criteria->order = "pic_id ASC";
-			$criteria->params = array(':pic_name' => '%' . strtolower($_GET['term']) . '%');
+			$criteria->params = array(':pic_name' => '%' . strtolower(Yii::app()->getRequest()->getParam('term')) . '%');
 			$model = KckrPic::model()->findAll($criteria);
 
 			if($model) {
@@ -126,7 +126,7 @@ class PicController extends Controller
 					$result[] = array('id' => $items->pic_id, 'value' => $items->pic_name);
 				}
 			} else {
-				$result[] = array('id' => 0, 'value' => $_GET['term']);
+				$result[] = array('id' => 0, 'value' => Yii::app()->getRequest()->getParam('term'));
 			}
 		}
 		echo CJSON::encode($result);
@@ -157,7 +157,7 @@ class PicController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'PICs');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_manage',array(
+		$this->render('admin_manage', array(
 			'model'=>$model,
 			'columns' => $columns,
 		));
@@ -191,7 +191,7 @@ class PicController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Create PIC');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_add',array(
+		$this->render('admin_add', array(
 			'model'=>$model,
 		));
 	}
@@ -225,7 +225,7 @@ class PicController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Update PIC: $pic_name', array('$pic_name'=>$model->pic_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_edit',array(
+		$this->render('admin_edit', array(
 			'model'=>$model,
 		));
 	}
@@ -245,7 +245,7 @@ class PicController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'View PIC: $pic_name', array('$pic_name'=>$model->pic_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_view',array(
+		$this->render('admin_view', array(
 			'model'=>$model,
 		));
 	}	
@@ -257,7 +257,7 @@ class PicController extends Controller
 	public function actionRunAction() {
 		$id       = $_POST['trash_id'];
 		$criteria = null;
-		$actions  = $_GET['action'];
+		$actions  = Yii::app()->getRequest()->getParam('action');
 
 		if(count($id) > 0) {
 			$criteria = new CDbCriteria;
@@ -281,7 +281,7 @@ class PicController extends Controller
 		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax'])) {
+		if(!Yii::app()->getRequest()->getParam('ajax')) {
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
 		}
 	}
@@ -362,7 +362,7 @@ class PicController extends Controller
 			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
-			$this->render('admin_publish',array(
+			$this->render('admin_publish', array(
 				'title'=>$title,
 				'model'=>$model,
 			));

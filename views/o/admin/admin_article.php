@@ -7,7 +7,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:42 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -64,7 +64,7 @@
 							<?php 
 							if($model->isNewRecord && !$model->getErrors())
 								$model->title = 'Penyerahan Bahan Pustaka Karya Cetak Dari '.$kckr->publisher->publisher_name;
-							echo $form->textField($model,'title',array('maxlength'=>128,'class'=>'span-8')); ?>
+							echo $form->textField($model,'title', array('maxlength'=>128,'class'=>'span-8')); ?>
 							<?php echo $form->error($model,'title'); ?>
 						</div>
 					</div>
@@ -101,10 +101,10 @@
 						<div class="desc">
 							<?php 
 							if($model->isNewRecord) {
-								echo $form->textArea($model,'keyword_i',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 smaller'));
+								echo $form->textArea($model,'keyword_i', array('rows'=>6, 'cols'=>50, 'class'=>'span-10 smaller'));
 								
 							} else {
-								//echo $form->textField($model,'keyword_i',array('maxlength'=>32,'class'=>'span-6'));
+								//echo $form->textField($model,'keyword_i', array('maxlength'=>32,'class'=>'span-6'));
 								$url = Yii::app()->controller->createUrl('article/o/tag/add', array('type'=>'article'));
 								$article = $model->article_id;
 								$tagId = 'Articles_keyword_input';
@@ -149,7 +149,7 @@
 									$tags = $model->tags;
 									if(!empty($tags)) {
 										foreach($tags as $key => $val) {?>
-										<div><?php echo $val->tag->body;?><a href="<?php echo Yii::app()->controller->createUrl('article/o/tag/delete',array('id'=>$val->id,'type'=>'article'));?>" title="<?php echo Yii::t('phrase', 'Delete');?>"><?php echo Yii::t('phrase', 'Delete');?></a></div>
+										<div><?php echo $val->tag->body;?><a href="<?php echo Yii::app()->controller->createUrl('article/o/tag/delete', array('id'=>$val->id,'type'=>'article'));?>" title="<?php echo Yii::t('phrase', 'Delete');?>"><?php echo Yii::t('phrase', 'Delete');?></a></div>
 									<?php }
 									}
 								}?>
@@ -188,12 +188,12 @@
 							<?php 
 							$model->published_date = $model->isNewRecord && $model->published_date == '' ? date('d-m-Y') : date('d-m-Y', strtotime($model->published_date));
 							//echo $form->textField($model,'published_date', array('class'=>'span-7'));
-							$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
+							$this->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 								'model'=>$model, 
 								'attribute'=>'published_date',
 								//'mode'=>'datetime',
 								'options'=>array(
-									'dateFormat' => 'dd-mm-yy',
+									'dateFormat' => 'yy-mm-dd',
 								),
 								'htmlOptions'=>array(
 									'class' => 'span-7',
@@ -246,7 +246,7 @@
 				<?php echo $form->labelEx($model,'quote'); ?>
 				<div class="desc">
 					<?php 
-					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
+					//echo $form->textArea($model,'body', array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
 					$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 						'model'=>$model,
 						'attribute'=>quote,
@@ -277,7 +277,7 @@
 						$message = $this->renderPartial('application.modules.kckr.components.templates.'.$template, array('kckr'=>$kckr), true, false);
 						$model->body = $message;
 					}
-					//echo $form->textArea($model,'body',array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
+					//echo $form->textArea($model,'body', array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
 					$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 						'model'=>$model,
 						'attribute'=>body,

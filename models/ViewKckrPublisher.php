@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 24 September 2016, 22:38 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -124,15 +124,15 @@ class ViewKckrPublisher extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.publisher_id',$this->publisher_id);
-		$criteria->compare('t.kckrs',$this->kckrs);
-		$criteria->compare('t.kckr_all',$this->kckr_all);
-		$criteria->compare('t.medias',$this->medias);
-		$criteria->compare('t.media_all',$this->media_all);
-		$criteria->compare('t.media_items',$this->media_items);
-		$criteria->compare('t.media_item_all',$this->media_item_all);
+		$criteria->compare('t.publisher_id', $this->publisher_id);
+		$criteria->compare('t.kckrs', $this->kckrs);
+		$criteria->compare('t.kckr_all', $this->kckr_all);
+		$criteria->compare('t.medias', $this->medias);
+		$criteria->compare('t.media_all', $this->media_all);
+		$criteria->compare('t.media_items', $this->media_items);
+		$criteria->compare('t.media_item_all', $this->media_item_all);
 
-		if(!isset($_GET['ViewKckrPublisher_sort']))
+		if(!Yii::app()->getRequest()->getParam('ViewKckrPublisher_sort'))
 			$criteria->order = 't.publisher_id DESC';
 
 		return new CActiveDataProvider($this, array(
@@ -199,7 +199,7 @@ class ViewKckrPublisher extends CActiveRecord
 	public static function getInfo($id, $column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk($id,array(
+			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
  			if(count(explode(',', $column)) == 1)

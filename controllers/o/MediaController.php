@@ -22,7 +22,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:41 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -146,7 +146,7 @@ class MediaController extends Controller
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_manage',array(
+		$this->render('admin_manage', array(
 			'model'=>$model,
 			'columns' => $columns,
 		));
@@ -158,7 +158,7 @@ class MediaController extends Controller
 	 */
 	public function actionAdd() 
 	{
-		$kckrID = $_GET['id'];
+		$kckrID = Yii::app()->getRequest()->getParam('id');
 		if(isset($kckrID)) {
 			$kckr=Kckrs::model()->findByPk($kckrID);
 			$pageTitle = Yii::t('phrase', 'Create Media: Publisher $publisher_name Letter Number "-"', array ('$publisher_name'=>$kckr->publisher->publisher_name));
@@ -186,7 +186,7 @@ class MediaController extends Controller
 				echo $jsonError;
 
 			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
+				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
 					if($model->save()) {
 						echo CJSON::encode(array(
 							'type' => 5,
@@ -209,7 +209,7 @@ class MediaController extends Controller
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_add',array(
+		$this->render('admin_add', array(
 			'model'=>$model,
 		));
 	}
@@ -222,7 +222,7 @@ class MediaController extends Controller
 	public function actionEdit($id) 
 	{
 		$model=$this->loadModel($id);
-		if(isset($_GET['type']) && $_GET['type'] == 'update')
+		if(Yii::app()->getRequest()->getParam('type') == 'update')
 			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$model->kckr_id));
 		else
 			$url = Yii::app()->controller->createUrl('manage');
@@ -237,7 +237,7 @@ class MediaController extends Controller
 				echo $jsonError;
 
 			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
+				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
 					if($model->save()) {
 						echo CJSON::encode(array(
 							'type' => 5,
@@ -260,7 +260,7 @@ class MediaController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Update Media: $media_title Publisher $publisher_name', array('$media_title'=>$model->media_title, '$publisher_name'=>$model->kckr->publisher->publisher_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_edit',array(
+		$this->render('admin_edit', array(
 			'model'=>$model,
 		));
 	}
@@ -272,7 +272,7 @@ class MediaController extends Controller
 	public function actionView($id) 
 	{
 		$model=$this->loadModel($id);
-		if(isset($_GET['type']) && $_GET['type'] == 'update')
+		if(Yii::app()->getRequest()->getParam('type') == 'update')
 			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$model->kckr_id));
 		else
 			$url = Yii::app()->controller->createUrl('manage');
@@ -284,7 +284,7 @@ class MediaController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'View Media: $media_title Publisher $publisher_name', array('$media_title'=>$model->media_title, '$publisher_name'=>$model->kckr->publisher->publisher_name));
 		$this->pageDescription = '';
 		$this->pageMeta = $setting->meta_keyword;
-		$this->render('admin_view',array(
+		$this->render('admin_view', array(
 			'model'=>$model,
 		));
 	}	
@@ -296,7 +296,7 @@ class MediaController extends Controller
 	public function actionRunAction() {
 		$id       = $_POST['trash_id'];
 		$criteria = null;
-		$actions  = $_GET['action'];
+		$actions  = Yii::app()->getRequest()->getParam('action');
 
 		if(count($id) > 0) {
 			$criteria = new CDbCriteria;
@@ -320,7 +320,7 @@ class MediaController extends Controller
 		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax'])) {
+		if(!Yii::app()->getRequest()->getParam('ajax')) {
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
 		}
 	}
@@ -333,7 +333,7 @@ class MediaController extends Controller
 	public function actionDelete($id) 
 	{
 		$model=$this->loadModel($id);
-		if(isset($_GET['type']) && $_GET['type'] == 'update')
+		if(Yii::app()->getRequest()->getParam('type') == 'update')
 			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$model->kckr_id));
 		else
 			$url = Yii::app()->controller->createUrl('manage');
@@ -371,7 +371,7 @@ class MediaController extends Controller
 	public function actionPublish($id) 
 	{
 		$model=$this->loadModel($id);
-		if(isset($_GET['type']) && $_GET['type'] == 'update')
+		if(Yii::app()->getRequest()->getParam('type') == 'update')
 			$url = Yii::app()->controller->createUrl('o/admin/edit', array('id'=>$model->kckr_id));
 		else
 			$url = Yii::app()->controller->createUrl('manage');
@@ -409,7 +409,7 @@ class MediaController extends Controller
 			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
-			$this->render('admin_publish',array(
+			$this->render('admin_publish', array(
 				'title'=>$title,
 				'model'=>$model,
 			));
@@ -438,7 +438,7 @@ class MediaController extends Controller
 		
 		$error = array();
 		
-		$kckrID = $_GET['id'];
+		$kckrID = Yii::app()->getRequest()->getParam('id');
 		if(isset($kckrID)) {
 			$kckr=Kckrs::model()->findByPk($kckrID);
 			$pageTitle = Yii::t('phrase', 'Import Media: Publisher $publisher_name Letter Number "-"', array ('$publisher_name'=>$kckr->publisher->publisher_name));

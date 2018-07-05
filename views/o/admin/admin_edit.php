@@ -7,7 +7,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:42 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -53,19 +53,19 @@
 						'options' => array(							
 							'class' => 'view',
 						),
-						'url' => 'Yii::app()->controller->createUrl("o/media/view",array("id"=>$data->primaryKey,"type"=>"update"))'),
+						'url' => 'Yii::app()->controller->createUrl("o/media/view", array("id"=>$data->primaryKey,"type"=>"update"))'),
 					'update' => array(
 						'label' => 'update',
 						'options' => array(
 							'class' => 'update'
 						),
-						'url' => 'Yii::app()->controller->createUrl("o/media/edit",array("id"=>$data->primaryKey,"type"=>"update"))'),
+						'url' => 'Yii::app()->controller->createUrl("o/media/edit", array("id"=>$data->primaryKey,"type"=>"update"))'),
 					'delete' => array(
 						'label' => 'delete',
 						'options' => array(
 							'class' => 'delete'
 						),
-						'url' => 'Yii::app()->controller->createUrl("o/media/delete",array("id"=>$data->primaryKey,"type"=>"update"))')
+						'url' => 'Yii::app()->controller->createUrl("o/media/delete", array("id"=>$data->primaryKey,"type"=>"update"))')
 				),
 				'template' => '{view}|{update}|{delete}',
 			));

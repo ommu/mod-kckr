@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 16 September 2016, 23:06 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -143,27 +143,27 @@ class KckrSetting extends CActiveRecord
 			),
 		);
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.license',strtolower($this->license),true);
-		$criteria->compare('t.permission',$this->permission);
-		$criteria->compare('t.meta_keyword',strtolower($this->meta_keyword),true);
-		$criteria->compare('t.meta_description',strtolower($this->meta_description),true);
-		$criteria->compare('t.gridview_column',$this->gridview_column,true);
-		$criteria->compare('t.photo_resize',$this->photo_resize);
-		$criteria->compare('t.photo_resize_size',$this->photo_resize_size,true);
-		$criteria->compare('t.photo_view_size',$this->photo_view_size,true);
-		$criteria->compare('t.article_sync',$this->article_sync);
-		$criteria->compare('t.article_cat_id',$this->article_cat_id);
-		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
-		if(isset($_GET['modified']))
-			$criteria->compare('t.modified_id',$_GET['modified']);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.license', strtolower($this->license), true);
+		$criteria->compare('t.permission', $this->permission);
+		$criteria->compare('t.meta_keyword', strtolower($this->meta_keyword), true);
+		$criteria->compare('t.meta_description', strtolower($this->meta_description), true);
+		$criteria->compare('t.gridview_column', $this->gridview_column,true);
+		$criteria->compare('t.photo_resize', $this->photo_resize);
+		$criteria->compare('t.photo_resize_size', $this->photo_resize_size,true);
+		$criteria->compare('t.photo_view_size', $this->photo_view_size,true);
+		$criteria->compare('t.article_sync', $this->article_sync);
+		$criteria->compare('t.article_cat_id', $this->article_cat_id);
+		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')))
+			$criteria->compare('date(t.modified_date)', date('Y-m-d', strtotime($this->modified_date)));
+		if(Yii::app()->getRequest()->getParam('modified'))
+			$criteria->compare('t.modified_id', Yii::app()->getRequest()->getParam('modified'));
 		else
-			$criteria->compare('t.modified_id',$this->modified_id);
+			$criteria->compare('t.modified_id', $this->modified_id);
 		
-		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
+		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
 
-		if(!isset($_GET['KckrSetting_sort']))
+		if(!Yii::app()->getRequest()->getParam('KckrSetting_sort'))
 			$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(
@@ -244,7 +244,7 @@ class KckrSetting extends CActiveRecord
 	public static function getInfo($id, $column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk($id,array(
+			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
  			if(count(explode(',', $column)) == 1)
@@ -256,33 +256,6 @@ class KckrSetting extends CActiveRecord
 			$model = self::model()->findByPk($id);
 			return $model;
 		}
-	}
-
-	/**
-	 * get Module License
-	 */
-	public static function getLicense($source='1234567890', $length=16, $char=4)
-	{
-		$mod = $length%$char;
-		if($mod == 0)
-			$sep = ($length/$char);
-		else
-			$sep = (int)($length/$char)+1;
-		
-		$sourceLength = strlen($source);
-		$random = '';
-		for ($i = 0; $i < $length; $i++)
-			$random .= $source[rand(0, $sourceLength - 1)];
-		
-		$license = '';
-		for ($i = 0; $i < $sep; $i++) {
-			if($i != $sep-1)
-				$license .= substr($random,($i*$char),$char).'-';
-			else
-				$license .= substr($random,($i*$char),$char);
-		}
-
-		return $license;
 	}
 
 	/**

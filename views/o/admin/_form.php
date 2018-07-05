@@ -7,7 +7,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:42 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -41,7 +41,7 @@
 		<?php echo $form->labelEx($publisher,'publisher_name'); ?>
 		<div class="desc">
 			<?php 
-			//echo $form->textField($publisher,'publisher_name',array('maxlength'=>64,'class'=>'span-7'));		
+			//echo $form->textField($publisher,'publisher_name', array('maxlength'=>64,'class'=>'span-7'));		
 			$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 				'model' => $publisher,
 				'attribute' => 'publisher_name',
@@ -69,7 +69,7 @@
 	<div class="clearfix">
 		<?php echo $form->labelEx($model,'letter_number'); ?>
 		<div class="desc">
-			<?php echo $form->textField($model,'letter_number',array('maxlength'=>64,'class'=>'span-6')); ?>
+			<?php echo $form->textField($model,'letter_number', array('maxlength'=>64,'class'=>'span-6')); ?>
 			<?php echo $form->error($model,'letter_number'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
@@ -79,7 +79,7 @@
 		<?php echo $form->labelEx($pic,'pic_name'); ?>
 		<div class="desc">
 			<?php 
-			//echo $form->textField($model,'pic_name',array('maxlength'=>64,'class'=>'span-7'));	
+			//echo $form->textField($model,'pic_name', array('maxlength'=>64,'class'=>'span-7'));	
 			$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 				'model' => $pic,
 				'attribute' => 'pic_name',
@@ -124,12 +124,12 @@
 			<?php
 			$model->send_date = !$model->isNewRecord ? (!in_array($model->send_date, array('0000-00-00','1970-01-01','0002-12-02','-0001-11-30')) ? date('d-m-Y', strtotime($model->send_date)) : '') : '';
 			//echo $form->textField($model,'send_date');
-			$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
+			$this->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 				'model'=>$model,
 				'attribute'=>'send_date',
 				//'mode'=>'datetime',
 				'options'=>array(
-					'dateFormat' => 'dd-mm-yy',
+					'dateFormat' => 'yy-mm-dd',
 				),
 				'htmlOptions'=>array(
 					'class' => 'span-4',
@@ -146,12 +146,12 @@
 			<?php
 			$model->receipt_date = !$model->isNewRecord ? (!in_array($model->receipt_date, array('0000-00-00','1970-01-01','0002-12-02','-0001-11-30')) ? date('d-m-Y', strtotime($model->receipt_date)) : '') : '';
 			//echo $form->textField($model,'receipt_date');
-			$this->widget('application.libraries.core.components.system.CJuiDatePicker',array(
+			$this->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 				'model'=>$model,
 				'attribute'=>'receipt_date',
 				//'mode'=>'datetime',
 				'options'=>array(
-					'dateFormat' => 'dd-mm-yy',
+					'dateFormat' => 'yy-mm-dd',
 				),
 				'htmlOptions'=>array(
 					'class' => 'span-4',
@@ -209,7 +209,7 @@
 <?php if($model->isNewRecord) {?>
 	</div>
 	<div class="dialog-submit">
-		<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save') ,array('onclick' => 'setEnableSave()')); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save') , array('onclick' => 'setEnableSave()')); ?>
 		<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 	</div>
 <?php }?>

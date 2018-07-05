@@ -7,7 +7,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:41 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -36,7 +36,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'pic_name'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'pic_name',array('maxlength'=>64)); ?>
+				<?php echo $form->textField($model,'pic_name', array('maxlength'=>64)); ?>
 				<?php echo $form->error($model,'pic_name'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
@@ -45,7 +45,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'pic_nip'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'pic_nip',array('maxlength'=>32)); ?>
+				<?php echo $form->textField($model,'pic_nip', array('maxlength'=>32)); ?>
 				<?php echo $form->error($model,'pic_nip'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
@@ -54,7 +54,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'pic_position'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'pic_position',array('maxlength'=>64)); ?>
+				<?php echo $form->textField($model,'pic_position', array('maxlength'=>64)); ?>
 				<?php echo $form->error($model,'pic_position'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
@@ -106,7 +106,7 @@
 	</fieldset>
 </div>
 <div class="dialog-submit">
-	<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save') ,array('onclick' => 'setEnableSave()')); ?>
+	<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save') , array('onclick' => 'setEnableSave()')); ?>
 	<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 </div>
 <?php $this->endWidget(); ?>

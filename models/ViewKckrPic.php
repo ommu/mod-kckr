@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 24 September 2016, 22:37 WIB
  * @link https://github.com/ommu/ommu-kckr
  *
@@ -114,11 +114,11 @@ class ViewKckrPic extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.pic_id',$this->pic_id);
-		$criteria->compare('t.kckrs',$this->kckrs);
-		$criteria->compare('t.kckr_all',$this->kckr_all);
+		$criteria->compare('t.pic_id', $this->pic_id);
+		$criteria->compare('t.kckrs', $this->kckrs);
+		$criteria->compare('t.kckr_all', $this->kckr_all);
 
-		if(!isset($_GET['ViewKckrPic_sort']))
+		if(!Yii::app()->getRequest()->getParam('ViewKckrPic_sort'))
 			$criteria->order = 't.pic_id DESC';
 
 		return new CActiveDataProvider($this, array(
@@ -177,7 +177,7 @@ class ViewKckrPic extends CActiveRecord
 	public static function getInfo($id, $column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk($id,array(
+			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
  			if(count(explode(',', $column)) == 1)
