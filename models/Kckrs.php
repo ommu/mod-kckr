@@ -48,6 +48,8 @@
  */
 class Kckrs extends CActiveRecord
 {
+	use UtilityTrait;
+
 	public $defaultColumns = array();
 	public $photo_old_input;
 	public $regenerate_input;
@@ -566,7 +568,7 @@ class Kckrs extends CActiveRecord
 				
 				$this->photos = CUploadedFile::getInstance($this, 'photos');
 				if($this->photos instanceOf CUploadedFile) {
-					$fileName = $this->kckr_id.'_'.time().'_'.Utility::getUrlTitle($this->publisher->publisher_name).'.'.strtolower($this->photos->extensionName);
+					$fileName = $this->kckr_id.'_'.time().'_'.$this->urlTitle($this->publisher->publisher_name).'.'.strtolower($this->photos->extensionName);
 					if($this->photos->saveAs($kckr_path.'/'.$fileName)) {
 						$setting = KckrSetting::getInfo(1);
 						if($setting->photo_resize == 1)
@@ -608,7 +610,7 @@ class Kckrs extends CActiveRecord
 			
 			$this->photos = CUploadedFile::getInstance($this, 'photos');
 			if($this->photos instanceOf CUploadedFile) {
-				$fileName = $this->kckr_id.'_'.time().'_'.Utility::getUrlTitle($this->publisher->publisher_name).'.'.strtolower($this->photos->extensionName);
+				$fileName = $this->kckr_id.'_'.time().'_'.$this->urlTitle($this->publisher->publisher_name).'.'.strtolower($this->photos->extensionName);
 				if($this->photos->saveAs($kckr_path.'/'.$fileName)) {
 					$setting = KckrSetting::getInfo(1);
 					if($setting->photo_resize == 1)

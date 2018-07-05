@@ -38,6 +38,8 @@
  */
 class KckrPic extends CActiveRecord
 {
+	use UtilityTrait;
+
 	public $defaultColumns = array();
 	public $old_pic_signature;
 	
@@ -413,7 +415,7 @@ class KckrPic extends CActiveRecord
 				
 				$this->pic_signature = CUploadedFile::getInstance($this, 'pic_signature');
 				if($this->pic_signature instanceOf CUploadedFile) {
-					$fileName = $this->pic_id.'_'.time().'_'.Utility::getUrlTitle($this->pic_name).'.'.strtolower($this->pic_signature->extensionName);
+					$fileName = $this->pic_id.'_'.time().'_'.$this->urlTitle($this->pic_name).'.'.strtolower($this->pic_signature->extensionName);
 					if($this->pic_signature->saveAs($pic_path.'/'.$fileName)) {
 						if($this->old_pic_signature != '' && file_exists($pic_path.'/'.$this->old_pic_signature))
 							rename($pic_path.'/'.$this->old_pic_signature, 'public/kckr/verwijderen/'.$this->old_pic_signature);
@@ -449,7 +451,7 @@ class KckrPic extends CActiveRecord
 			
 			$this->pic_signature = CUploadedFile::getInstance($this, 'pic_signature');
 			if($this->pic_signature instanceOf CUploadedFile) {
-				$fileName = $this->pic_id.'_'.time().'_'.Utility::getUrlTitle($this->pic_name).'.'.strtolower($this->pic_signature->extensionName);
+				$fileName = $this->pic_id.'_'.time().'_'.$this->urlTitle($this->pic_name).'.'.strtolower($this->pic_signature->extensionName);
 				if($this->pic_signature->saveAs($pic_path.'/'.$fileName)) {
 					self::model()->updateByPk($this->pic_id, array('pic_signature'=>$fileName));
 				}

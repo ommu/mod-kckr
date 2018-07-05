@@ -523,7 +523,7 @@ class AdminController extends Controller
 					} else
 						@chmod($letter_path, 0755, true);
 					
-					$letter_documentName = Utility::getUrlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
+					$letter_documentName = $this->urlTitle($model->kckr_id.' '.$model->publisher->publisher_name.' '.$model->receipt_date);
 					
 					$letters = new KckrUtility();
 					$fileName = $letters->getPdf($model, false, $letter_template, $letter_path, $letter_documentName, null, false);
@@ -533,7 +533,7 @@ class AdminController extends Controller
 					if(!empty($attachment)) {
 						$attachment_template = 'document_lampiran';
 						$attachment_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
-						$attachment_documentName = Utility::getUrlTitle($model->kckr_id.' lampiran '.$model->publisher->publisher_name.' '.$model->receipt_date);
+						$attachment_documentName = $this->urlTitle($model->kckr_id.' lampiran '.$model->publisher->publisher_name.' '.$model->receipt_date);
 						
 						$attachments = new KckrUtility();
 						$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
@@ -598,7 +598,7 @@ class AdminController extends Controller
 				
 				$letter_template = 'document_letter';
 				$letter_path = YiiBase::getPathOfAlias('webroot.public.kckr.document_pdf');
-				$letter_documentName = Utility::getUrlTitle($item->kckr_id.' '.$item->publisher->publisher_name.' '.$item->receipt_date);
+				$letter_documentName = $this->urlTitle($item->kckr_id.' '.$item->publisher->publisher_name.' '.$item->receipt_date);
 				
 				$letters = new KckrUtility();
 				$fileName = $letters->getPdf($item, false, $letter_template, $letter_path, $letter_documentName, null, false);
@@ -618,7 +618,7 @@ class AdminController extends Controller
 					} else
 						@chmod($attachment_path, 0755, true);
 					
-					$attachment_documentName = Utility::getUrlTitle($item->kckr_id.' lampiran '.$item->publisher->publisher_name.' '.$item->receipt_date);
+					$attachment_documentName = $this->urlTitle($item->kckr_id.' lampiran '.$item->publisher->publisher_name.' '.$item->receipt_date);
 					
 					$attachments = new KckrUtility();
 					$fileName = $attachments->getPdf($attachment, false, $attachment_template, $attachment_path, $attachment_documentName, 'L', false);
