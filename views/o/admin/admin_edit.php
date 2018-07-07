@@ -50,22 +50,25 @@
 				'buttons' => array(
 					'view' => array(
 						'label' => 'view',
-						'options' => array(							
+						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
+						'options' => array(
 							'class' => 'view',
 						),
-						'url' => 'Yii::app()->controller->createUrl("o/media/view", array("id"=>$data->primaryKey,"type"=>"update"))'),
+						'url' => 'Yii::app()->controller->createUrl("o/media/view", array(\'id\'=>$data->primaryKey,"type"=>"update"))'),
 					'update' => array(
 						'label' => 'update',
+						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
-							'class' => 'update'
+							'class' => 'update',
 						),
-						'url' => 'Yii::app()->controller->createUrl("o/media/edit", array("id"=>$data->primaryKey,"type"=>"update"))'),
+						'url' => 'Yii::app()->controller->createUrl("o/media/edit", array(\'id\'=>$data->primaryKey,"type"=>"update"))'),
 					'delete' => array(
 						'label' => 'delete',
+						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
-							'class' => 'delete'
+							'class' => 'delete',
 						),
-						'url' => 'Yii::app()->controller->createUrl("o/media/delete", array("id"=>$data->primaryKey,"type"=>"update"))')
+						'url' => 'Yii::app()->controller->createUrl("o/media/delete", array(\'id\'=>$data->primaryKey,"type"=>"update"))')
 				),
 				'template' => '{view}|{update}|{delete}',
 			));
@@ -74,8 +77,9 @@
 				'id'=>'kckr-media-grid',
 				'dataProvider'=>$media->searchKckrEdit(),
 				'filter'=>$media,
-				'columns' => $columnData,
-				'pager' => array('header' => ''),
+				'columns'=>$columnData,
+				'template'=>Yii::app()->params['grid-view']['gridTemplate'],
+				'pager'=>array('header'=>''),
 			));
 		?>
 		<?php //end.Grid Item ?>
