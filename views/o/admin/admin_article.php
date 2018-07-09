@@ -31,7 +31,7 @@
 ?>
 
 <div class="form" <?php //echo ($articleSetting->media_image_limit != 1) ? 'name="post-on"' : ''; ?>>
-	<?php $form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
+	<?php $form=$this->beginWidget('application.libraries.yii-traits.system.OActiveForm', array(
 		'id'=>'articles-form',
 		'enableAjaxValidation'=>$validation,
 		'htmlOptions' => array('enctype' => 'multipart/form-data')
