@@ -188,7 +188,7 @@
 							<?php 
 							$model->published_date = $model->isNewRecord && $model->published_date == '' ? date('d-m-Y') : date('d-m-Y', strtotime($model->published_date));
 							//echo $form->textField($model,'published_date', array('class'=>'span-7'));
-							$this->widget('application.libraries.core.components.system.CJuiDatePicker', array(
+							$this->widget('zii.widgets.jui.CJuiDatePicker', array(
 								'model'=>$model, 
 								'attribute'=>'published_date',
 								//'mode'=>'datetime',
