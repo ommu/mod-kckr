@@ -359,25 +359,7 @@ class Kckrs extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'send_date',
-					'language' => 'en',
-					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
-					//'mode'=>'datetime',
-					'htmlOptions' => array(
-						'id' => 'receipt_date_filter',
-					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'yy-mm-dd',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
-					),
-				), true),
+				'filter' => $this->filterDatepicker($this, 'send_date'),
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'receipt_date',
@@ -385,25 +367,7 @@ class Kckrs extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'receipt_date',
-					'language' => 'en',
-					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
-					//'mode'=>'datetime',
-					'htmlOptions' => array(
-						'id' => 'receipt_date_filter',
-					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'yy-mm-dd',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
-					),
-				), true),
+				'filter' => $this->filterDatepicker($this, 'receipt_date'),
 			);
 			if(in_array('creation_search', $gridview_column)) {
 				$this->defaultColumns[] = array(
@@ -418,25 +382,7 @@ class Kckrs extends CActiveRecord
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
-					'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
-						'model'=>$this,
-						'attribute'=>'creation_date',
-						'language' => 'en',
-						'i18nScriptFile' => 'jquery-ui-i18n.min.js',
-						//'mode'=>'datetime',
-						'htmlOptions' => array(
-							'id' => 'creation_date_filter',
-						),
-						'options'=>array(
-							'showOn' => 'focus',
-							'dateFormat' => 'yy-mm-dd',
-							'showOtherMonths' => true,
-							'selectOtherMonths' => true,
-							'changeMonth' => true,
-							'changeYear' => true,
-							'showButtonPanel' => true,
-						),
-					), true),
+					'filter' => $this->filterDatepicker($this, 'creation_date'),
 				);
 			}
 			if(in_array('media_search', $gridview_column)) {
