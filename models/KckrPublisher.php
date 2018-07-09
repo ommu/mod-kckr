@@ -330,23 +330,21 @@ class KckrPublisher extends CActiveRecord
 	/**
 	 * Get Publisher
 	 */
-	public static function getPublisher($publish=null, $type=null) 
+	public static function getPublisher($publish=null, $array=true) 
 	{		
 		$criteria=new CDbCriteria;
 		if($publish != null)
 			$criteria->compare('publish',$publish);
 		$model = self::model()->findAll($criteria);
 
-		if($type == null) {
+		if($array == true) {
 			$items = array();
 			if($model != null) {
 				foreach($model as $key => $val)
 					$items[$val->publisher_id] = $val->publisher_name;
 				return $items;
-				
 			} else
 				return false;
-			
 		} else
 			return $model;
 	}
