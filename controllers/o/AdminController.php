@@ -129,15 +129,7 @@ class AdminController extends Controller
 			$model->attributes=$_GET['Kckrs'];
 		}
 
-		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
-					$columnTemp[] = $key;
-				}
-			}
-		}
-		$columns = $model->getGridColumn($columnTemp);
+		$columns = $model->getGridColumn($this->gridColumnTemp());
 
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
@@ -242,15 +234,7 @@ class AdminController extends Controller
 			$media->attributes=$_GET['KckrMedia'];
 		}
 
-		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
-					$columnTemp[] = $key;
-				}
-			}
-		}
-		$columns = $media->getGridColumn($columnTemp);
+		$columns = $media->getGridColumn($this->gridColumnTemp());
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
