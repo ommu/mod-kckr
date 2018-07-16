@@ -355,7 +355,7 @@ class Kckrs extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'send_date',
-				'value' => '!in_array($data->send_date, array(\'0000-00-00\', \'1970-01-01\')) ? Utility::dateFormat($data->send_date) : "-"',
+				'value' => '!in_array($data->send_date, array(\'0000-00-00\', \'1970-01-01\')) ? Yii::app()->dateFormatter->formatDateTime($data->send_date, \'medium\', false) : "-"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -363,7 +363,7 @@ class Kckrs extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'receipt_date',
-				'value' => '!in_array($data->receipt_date, array(\'0000-00-00\', \'1970-01-01\')) ? Utility::dateFormat($data->receipt_date) : "-"',
+				'value' => '!in_array($data->receipt_date, array(\'0000-00-00\', \'1970-01-01\')) ? Yii::app()->dateFormatter->formatDateTime($data->receipt_date, \'medium\', false) : "-"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -378,7 +378,7 @@ class Kckrs extends CActiveRecord
 			if(in_array('creation_date', $gridview_column)) {
 				$this->defaultColumns[] = array(
 					'name' => 'creation_date',
-					'value' => 'Utility::dateFormat($data->creation_date)',
+					'value' => 'Yii::app()->dateFormatter->formatDateTime($data->creation_date, \'medium\', false)',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
