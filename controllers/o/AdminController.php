@@ -124,7 +124,7 @@ class AdminController extends Controller
 		}
 		
 		$model=new Kckrs('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(isset($_GET['Kckrs'])) {
 			$model->attributes=$_GET['Kckrs'];
 		}
@@ -229,7 +229,7 @@ class AdminController extends Controller
 		$publisher = KckrPublisher::model()->findByPk($model->publisher_id);	
 		
 		$media=new KckrMedia('searchKckrEdit');
-		$media->unsetAttributes();  // clear any default values
+		$media->unsetAttributes();	// clear any default values
 		if(isset($_GET['KckrMedia'])) {
 			$media->attributes=$_GET['KckrMedia'];
 		}

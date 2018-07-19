@@ -128,7 +128,7 @@ class MediaController extends Controller
 		}
 		
 		$model=new KckrMedia('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(isset($_GET['KckrMedia'])) {
 			$model->attributes=$_GET['KckrMedia'];
 		}

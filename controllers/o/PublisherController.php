@@ -145,7 +145,7 @@ class PublisherController extends Controller
 	public function actionManage() 
 	{
 		$model=new KckrPublisher('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(isset($_GET['KckrPublisher'])) {
 			$model->attributes=$_GET['KckrPublisher'];
 		}

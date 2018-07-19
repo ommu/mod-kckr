@@ -139,7 +139,7 @@ class PicController extends Controller
 	public function actionManage() 
 	{
 		$model=new KckrPic('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(isset($_GET['KckrPic'])) {
 			$model->attributes=$_GET['KckrPic'];
 		}
