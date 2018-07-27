@@ -149,15 +149,15 @@ class KckrPublisher extends CActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'view' => array(
-				'alias'=>'view',
+				'alias' => 'view',
 			),
 			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
+				'alias' => 'creation',
+				'select' => 'displayname'
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
+				'alias' => 'modified',
+				'select' => 'displayname'
 			),
 		);
 
@@ -260,7 +260,7 @@ class KckrPublisher extends CActiveRecord
 			$this->defaultColumns[] = array(
 				'name' => 'publisher_area',
 				'value' => '$data->publisher_area == 1 ? Yii::t(\'phrase\', \'Yogyakarta\') : Yii::t(\'phrase\', \'Luar Yogyakarta\')',
-				'filter'=>array(
+				'filter' =>array(
 					1=>Yii::t('phrase', 'Yogyakarta'),
 					0=>Yii::t('phrase', 'Luar Yogyakarta'),
 				),

@@ -153,20 +153,20 @@ class KckrMedia extends CActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'kckr' => array(
-				'alias'=>'kckr',
-				'select'=>'publisher_id, letter_number'
+				'alias' => 'kckr',
+				'select' => 'publisher_id, letter_number'
 			),
 			'kckr.publisher' => array(
-				'alias'=>'kckr_publisher',
-				'select'=>'publisher_name'
+				'alias' => 'kckr_publisher',
+				'select' => 'publisher_name'
 			),
 			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
+				'alias' => 'creation',
+				'select' => 'displayname'
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
+				'alias' => 'modified',
+				'select' => 'displayname'
 			),
 		);
 
@@ -263,12 +263,12 @@ class KckrMedia extends CActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
+				'alias' => 'creation',
+				'select' => 'displayname'
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
+				'alias' => 'modified',
+				'select' => 'displayname'
 			),
 		);
 
@@ -398,7 +398,7 @@ class KckrMedia extends CActiveRecord
 				$this->defaultColumns[] = array(
 					'name' => 'category_id',
 					'value' => '$data->category->category_name',
-					'filter'=>KckrCategory::getCategory(null, $parent),
+					'filter' =>KckrCategory::getCategory(null, $parent),
 					'type' => 'raw',
 				);				
 			}

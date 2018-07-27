@@ -150,15 +150,15 @@ class KckrCategory extends CActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'view' => array(
-				'alias'=>'view',
+				'alias' => 'view',
 			),
 			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
+				'alias' => 'creation',
+				'select' => 'displayname'
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
+				'alias' => 'modified',
+				'select' => 'displayname'
 			),
 		);
 
@@ -259,7 +259,7 @@ class KckrCategory extends CActiveRecord
 			$this->defaultColumns[] = array(
 				'name' => 'category_type',
 				'value' => '$data->category_type == \'book\' ? Yii::t(\'phrase\', \'Book\') : Yii::t(\'phrase\', \'Record\')',
-				'filter'=>array(
+				'filter' =>array(
 					'book'=>Yii::t('phrase', 'Book'),
 					'record'=>Yii::t('phrase', 'Record'),
 				),

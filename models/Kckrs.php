@@ -179,23 +179,23 @@ class Kckrs extends CActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'view' => array(
-				'alias'=>'view',
+				'alias' => 'view',
 			),
 			'pic' => array(
-				'alias'=>'pic',
-				'select'=>'pic_name'
+				'alias' => 'pic',
+				'select' => 'pic_name'
 			),
 			'publisher' => array(
-				'alias'=>'publisher',
-				'select'=>'publisher_name'
+				'alias' => 'publisher',
+				'select' => 'publisher_name'
 			),
 			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname'
+				'alias' => 'creation',
+				'select' => 'displayname'
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname'
+				'alias' => 'modified',
+				'select' => 'displayname'
 			),
 		);
 
@@ -347,7 +347,7 @@ class Kckrs extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
+				'filter' =>array(
 					'pos'=>Yii::t('phrase', 'Pos'),
 					'langsung'=>Yii::t('phrase', 'Langsung'),
 				),
