@@ -8,7 +8,7 @@
  * @contact (+62)856-299-4114
  * @created date 4 October 2016, 18:58 WIB
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
- * @link https://github.com/ommu/ommu-kckr
+ * @link https://bitbucket.org/ommu/kckr
  *
  */
 

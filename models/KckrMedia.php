@@ -6,7 +6,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 1 July 2016, 07:37 WIB
- * @link https://github.com/ommu/ommu-kckr
+ * @link https://bitbucket.org/ommu/kckr
  *
  * This is the template for generating the model class of a specified table.
  * - $this: the ModelCode object
