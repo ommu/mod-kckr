@@ -61,8 +61,7 @@
 					<div class="clearfix">
 						<label><?php echo $model->getAttributeLabel('title');?> <span class="required">*</span></label>
 						<div class="desc">
-							<?php 
-							if($model->isNewRecord && !$model->getErrors())
+							<?php if($model->isNewRecord && !$model->getErrors())
 								$model->title = 'Penyerahan Bahan Pustaka Karya Cetak Dari '.$kckr->publisher->publisher_name;
 							echo $form->textField($model,'title', array('maxlength'=>128,'class'=>'span-8')); ?>
 							<?php echo $form->error($model,'title'); ?>
@@ -91,7 +90,7 @@
 						<div class="desc">
 							<?php echo $form->fileField($model,'media_photo_i'); ?>
 							<?php echo $form->error($model,'media_photo_i'); ?>
-							<span class="small-px">extensions are allowed: <?php echo Utility::formatFileType($media_image_type, false);?></span>
+							<div class="small-px">extensions are allowed: <?php echo Utility::formatFileType($media_image_type, false);?></div>
 						</div>
 					</div>
 					<?php }?>
@@ -136,7 +135,7 @@
 								));
 								echo $form->error($model,'keyword_i');							
 							}?>
-							<?php if($model->isNewRecord) {?><span class="small-px">tambahkan tanda koma (,) jika ingin menambahkan keyword lebih dari satu</span><?php }?>
+							<?php if($model->isNewRecord) {?><div class="small-px">tambahkan tanda koma (,) jika ingin menambahkan keyword lebih dari satu</div><?php }?>
 							<div id="keyword-suggest" class="suggest clearfix">
 								<?php 
 								if($articleSetting->meta_keyword && $articleSetting->meta_keyword != '-') {
@@ -178,7 +177,7 @@
 						<div class="desc">
 							<?php echo $form->fileField($model,'media_file_i'); ?>
 							<?php echo $form->error($model,'media_file_i'); ?>
-							<span class="small-px">extensions are allowed: <?php echo Utility::formatFileType($media_file_type, false);?></span>
+							<div class="small-px">extensions are allowed: <?php echo Utility::formatFileType($media_file_type, false);?></div>
 						</div>
 					</div>
 		
@@ -245,14 +244,10 @@
 			<div class="clearfix" id="quote">
 				<?php echo $form->labelEx($model,'quote'); ?>
 				<div class="desc">
-					<?php 
-					//echo $form->textArea($model,'body', array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
-					$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
+					<?php $this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 						'model'=>$model,
 						'attribute'=>quote,
-						// Redactor options
 						'options'=>array(
-							//'lang'=>'fi',
 							'buttons'=>array(
 								'html', '|', 
 								'bold', 'italic', 'deleted', '|',
@@ -263,7 +258,7 @@
 							'fullscreen' => array('js' => array('fullscreen.js')),
 						),
 					)); ?>
-					<span class="small-px"><?php echo Yii::t('phrase', 'Note : add {$quote} in description article');?></span>
+					<div class="small-px"><?php echo Yii::t('phrase', 'Note : add {$quote} in description article');?></div>
 					<?php echo $form->error($model,'quote'); ?>
 				</div>
 			</div>
@@ -271,19 +266,15 @@
 			<div class="clearfix">
 				<?php echo $form->labelEx($model,'body'); ?>
 				<div class="desc">
-					<?php 
-					if($model->isNewRecord && !$model->getErrors()) {
+					<?php if($model->isNewRecord && !$model->getErrors()) {
 						$template = 'kckr_article';
 						$message = $this->renderPartial('application.modules.kckr.components.templates.'.$template, array('kckr'=>$kckr), true, false);
 						$model->body = $message;
 					}
-					//echo $form->textArea($model,'body', array('rows'=>6, 'cols'=>50, 'class'=>'span-10 small'));
 					$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 						'model'=>$model,
 						'attribute'=>body,
-						// Redactor options
 						'options'=>array(
-							//'lang'=>'fi',
 							'buttons'=>array(
 								'html', 'formatting', '|', 
 								'bold', 'italic', 'deleted', '|',

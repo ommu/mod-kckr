@@ -271,7 +271,7 @@ class KckrPic extends CActiveRecord
 				);
 			$this->defaultColumns[] = array(
 				'name' => 'kckr_search',
-				'value' => 'CHtml::link($data->view->kckrs ? $data->view->kckrs : 0, Yii::app()->controller->createUrl("o/admin/manage", array(\'pic\'=>$data->pic_id)))',
+				'value' => 'CHtml::link($data->view->kckrs ? $data->view->kckrs : 0, Yii::app()->controller->createUrl(\'o/admin/manage\', array(\'pic\'=>$data->pic_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -289,7 +289,7 @@ class KckrPic extends CActiveRecord
 				);
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish", array("id"=>$data->pic_id)), $data->publish, 1)',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'publish\', array(\'id\'=>$data->pic_id)), $data->publish, 1)',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),

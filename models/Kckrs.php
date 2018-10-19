@@ -343,7 +343,7 @@ class Kckrs extends CActiveRecord
 			}
 			$this->defaultColumns[] = array(
 				'name' => 'send_type',
-				'value' => '$data->send_type == \'\' ? \'-\' : ($data->send_type == \'pos\' ? Yii::t(\'phrase\', \'Pos\') : Yii::t(\'phrase\', \'Langsung\'))',				
+				'value' => '$data->send_type == \'\' ? \'-\' : ($data->send_type == \'pos\' ? Yii::t(\'phrase\', \'Pos\') : Yii::t(\'phrase\', \'Langsung\'))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -355,7 +355,7 @@ class Kckrs extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'send_date',
-				'value' => '!in_array($data->send_date, array(\'0000-00-00\', \'1970-01-01\')) ? Yii::app()->dateFormatter->formatDateTime($data->send_date, \'medium\', false) : "-"',
+				'value' => '!in_array($data->send_date, array(\'0000-00-00\', \'1970-01-01\')) ? Yii::app()->dateFormatter->formatDateTime($data->send_date, \'medium\', false) : \'-\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -363,7 +363,7 @@ class Kckrs extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'receipt_date',
-				'value' => '!in_array($data->receipt_date, array(\'0000-00-00\', \'1970-01-01\')) ? Yii::app()->dateFormatter->formatDateTime($data->receipt_date, \'medium\', false) : "-"',
+				'value' => '!in_array($data->receipt_date, array(\'0000-00-00\', \'1970-01-01\')) ? Yii::app()->dateFormatter->formatDateTime($data->receipt_date, \'medium\', false) : \'-\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -424,7 +424,7 @@ class Kckrs extends CActiveRecord
 			if(!Yii::app()->getRequest()->getParam('type')) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish", array("id"=>$data->kckr_id)), $data->publish, 1)',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'publish\', array(\'id\'=>$data->kckr_id)), $data->publish, 1)',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),

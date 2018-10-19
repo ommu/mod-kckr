@@ -16,10 +16,8 @@
 	$this->breadcrumbs=array(
 		'Kckr Medias'=>array('manage'),
 		$model->media_id=>array('view','id'=>$model->media_id),
-		'Update',
+		Yii::t('phrase', 'Update'),
 	);
 ?>
 
-<?php echo $this->renderPartial('_form', array(
-	'model'=>$model,
-)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

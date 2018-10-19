@@ -16,7 +16,7 @@
 	$this->breadcrumbs=array(
 		'Kckr Publishers'=>array('manage'),
 		$model->publisher_id=>array('view','id'=>$model->publisher_id),
-		'Update',
+		Yii::t('phrase', 'Update'),
 	);
 ?>
 

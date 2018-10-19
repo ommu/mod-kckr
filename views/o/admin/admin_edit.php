@@ -16,7 +16,7 @@
 	$this->breadcrumbs=array(
 		'Kckrs'=>array('manage'),
 		$model->kckr_id=>array('view','id'=>$model->kckr_id),
-		'Update',
+		Yii::t('phrase', 'Update'),
 	);
 ?>
 

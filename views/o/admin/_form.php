@@ -110,7 +110,7 @@
 			<?php 
 			$send_type = array(
 				'pos'=>Yii::t('phrase', 'Pos'),
-				'langsung'=>Yii::t('phrase', 'Langsung'),				
+				'langsung'=>Yii::t('phrase', 'Langsung'),
 			);
 			echo $form->dropDownList($model,'send_type', $send_type, array('prompt'=>Yii::t('phrase', 'Select Type'))); ?>
 			<?php echo $form->error($model,'send_type'); ?>

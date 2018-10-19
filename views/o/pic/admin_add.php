@@ -15,7 +15,7 @@
 
 	$this->breadcrumbs=array(
 		'Kckr Pics'=>array('manage'),
-		'Create',
+		Yii::t('phrase', 'Create'),
 	);
 ?>
 
