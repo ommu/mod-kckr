@@ -1,0 +1,45 @@
+{
+	"name": "ommu/kckr",
+	"description": "Karya Cetak & Karya Rekam Modul dari Ommu Platform",
+	"keywords": [
+		"module",
+		"kckr",
+		"karya-cetak",
+		"karya-rekam",
+		"perpustakaan",
+		"kearsipan",
+		"ommu",
+		"ommu-platform",
+		"yii2"
+	],
+	"homepage": "https://bitbucket.org/ommu/kckr",
+	"type": "ommu-module",
+	"license": "Apache-2.0",
+	"support": {
+		"issues": "https://bitbucket.org/ommu/kckr/issues",
+		"wiki": "https://bitbucket.org/ommu/kckr/wiki",
+		"source": "https://bitbucket.org/ommu/kckr"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://bitbucket.org/ommu/kckr.git"
+	},
+	"authors": [
+		{
+			"name": "Putra Sudaryanto",
+			"email": "putra@sudaryanto.id",
+			"homepage": "https://putra.sudaryanto.id",
+			"role": "Creator"
+		}
+	],
+	"require": {
+		"php": "~7.0",
+		"yiisoft/yii2": "~2.0.13",
+		"ommu/yii-traits": "~2.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"ommu\\kckr\\": ""
+		}
+	}
+}
