@@ -1,6 +1,7 @@
 {
 	"name": "ommu/kckr",
 	"description": "Karya Cetak & Karya Rekam Modul dari Ommu Platform",
+	"type": "ommu-module",
 	"keywords": [
 		"module",
 		"kckr",
@@ -12,9 +13,8 @@
 		"ommu-platform",
 		"yii2"
 	],
-	"homepage": "https://bitbucket.org/ommu/kckr",
-	"type": "ommu-module",
 	"license": "Apache-2.0",
+	"homepage": "https://bitbucket.org/ommu/kckr",
 	"support": {
 		"issues": "https://bitbucket.org/ommu/kckr/issues",
 		"wiki": "https://bitbucket.org/ommu/kckr/wiki",
