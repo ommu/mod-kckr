@@ -1,6 +1,6 @@
 {
 	"name": "ommu/kckr",
-	"description": "Karya Cetak & Karya Rekam Modul dari Ommu Platform",
+	"description": "Karya Cetak dan Karya Rekam (KCKR) Module from Ommu Platform",
 	"type": "ommu-module",
 	"keywords": [
 		"module",
@@ -9,6 +9,7 @@
 		"karya-rekam",
 		"perpustakaan",
 		"kearsipan",
+		"deposit",
 		"ommu",
 		"ommu-platform",
 		"yii2"
