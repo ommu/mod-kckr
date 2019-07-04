@@ -1,0 +1,317 @@
+<?php
+/**
+ * KckrPic
+ * 
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
+ * @created date 4 July 2019, 21:49 WIB
+ * @link https://bitbucket.org/ommu/kckr
+ *
+ * This is the model class for table "ommu_kckr_pic".
+ *
+ * The followings are the available columns in table "ommu_kckr_pic":
+ * @property integer $id
+ * @property integer $publish
+ * @property integer $default
+ * @property string $pic_name
+ * @property string $pic_nip
+ * @property string $pic_position
+ * @property string $pic_signature
+ * @property string $creation_date
+ * @property integer $creation_id
+ * @property string $modified_date
+ * @property integer $modified_id
+ * @property string $updated_date
+ *
+ * The followings are the available model relations:
+ * @property Kckrs[] $kckrs
+ * @property Users $creation
+ * @property Users $modified
+ *
+ */
+
+namespace ommu\kckr\models;
+
+use Yii;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use ommu\users\models\Users;
+
+class KckrPic extends \app\components\ActiveRecord
+{
+	use \ommu\traits\UtilityTrait;
+
+	public $gridForbiddenColumn = [];
+
+	public $creationDisplayname;
+	public $modifiedDisplayname;
+
+	/**
+	 * @return string the associated database table name
+	 */
+	public static function tableName()
+	{
+		return 'ommu_kckr_pic';
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		return [
+			[['pic_name', 'pic_nip', 'pic_position', 'pic_signature'], 'required'],
+			[['publish', 'default', 'creation_id', 'modified_id'], 'integer'],
+			[['pic_signature'], 'string'],
+			[['pic_name', 'pic_position'], 'string', 'max' => 64],
+			[['pic_nip'], 'string', 'max' => 32],
+		];
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id' => Yii::t('app', 'ID'),
+			'publish' => Yii::t('app', 'Publish'),
+			'default' => Yii::t('app', 'Default'),
+			'pic_name' => Yii::t('app', 'Pic Name'),
+			'pic_nip' => Yii::t('app', 'Pic Nip'),
+			'pic_position' => Yii::t('app', 'Pic Position'),
+			'pic_signature' => Yii::t('app', 'Pic Signature'),
+			'creation_date' => Yii::t('app', 'Creation Date'),
+			'creation_id' => Yii::t('app', 'Creation'),
+			'modified_date' => Yii::t('app', 'Modified Date'),
+			'modified_id' => Yii::t('app', 'Modified'),
+			'updated_date' => Yii::t('app', 'Updated Date'),
+			'kckrs' => Yii::t('app', 'Kckrs'),
+			'creationDisplayname' => Yii::t('app', 'Creation'),
+			'modifiedDisplayname' => Yii::t('app', 'Modified'),
+		];
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getKckrs($count=false, $publish=1)
+	{
+		if($count == false)
+			return $this->hasMany(Kckrs::className(), ['pic_id' => 'id'])
+			->alias('kckrs')
+			->andOnCondition([sprintf('%s.publish', 'kckrs') => $publish]);
+
+		$model = Kckrs::find()
+			->where(['pic_id' => $this->id]);
+		if($publish == 0)
+			$model->unpublish();
+		elseif($publish == 1)
+			$model->published();
+		elseif($publish == 2)
+			$model->deleted();
+		$kckrs = $model->count();
+
+		return $kckrs ? $kckrs : 0;
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getCreation()
+	{
+		return $this->hasOne(Users::className(), ['user_id' => 'creation_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getModified()
+	{
+		return $this->hasOne(Users::className(), ['user_id' => 'modified_id']);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 * @return \ommu\kckr\models\query\KckrPic the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		return new \ommu\kckr\models\query\KckrPic(get_called_class());
+	}
+
+	/**
+	 * Set default columns to display
+	 */
+	public function init()
+	{
+		parent::init();
+
+		if(!(Yii::$app instanceof \app\components\Application))
+			return;
+
+		$this->templateColumns['_no'] = [
+			'header' => Yii::t('app', 'No'),
+			'class' => 'yii\grid\SerialColumn',
+			'contentOptions' => ['class'=>'center'],
+		];
+		$this->templateColumns['pic_name'] = [
+			'attribute' => 'pic_name',
+			'value' => function($model, $key, $index, $column) {
+				return $model->pic_name;
+			},
+		];
+		$this->templateColumns['pic_nip'] = [
+			'attribute' => 'pic_nip',
+			'value' => function($model, $key, $index, $column) {
+				return $model->pic_nip;
+			},
+		];
+		$this->templateColumns['pic_position'] = [
+			'attribute' => 'pic_position',
+			'value' => function($model, $key, $index, $column) {
+				return $model->pic_position;
+			},
+		];
+		$this->templateColumns['pic_signature'] = [
+			'attribute' => 'pic_signature',
+			'value' => function($model, $key, $index, $column) {
+				return $model->pic_signature;
+			},
+		];
+		$this->templateColumns['creation_date'] = [
+			'attribute' => 'creation_date',
+			'value' => function($model, $key, $index, $column) {
+				return Yii::$app->formatter->asDatetime($model->creation_date, 'medium');
+			},
+			'filter' => $this->filterDatepicker($this, 'creation_date'),
+		];
+		if(!Yii::$app->request->get('creation')) {
+			$this->templateColumns['creationDisplayname'] = [
+				'attribute' => 'creationDisplayname',
+				'value' => function($model, $key, $index, $column) {
+					return isset($model->creation) ? $model->creation->displayname : '-';
+					// return $model->creationDisplayname;
+				},
+			];
+		}
+		$this->templateColumns['modified_date'] = [
+			'attribute' => 'modified_date',
+			'value' => function($model, $key, $index, $column) {
+				return Yii::$app->formatter->asDatetime($model->modified_date, 'medium');
+			},
+			'filter' => $this->filterDatepicker($this, 'modified_date'),
+		];
+		if(!Yii::$app->request->get('modified')) {
+			$this->templateColumns['modifiedDisplayname'] = [
+				'attribute' => 'modifiedDisplayname',
+				'value' => function($model, $key, $index, $column) {
+					return isset($model->modified) ? $model->modified->displayname : '-';
+					// return $model->modifiedDisplayname;
+				},
+			];
+		}
+		$this->templateColumns['updated_date'] = [
+			'attribute' => 'updated_date',
+			'value' => function($model, $key, $index, $column) {
+				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
+			},
+			'filter' => $this->filterDatepicker($this, 'updated_date'),
+		];
+		$this->templateColumns['kckrs'] = [
+			'attribute' => 'kckrs',
+			'value' => function($model, $key, $index, $column) {
+				$kckrs = $model->getKckrs(true);
+				return Html::a($kckrs, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		$this->templateColumns['default'] = [
+			'attribute' => 'default',
+			'value' => function($model, $key, $index, $column) {
+				return $this->filterYesNo($model->default);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'center'],
+		];
+		if(!Yii::$app->request->get('trash')) {
+			$this->templateColumns['publish'] = [
+				'attribute' => 'publish',
+				'value' => function($model, $key, $index, $column) {
+					$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+					return $this->quickAction($url, $model->publish);
+				},
+				'filter' => $this->filterYesNo(),
+				'contentOptions' => ['class'=>'center'],
+				'format' => 'raw',
+			];
+		}
+	}
+
+	/**
+	 * User get information
+	 */
+	public static function getInfo($id, $column=null)
+	{
+		if($column != null) {
+			$model = self::find()
+				->select([$column])
+				->where(['id' => $id])
+				->one();
+			return $model->$column;
+			
+		} else {
+			$model = self::findOne($id);
+			return $model;
+		}
+	}
+
+	/**
+	 * function getPic
+	 */
+	public static function getPic($publish=null, $array=true) 
+	{
+		$model = self::find()->alias('t')
+			->select(['t.id', 't.pic_name']);
+		if($publish != null)
+			$model->andWhere(['t.publish' => $publish]);
+
+		$model = $model->orderBy('t.pic_name ASC')->all();
+
+		if($array == true)
+			return \yii\helpers\ArrayHelper::map($model, 'id', 'pic_name');
+
+		return $model;
+	}
+
+	/**
+	 * after find attributes
+	 */
+	public function afterFind()
+	{
+		parent::afterFind();
+
+		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
+		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+	}
+
+	/**
+	 * before validate attributes
+	 */
+	public function beforeValidate()
+	{
+		if(parent::beforeValidate()) {
+			if($this->isNewRecord) {
+				if($this->creation_id == null)
+					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+			} else {
+				if($this->modified_id == null)
+					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,117 @@
+<?php
+/**
+ * Kckr Publishers (kckr-publisher)
+ * @var $this app\components\View
+ * @var $this ommu\kckr\controllers\o\PublisherController
+ * @var $model ommu\kckr\models\KckrPublisher
+ *
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
+ * @created date 4 July 2019, 21:55 WIB
+ * @link https://bitbucket.org/ommu/kckr
+ *
+ */
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\DetailView;
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publishers'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $model->publisher_name;
+
+if(!$small) {
+$this->params['menu']['content'] = [
+	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->id]), 'icon' => 'eye', 'htmlOptions' => ['class'=>'btn btn-success']],
+	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
+	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+];
+} ?>
+
+<div class="kckr-publisher-view">
+
+<?php
+$attributes = [
+	[
+		'attribute' => 'id',
+		'value' => $model->id ? $model->id : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'publish',
+		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
+		'format' => 'raw',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'publisher_area',
+		'value' => $model->quickAction(Url::to(['publisher-area', 'id'=>$model->primaryKey]), $model->publisher_area, '0=luar diy, 1=diy'),
+		'format' => 'raw',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'publisher_name',
+		'value' => $model->publisher_name ? $model->publisher_name : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'publisher_address',
+		'value' => $model->publisher_address ? $model->publisher_address : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'publisher_phone',
+		'value' => $model->publisher_phone ? $model->publisher_phone : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'creation_date',
+		'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'creationDisplayname',
+		'value' => isset($model->creation) ? $model->creation->displayname : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'modified_date',
+		'value' => Yii::$app->formatter->asDatetime($model->modified_date, 'medium'),
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'modifiedDisplayname',
+		'value' => isset($model->modified) ? $model->modified->displayname : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'updated_date',
+		'value' => Yii::$app->formatter->asDatetime($model->updated_date, 'medium'),
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'kckrs',
+		'value' => function ($model) {
+			$kckrs = $model->getKckrs(true);
+			return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => '',
+		'value' => Html::a(Yii::t('app', 'Update'), ['update', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Update'), 'class'=>'btn btn-primary']),
+		'format' => 'html',
+		'visible' => !$small && Yii::$app->request->isAjax ? true : false,
+	],
+];
+
+echo DetailView::widget([
+	'model' => $model,
+	'options' => [
+		'class'=>'table table-striped detail-view',
+	],
+	'attributes' => $attributes,
+]); ?>
+
+</div>
