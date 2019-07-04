@@ -15,7 +15,6 @@
  *	Delete
  *	RunAction
  *	Publish
- *	PublisherArea
  *
  *	findModel
  *
@@ -52,7 +51,6 @@ class PublisherController extends Controller
 				'actions' => [
 					'delete' => ['POST'],
 					'publish' => ['POST'],
-					'publisher-area' => ['POST'],
 				],
 			],
 		];
@@ -208,24 +206,6 @@ class PublisherController extends Controller
 		$model->publish = $replace;
 
 		if($model->save(false, ['publish','modified_id'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher success updated.'));
-			return $this->redirect(['manage']);
-		}
-	}
-
-	/**
-	 * actionPublisherArea an existing KckrPublisher model.
-	 * If publisher-area is successful, the browser will be redirected to the 'index' page.
-	 * @param integer $id
-	 * @return mixed
-	 */
-	public function actionPublisherArea($id)
-	{
-		$model = $this->findModel($id);
-		$replace = $model->publisher_area == 1 ? 0 : 1;
-		$model->publisher_area = $replace;
-		
-		if($model->save(false, ['publisher_area','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher success updated.'));
 			return $this->redirect(['manage']);
 		}

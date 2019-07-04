@@ -65,6 +65,15 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
+		'attribute' => 'media',
+		'value' => function ($model) {
+			$media = $model->getMedias(true);
+			return Html::a($media, ['media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
 		'attribute' => 'creation_date',
 		'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
 		'visible' => !$small,
@@ -87,15 +96,6 @@ $attributes = [
 	[
 		'attribute' => 'updated_date',
 		'value' => Yii::$app->formatter->asDatetime($model->updated_date, 'medium'),
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'media',
-		'value' => function ($model) {
-			$media = $model->getMedias(true);
-			return Html::a($media, ['media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
-		},
-		'format' => 'html',
 		'visible' => !$small,
 	],
 	[

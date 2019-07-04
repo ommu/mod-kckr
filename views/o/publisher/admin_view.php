@@ -16,6 +16,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
+use ommu\kckr\models\KckrPublisher;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publishers'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->publisher_name;
@@ -45,8 +46,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'publisher_area',
-		'value' => $model->quickAction(Url::to(['publisher-area', 'id'=>$model->primaryKey]), $model->publisher_area, '0=luar diy, 1=diy'),
-		'format' => 'raw',
+		'value' => KckrPublisher::getPublisherArea($model->publisher_area),
 		'visible' => !$small,
 	],
 	[
@@ -62,6 +62,15 @@ $attributes = [
 	[
 		'attribute' => 'publisher_phone',
 		'value' => $model->publisher_phone ? $model->publisher_phone : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'kckrs',
+		'value' => function ($model) {
+			$kckrs = $model->getKckrs(true);
+			return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
+		},
+		'format' => 'html',
 		'visible' => !$small,
 	],
 	[
@@ -87,15 +96,6 @@ $attributes = [
 	[
 		'attribute' => 'updated_date',
 		'value' => Yii::$app->formatter->asDatetime($model->updated_date, 'medium'),
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'kckrs',
-		'value' => function ($model) {
-			$kckrs = $model->getKckrs(true);
-			return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
-		},
-		'format' => 'html',
 		'visible' => !$small,
 	],
 	[

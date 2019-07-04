@@ -41,7 +41,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['publisher_phone', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $creationDisplayname;
 	public $modifiedDisplayname;
@@ -74,10 +74,10 @@ class KckrPublisher extends \app\components\ActiveRecord
 		return [
 			'id' => Yii::t('app', 'ID'),
 			'publish' => Yii::t('app', 'Publish'),
-			'publisher_area' => Yii::t('app', 'Publisher Area'),
-			'publisher_name' => Yii::t('app', 'Publisher Name'),
-			'publisher_address' => Yii::t('app', 'Publisher Address'),
-			'publisher_phone' => Yii::t('app', 'Publisher Phone'),
+			'publisher_area' => Yii::t('app', 'Area'),
+			'publisher_name' => Yii::t('app', 'Publisher'),
+			'publisher_address' => Yii::t('app', 'Address'),
+			'publisher_phone' => Yii::t('app', 'Phone'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'creation_id' => Yii::t('app', 'Creation'),
 			'modified_date' => Yii::t('app', 'Modified Date'),
@@ -152,6 +152,13 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
+		$this->templateColumns['publisher_area'] = [
+			'attribute' => 'publisher_area',
+			'value' => function($model, $key, $index, $column) {
+				return self::getPublisherArea($model->publisher_area);
+			},
+			'filter' => self::getPublisherArea(),
+		];
 		$this->templateColumns['publisher_name'] = [
 			'attribute' => 'publisher_name',
 			'value' => function($model, $key, $index, $column) {
@@ -219,16 +226,6 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
-		$this->templateColumns['publisher_area'] = [
-			'attribute' => 'publisher_area',
-			'value' => function($model, $key, $index, $column) {
-				$url = Url::to(['publisher-area', 'id'=>$model->primaryKey]);
-				return $this->quickAction($url, $model->publisher_area, '0=luar diy, 1=diy');
-			},
-			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
-			'format' => 'raw',
-		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
 				'attribute' => 'publish',
@@ -259,6 +256,22 @@ class KckrPublisher extends \app\components\ActiveRecord
 			$model = self::findOne($id);
 			return $model;
 		}
+	}
+
+	/**
+	 * function getPermission
+	 */
+	public static function getPublisherArea($value=null)
+	{
+		$items = array(
+			1 => Yii::t('app', 'D.I. Yogyakarta'),
+			0 => Yii::t('app', 'Luar D.I. Yogyakarta'),
+		);
+
+		if($value !== null)
+			return $items[$value];
+		else
+			return $items;
 	}
 
 	/**

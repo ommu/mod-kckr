@@ -16,6 +16,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use ommu\kckr\models\KckrPublisher;
 ?>
 
 <div class="kckr-publisher-search search-form">
@@ -47,8 +48,9 @@ use yii\widgets\ActiveForm;
 		<?php echo $form->field($model, 'updated_date')
 			->input('date');?>
 
-		<?php echo $form->field($model, 'publisher_area')
-			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
+		<?php $publisherArea = KckrPublisher::getPublisherArea();
+		echo $form->field($model, 'publisher_area')
+			->dropDownList($publisherArea, ['prompt'=>'']);?>
 
 		<?php echo $form->field($model, 'publish')
 			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>

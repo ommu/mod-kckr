@@ -16,6 +16,7 @@
 
 use yii\helpers\Html;
 use app\components\widgets\ActiveForm;
+use ommu\kckr\models\KckrPublisher;
 ?>
 
 <div class="kckr-publisher-form">
@@ -34,8 +35,13 @@ use app\components\widgets\ActiveForm;
 
 <?php //echo $form->errorSummary($model);?>
 
+<?php $publisherArea = KckrPublisher::getPublisherArea();
+echo $form->field($model, 'publisher_area')
+	->dropDownList($publisherArea, ['prompt'=>''])
+	->label($model->getAttributeLabel('publisher_area')); ?>
+
 <?php echo $form->field($model, 'publisher_name')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textInput()
 	->label($model->getAttributeLabel('publisher_name')); ?>
 
 <?php echo $form->field($model, 'publisher_address')
@@ -43,12 +49,8 @@ use app\components\widgets\ActiveForm;
 	->label($model->getAttributeLabel('publisher_address')); ?>
 
 <?php echo $form->field($model, 'publisher_phone')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textInput()
 	->label($model->getAttributeLabel('publisher_phone')); ?>
-
-<?php echo $form->field($model, 'publisher_area')
-	->checkbox()
-	->label($model->getAttributeLabel('publisher_area')); ?>
 
 <?php echo $form->field($model, 'publish')
 	->checkbox()

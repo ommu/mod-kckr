@@ -73,6 +73,15 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
+		'attribute' => 'kckrs',
+		'value' => function ($model) {
+			$kckrs = $model->getKckrs(true);
+			return Html::a($kckrs, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
 		'attribute' => 'creation_date',
 		'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
 		'visible' => !$small,
@@ -95,15 +104,6 @@ $attributes = [
 	[
 		'attribute' => 'updated_date',
 		'value' => Yii::$app->formatter->asDatetime($model->updated_date, 'medium'),
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'kckrs',
-		'value' => function ($model) {
-			$kckrs = $model->getKckrs(true);
-			return Html::a($kckrs, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
-		},
-		'format' => 'html',
 		'visible' => !$small,
 	],
 	[
