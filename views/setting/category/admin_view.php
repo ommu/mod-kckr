@@ -65,10 +65,10 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'media',
+		'attribute' => 'medias',
 		'value' => function ($model) {
-			$media = $model->getMedias(true);
-			return Html::a($media, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
+			$medias = $model->getMedias(true);
+			return Html::a($medias, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

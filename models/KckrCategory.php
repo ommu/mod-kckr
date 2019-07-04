@@ -94,7 +94,7 @@ class KckrCategory extends \app\components\ActiveRecord
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'category_name_i' => Yii::t('app', 'Category'),
 			'category_desc_i' => Yii::t('app', 'Description'),
-			'media' => Yii::t('app', 'Media'),
+			'medias' => Yii::t('app', 'Medias'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 		];
@@ -243,11 +243,11 @@ class KckrCategory extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
-		$this->templateColumns['media'] = [
-			'attribute' => 'media',
+		$this->templateColumns['medias'] = [
+			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
-				$media = $model->getMedias(true);
-				return Html::a($media, ['media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
+				$medias = $model->getMedias(true);
+				return Html::a($medias, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],

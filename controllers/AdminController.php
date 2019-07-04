@@ -152,7 +152,7 @@ class AdminController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr success updated.'));
-				return $this->redirect(['manage', 'id'=>$model->id]);
+				return $this->redirect(['update', 'id'=>$model->id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)

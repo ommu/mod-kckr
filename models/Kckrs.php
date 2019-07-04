@@ -55,7 +55,7 @@ class Kckrs extends \app\components\ActiveRecord
 	use \ommu\traits\UtilityTrait;
 	use \ommu\traits\FileTrait;
 
-	public $gridForbiddenColumn = ['creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['article_id', 'pic_id', 'thanks_date', 'thanks_document', 'thanksUserDisplayname', 'photos', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $old_photos;
 	public $picName;
@@ -114,7 +114,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'old_photos' => Yii::t('app', 'Old Photos'),
-			'media' => Yii::t('app', 'Media'),
+			'medias' => Yii::t('app', 'Medias'),
 			'picName' => Yii::t('app', 'Person In Charge'),
 			'publisherName' => Yii::t('app', 'Publisher'),
 			'thanksUserDisplayname' => Yii::t('app', 'Thanksuser'),
@@ -339,11 +339,11 @@ class Kckrs extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
-		$this->templateColumns['media'] = [
-			'attribute' => 'media',
+		$this->templateColumns['medias'] = [
+			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
-				$media = $model->getMedias(true);
-				return Html::a($media, ['media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
+				$medias = $model->getMedias(true);
+				return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
@@ -387,7 +387,6 @@ class Kckrs extends \app\components\ActiveRecord
 	public static function getSendType($value=null)
 	{
 		$items = array(
-			'' => Yii::t('app', ''),
 			'pos' => Yii::t('app', 'Pos'),
 			'langsung' => Yii::t('app', 'Langsung'),
 		);
