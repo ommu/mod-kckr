@@ -413,6 +413,13 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
+		if(in_array($this->send_date, ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']))
+			$this->send_date = '';
+		if(in_array($this->receipt_date, ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']))
+			$this->receipt_date = '';
+		if(in_array($this->thanks_date, ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']))
+			$this->thanks_date = '';
+
 		$this->thanks_document = unserialize($this->thanks_document);
 		$this->old_photos = $this->photos;
 		// $this->picName = isset($this->pic) ? $this->pic->pic_name : '-';

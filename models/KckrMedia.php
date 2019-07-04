@@ -298,8 +298,9 @@ class KckrMedia extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		if(in_array($this->media_publish_year, ['1970']))
+		if(in_array($this->media_publish_year, ['0000','1970','0002','-0001']))
 			$this->media_publish_year = '';
+
 		// $this->kckrPicId = isset($this->kckr) ? $this->kckr->pic->pic_name : '-';
 		// $this->categoryName = isset($this->category) ? $this->category->title->message : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';

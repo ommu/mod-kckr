@@ -19,6 +19,8 @@ use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
 use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\KckrPic;
+use ommu\selectize\Selectize;
+use yii\helpers\ArrayHelper;
 ?>
 
 <div class="kckrs-form">
@@ -40,15 +42,6 @@ use ommu\kckr\models\KckrPic;
 
 <?php //echo $form->errorSummary($model);?>
 
-<?php echo $form->field($model, 'article_id')
-	->textInput(['type'=>'number', 'min'=>'1'])
-	->label($model->getAttributeLabel('article_id')); ?>
-
-<?php $pic = KckrPic::getPic();
-echo $form->field($model, 'pic_id')
-	->dropDownList($pic, ['prompt'=>''])
-	->label($model->getAttributeLabel('pic_id')); ?>
-
 <?php echo $form->field($model, 'publisher_id')
 	->textInput(['type'=>'number', 'min'=>'1'])
 	->label($model->getAttributeLabel('publisher_id')); ?>
@@ -57,9 +50,22 @@ echo $form->field($model, 'pic_id')
 	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('letter_number')); ?>
 
-<?php $sendType = Kckrs::getSendType();
-echo $form->field($model, 'send_type')
-	->dropDownList($sendType, ['prompt'=>''])
+<?php echo $form->field($model, 'pic_id')
+	->widget(Selectize::className(), [
+		'options' => [
+			'placeholder' => Yii::t('app', 'Select a person in charge..'),
+		],
+		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a person in charge..')], KckrPic::getPic()),
+	])
+	->label($model->getAttributeLabel('pic_id')); ?>
+
+<?php echo $form->field($model, 'send_type')
+	->widget(Selectize::className(), [
+		'options' => [
+			'placeholder' => Yii::t('app', 'Select a send type..'),
+		],
+		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a send type..')], Kckrs::getSendType()),
+	])
 	->label($model->getAttributeLabel('send_type')); ?>
 
 <?php echo $form->field($model, 'send_date')
@@ -69,18 +75,6 @@ echo $form->field($model, 'send_type')
 <?php echo $form->field($model, 'receipt_date')
 	->textInput(['type'=>'date'])
 	->label($model->getAttributeLabel('receipt_date')); ?>
-
-<?php echo $form->field($model, 'thanks_date')
-	->textInput(['type'=>'date'])
-	->label($model->getAttributeLabel('thanks_date')); ?>
-
-<?php echo $form->field($model, 'thanks_document')
-	->textarea(['rows'=>6, 'cols'=>50])
-	->label($model->getAttributeLabel('thanks_document')); ?>
-
-<?php echo $form->field($model, 'thanks_user_id')
-	->textInput(['type'=>'number', 'min'=>'1'])
-	->label($model->getAttributeLabel('thanks_user_id')); ?>
 
 <?php $uploadPath = Kckrs::getUploadPath(false);
 $photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['class'=>'mb-3']) : '';

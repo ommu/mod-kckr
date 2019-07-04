@@ -17,6 +17,8 @@
 use yii\helpers\Html;
 use app\components\widgets\ActiveForm;
 use ommu\kckr\models\KckrCategory;
+use ommu\selectize\Selectize;
+use yii\helpers\ArrayHelper;
 ?>
 
 <div class="kckr-media-form">
@@ -33,9 +35,13 @@ use ommu\kckr\models\KckrCategory;
 	],
 ]); ?>
 
-<?php $category = KckrCategory::getCategory();
-echo $form->field($model, 'cat_id')
-	->dropDownList($category, ['prompt'=>''])
+<?php echo $form->field($model, 'cat_id')
+	->widget(Selectize::className(), [
+		'options' => [
+			'placeholder' => Yii::t('app', 'Select a category..'),
+		],
+		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a category..')], KckrCategory::getCategory()),
+	])
 	->label($model->getAttributeLabel('cat_id')); ?>
 
 <?php echo $form->field($model, 'media_title')
