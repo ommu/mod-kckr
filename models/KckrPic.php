@@ -36,14 +36,18 @@ namespace ommu\kckr\models;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\UploadedFile;
+use thamtech\uuid\helpers\UuidHelper;
 use ommu\users\models\Users;
 
 class KckrPic extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
+	use \ommu\traits\FileTrait;
 
 	public $gridForbiddenColumn = ['pic_signature', 'kckrs', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
+	public $old_pic_signature;
 	public $creationDisplayname;
 	public $modifiedDisplayname;
 
@@ -61,9 +65,10 @@ class KckrPic extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['pic_name', 'pic_nip', 'pic_position', 'pic_signature'], 'required'],
+			[['pic_name', 'pic_nip', 'pic_position'], 'required'],
 			[['publish', 'default', 'creation_id', 'modified_id'], 'integer'],
 			[['pic_signature'], 'string'],
+			[['pic_signature'], 'safe'],
 			[['pic_name', 'pic_position'], 'string', 'max' => 64],
 			[['pic_nip'], 'string', 'max' => 32],
 		];
@@ -87,6 +92,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
+			'old_pic_signature' => Yii::t('app', 'Old Signature'),
 			'kckrs' => Yii::t('app', 'Kckrs'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
@@ -177,8 +183,10 @@ class KckrPic extends \app\components\ActiveRecord
 		$this->templateColumns['pic_signature'] = [
 			'attribute' => 'pic_signature',
 			'value' => function($model, $key, $index, $column) {
-				return $model->pic_signature;
+				$uploadPath = self::getUploadPath(false);
+				return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['alt' => $model->pic_signature]) : '-';
 			},
+			'format' => 'html',
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -288,12 +296,22 @@ class KckrPic extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * @param returnAlias set true jika ingin kembaliannya path alias atau false jika ingin string
+	 * relative path. default true.
+	 */
+	public static function getUploadPath($returnAlias=true) 
+	{
+		return ($returnAlias ? Yii::getAlias('@public/kckr') : 'kckr');
+	}
+
+	/**
 	 * after find attributes
 	 */
 	public function afterFind()
 	{
 		parent::afterFind();
 
+		$this->old_pic_signature = $this->pic_signature;
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 	}
@@ -304,6 +322,20 @@ class KckrPic extends \app\components\ActiveRecord
 	public function beforeValidate()
 	{
 		if(parent::beforeValidate()) {
+			// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
+			if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
+				$picSignatureFileType = ['jpg', 'jpeg', 'png', 'bmp', 'gif'];
+				if(!in_array(strtolower($this->pic_signature->getExtension()), $picSignatureFileType)) {
+					$this->addError('pic_signature', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
+						'name'=>$this->pic_signature->name,
+						'extensions'=>$this->formatFileType($picSignatureFileType, false),
+					]));
+				}
+			} /* else {
+				if($this->isNewRecord || (!$this->isNewRecord && $this->old_pic_signature == ''))
+					$this->addError('pic_signature', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('pic_signature')]));
+			} */
+
 			if($this->isNewRecord) {
 				if($this->creation_id == null)
 					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
@@ -313,5 +345,71 @@ class KckrPic extends \app\components\ActiveRecord
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * before save attributes
+	 */
+	public function beforeSave($insert)
+	{
+		if(parent::beforeSave($insert)) {
+			if(!$insert) {
+				$uploadPath = self::getUploadPath();
+				$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+				$this->createUploadDirectory(self::getUploadPath());
+
+				// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
+				if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
+					$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
+					if($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName]))) {
+						if($this->old_pic_signature != '' && file_exists(join('/', [$uploadPath, $this->old_pic_signature])))
+							rename(join('/', [$uploadPath, $this->old_pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_pic_signature]));
+						$this->pic_signature = $fileName;
+					}
+				} else {
+					if($this->pic_signature == '')
+						$this->pic_signature = $this->old_pic_signature;
+				}
+
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * After save attributes
+	 */
+	public function afterSave($insert, $changedAttributes)
+	{
+		parent::afterSave($insert, $changedAttributes);
+
+		$uploadPath = self::getUploadPath();
+		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+		$this->createUploadDirectory(self::getUploadPath());
+
+		if($insert) {
+			// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
+			if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
+				$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
+				if($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName])))
+					self::updateAll(['pic_signature' => $fileName], ['id' => $this->id]);
+			}
+
+		}
+	}
+
+	/**
+	 * After delete attributes
+	 */
+	public function afterDelete()
+	{
+		parent::afterDelete();
+
+		$uploadPath = self::getUploadPath();
+		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+
+		if($this->pic_signature != '' && file_exists(join('/', [$uploadPath, $this->pic_signature])))
+			rename(join('/', [$uploadPath, $this->pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_deleted_'.$this->pic_signature]));
+
 	}
 }

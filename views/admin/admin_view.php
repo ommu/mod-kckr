@@ -106,7 +106,11 @@ $attributes = [
 	],
 	[
 		'attribute' => 'photos',
-		'value' => $model->photos ? $model->photos : '-',
+		'value' => function ($model) {
+			$uploadPath = Kckrs::getUploadPath(false);
+			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['class'=>'mb-3']).$model->photos : '-';
+		},
+		'format' => 'html',
 		'visible' => !$small,
 	],
 	[

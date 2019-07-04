@@ -15,6 +15,7 @@
  */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
 use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\KckrPic;
@@ -23,8 +24,11 @@ use ommu\kckr\models\KckrPic;
 <div class="kckrs-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
-	'enableClientValidation' => true,
+	'options' => [
+		'class' => 'form-horizontal form-label-left',
+		'enctype' => 'multipart/form-data',
+	],
+	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
 	'fieldConfig' => [
@@ -78,8 +82,10 @@ echo $form->field($model, 'send_type')
 	->textInput(['type'=>'number', 'min'=>'1'])
 	->label($model->getAttributeLabel('thanks_user_id')); ?>
 
-<?php echo $form->field($model, 'photos')
-	->textarea(['rows'=>6, 'cols'=>50])
+<?php $uploadPath = Kckrs::getUploadPath(false);
+$photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['class'=>'mb-3']) : '';
+echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.$photo.'</div>{input}{error}{hint}{endWrapper}'])
+	->fileInput()
 	->label($model->getAttributeLabel('photos')); ?>
 
 <?php echo $form->field($model, 'publish')

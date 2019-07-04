@@ -45,14 +45,18 @@ namespace ommu\kckr\models;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\UploadedFile;
+use thamtech\uuid\helpers\UuidHelper;
 use ommu\users\models\Users;
 
 class Kckrs extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
+	use \ommu\traits\FileTrait;
 
 	public $gridForbiddenColumn = ['creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
+	public $old_photos;
 	public $picName;
 	public $publisherName;
 	public $thanksUserDisplayname;
@@ -73,11 +77,11 @@ class Kckrs extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['pic_id', 'publisher_id', 'letter_number', 'send_type', 'send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'thanks_user_id', 'photos'], 'required'],
+			[['pic_id', 'publisher_id', 'letter_number', 'send_type', 'send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'thanks_user_id'], 'required'],
 			[['publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id'], 'integer'],
 			[['send_type', 'photos'], 'string'],
 			//[['thanks_document'], 'serialize'],
-			[['send_date', 'receipt_date', 'thanks_date'], 'safe'],
+			[['send_date', 'receipt_date', 'thanks_date', 'photos'], 'safe'],
 			[['letter_number'], 'string', 'max' => 64],
 			[['pic_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrPic::className(), 'targetAttribute' => ['pic_id' => 'id']],
 			[['publisher_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrPublisher::className(), 'targetAttribute' => ['publisher_id' => 'id']],
@@ -108,6 +112,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
+			'old_photos' => Yii::t('app', 'Old Photos'),
 			'media' => Yii::t('app', 'Media'),
 			'picName' => Yii::t('app', 'Pic'),
 			'publisherName' => Yii::t('app', 'Publisher'),
@@ -281,8 +286,10 @@ class Kckrs extends \app\components\ActiveRecord
 		$this->templateColumns['photos'] = [
 			'attribute' => 'photos',
 			'value' => function($model, $key, $index, $column) {
-				return $model->photos;
+				$uploadPath = self::getUploadPath(false);
+				return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt' => $model->photos]) : '-';
 			},
+			'format' => 'html',
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -383,6 +390,15 @@ class Kckrs extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * @param returnAlias set true jika ingin kembaliannya path alias atau false jika ingin string
+	 * relative path. default true.
+	 */
+	public static function getUploadPath($returnAlias=true) 
+	{
+		return ($returnAlias ? Yii::getAlias('@public/kckr') : 'kckr');
+	}
+
+	/**
 	 * after find attributes
 	 */
 	public function afterFind()
@@ -390,6 +406,7 @@ class Kckrs extends \app\components\ActiveRecord
 		parent::afterFind();
 
 		$this->thanks_document = unserialize($this->thanks_document);
+		$this->old_photos = $this->photos;
 		// $this->picName = isset($this->pic) ? $this->pic->pic_name : '-';
 		// $this->publisherName = isset($this->publisher) ? $this->publisher->publisher_name : '-';
 		// $this->thanksUserDisplayname = isset($this->thanksUser) ? $this->thanksUser->displayname : '-';
@@ -403,6 +420,20 @@ class Kckrs extends \app\components\ActiveRecord
 	public function beforeValidate()
 	{
 		if(parent::beforeValidate()) {
+			// $this->photos = UploadedFile::getInstance($this, 'photos');
+			if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
+				$photoFileType = ['jpg', 'jpeg', 'png', 'bmp', 'gif'];
+				if(!in_array(strtolower($this->photos->getExtension()), $photoFileType)) {
+					$this->addError('photos', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
+						'name'=>$this->photos->name,
+						'extensions'=>$this->formatFileType($photoFileType, false),
+					]));
+				}
+			} /* else {
+				if($this->isNewRecord || (!$this->isNewRecord && $this->old_photos == ''))
+					$this->addError('photos', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photos')]));
+			} */
+
 			if($this->isNewRecord) {
 				if($this->creation_id == null)
 					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
@@ -420,11 +451,67 @@ class Kckrs extends \app\components\ActiveRecord
 	public function beforeSave($insert)
 	{
 		if(parent::beforeSave($insert)) {
+			if(!$insert) {
+				$uploadPath = self::getUploadPath();
+				$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+				$this->createUploadDirectory(self::getUploadPath());
+
+				// $this->photos = UploadedFile::getInstance($this, 'photos');
+				if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
+					$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension()); 
+					if($this->photos->saveAs(join('/', [$uploadPath, $fileName]))) {
+						if($this->old_photos != '' && file_exists(join('/', [$uploadPath, $this->old_photos])))
+							rename(join('/', [$uploadPath, $this->old_photos]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_photos]));
+						$this->photos = $fileName;
+					}
+				} else {
+					if($this->photos == '')
+						$this->photos = $this->old_photos;
+				}
+
+			}
 			$this->send_date = Yii::$app->formatter->asDate($this->send_date, 'php:Y-m-d');
 			$this->receipt_date = Yii::$app->formatter->asDate($this->receipt_date, 'php:Y-m-d');
 			$this->thanks_date = Yii::$app->formatter->asDate($this->thanks_date, 'php:Y-m-d');
 			$this->thanks_document = serialize($this->thanks_document);
 		}
 		return true;
+	}
+
+	/**
+	 * After save attributes
+	 */
+	public function afterSave($insert, $changedAttributes)
+	{
+		parent::afterSave($insert, $changedAttributes);
+
+		$uploadPath = self::getUploadPath();
+		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+		$this->createUploadDirectory(self::getUploadPath());
+
+		if($insert) {
+			// $this->photos = UploadedFile::getInstance($this, 'photos');
+			if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
+				$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension()); 
+				if($this->photos->saveAs(join('/', [$uploadPath, $fileName])))
+					self::updateAll(['photos' => $fileName], ['id' => $this->id]);
+			}
+
+		}
+	}
+
+	/**
+	 * After delete attributes
+	 */
+	public function afterDelete()
+	{
+		parent::afterDelete();
+
+		$uploadPath = self::getUploadPath();
+		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+
+		if($this->photos != '' && file_exists(join('/', [$uploadPath, $this->photos])))
+			rename(join('/', [$uploadPath, $this->photos]), join('/', [$verwijderenPath, $this->id.'-'.time().'_deleted_'.$this->photos]));
+
 	}
 }

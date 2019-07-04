@@ -16,6 +16,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
+use ommu\kckr\models\KckrPic;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Pics'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->pic_name;
@@ -64,7 +65,11 @@ $attributes = [
 	],
 	[
 		'attribute' => 'pic_signature',
-		'value' => $model->pic_signature ? $model->pic_signature : '-',
+		'value' => function ($model) {
+			$uploadPath = KckrPic::getUploadPath(false);
+			return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['class'=>'mb-3']).$model->pic_signature : '-';
+		},
+		'format' => 'html',
 		'visible' => !$small,
 	],
 	[

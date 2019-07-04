@@ -111,6 +111,7 @@ class AdminController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
+			$model->photos = UploadedFile::getInstance($this, 'photos');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 
@@ -145,6 +146,7 @@ class AdminController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
+			$model->photos = UploadedFile::getInstance($this, 'photos');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 

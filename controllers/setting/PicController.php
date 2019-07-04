@@ -113,6 +113,7 @@ class PicController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
+			$model->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 
@@ -147,6 +148,7 @@ class PicController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
+			$model->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 

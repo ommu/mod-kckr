@@ -15,14 +15,19 @@
  */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
+use ommu\kckr\models\KckrPic;
 ?>
 
 <div class="kckr-pic-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
-	'enableClientValidation' => true,
+	'options' => [
+		'class' => 'form-horizontal form-label-left',
+		'enctype' => 'multipart/form-data',
+	],
+	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
 	'fieldConfig' => [
@@ -46,8 +51,10 @@ use app\components\widgets\ActiveForm;
 	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('pic_position')); ?>
 
-<?php echo $form->field($model, 'pic_signature')
-	->textarea(['rows'=>6, 'cols'=>50])
+<?php $uploadPath = KckrPic::getUploadPath(false);
+$picSignature = !$model->isNewRecord && $model->old_pic_signature != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_pic_signature])), ['class'=>'mb-3']) : '';
+echo $form->field($model, 'pic_signature', ['template' => '{label}{beginWrapper}<div>'.$picSignature.'</div>{input}{error}{hint}{endWrapper}'])
+	->fileInput()
 	->label($model->getAttributeLabel('pic_signature')); ?>
 
 <?php echo $form->field($model, 'default')
