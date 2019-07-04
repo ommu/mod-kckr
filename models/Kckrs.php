@@ -51,7 +51,7 @@ class Kckrs extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $picName;
 	public $publisherName;
@@ -120,7 +120,7 @@ class Kckrs extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getMedia($count=false, $publish=1)
+	public function getMedias($count=false, $publish=1)
 	{
 		if($count == false)
 			return $this->hasMany(KckrMedia::className(), ['kckr_id' => 'id'])
@@ -326,7 +326,7 @@ class Kckrs extends \app\components\ActiveRecord
 		$this->templateColumns['media'] = [
 			'attribute' => 'media',
 			'value' => function($model, $key, $index, $column) {
-				$media = $model->getMedia(true);
+				$media = $model->getMedias(true);
 				return Html::a($media, ['media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
 			},
 			'filter' => false,

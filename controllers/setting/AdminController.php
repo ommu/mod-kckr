@@ -8,10 +8,7 @@
  * Reference start
  * TOC :
  *	Index
- *	Manage
- *	Create
  *	Update
- *	View
  *	Delete
  *
  *	findModel
@@ -31,7 +28,7 @@ use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\kckr\models\KckrSetting;
-use yii\data\ActiveDataProvider;
+use ommu\kckr\models\search\KckrCategory as KckrCategorySearch;
 
 class AdminController extends Controller
 {
@@ -58,35 +55,11 @@ class AdminController extends Controller
 	 */
 	public function actionIndex()
 	{
-		return $this->redirect(['manage']);
-	}
+		$this->layout = 'admin_default';
 
-	/**
-	 * Lists all KckrSetting models.
-	 * @return mixed
-	 */
-	public function actionManage()
-	{
-		$dataProvider = new ActiveDataProvider([
-			'query' => KckrSetting::find(),
-		]);
-
-		$this->view->title = Yii::t('app', 'Settings');
-		$this->view->description = '';
-		$this->view->keywords = '';
-		return $this->render('admin_manage', [
-			'dataProvider' => $dataProvider,
-		]);
-	}
-
-	/**
-	 * Creates a new KckrSetting model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 * @return mixed
-	 */
-	public function actionCreate()
-	{
 		$model = new KckrSetting();
+		if ($model === null) 
+			$model = new KckrSetting(['id'=>1]);
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -94,8 +67,8 @@ class AdminController extends Controller
 			// $model->load($postData);
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr setting success created.'));
-				return $this->redirect(['manage']);
+				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR setting success created.'));
+				return $this->redirect(['update']);
 				//return $this->redirect(['view', 'id'=>$model->id]);
 
 			} else {
@@ -104,11 +77,27 @@ class AdminController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Create Setting');
+		$searchModel = new KckrCategorySearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+		$gridColumn = Yii::$app->request->get('GridColumn', null);
+		$cols = [];
+		if($gridColumn != null && count($gridColumn) > 0) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
+					$cols[] = $key;
+			}
+		}
+		$columns = $searchModel->getGridColumn($cols);
+
+		$this->view->title = Yii::t('app', 'KCKR Settings');
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_create', [
+		return $this->render('admin_index', [
 			'model' => $model,
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+			'columns' => $columns,
 		]);
 	}
 
@@ -118,9 +107,11 @@ class AdminController extends Controller
 	 * @param integer $id
 	 * @return mixed
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate()
 	{
-		$model = $this->findModel($id);
+		$model = new KckrSetting();
+		if ($model === null) 
+			$model = new KckrSetting(['id'=>1]);
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -128,8 +119,8 @@ class AdminController extends Controller
 			// $model->load($postData);
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr setting success updated.'));
-				return $this->redirect(['manage']);
+				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR setting success updated.'));
+				return $this->redirect(['update']);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -137,27 +128,11 @@ class AdminController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Update Setting: {id}', ['id' => $model->id]);
+		$this->subMenu = $this->module->params['setting_submenu'];
+		$this->view->title = Yii::t('app', 'KCKR Settings');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_update', [
-			'model' => $model,
-		]);
-	}
-
-	/**
-	 * Displays a single KckrSetting model.
-	 * @param integer $id
-	 * @return mixed
-	 */
-	public function actionView($id)
-	{
-		$model = $this->findModel($id);
-
-		$this->view->title = Yii::t('app', 'Detail Setting: {id}', ['id' => $model->id]);
-		$this->view->description = '';
-		$this->view->keywords = '';
-		return $this->oRender('admin_view', [
 			'model' => $model,
 		]);
 	}
@@ -173,8 +148,8 @@ class AdminController extends Controller
 		$model = $this->findModel($id);
 		$model->delete();
 
-		Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr setting success deleted.'));
-		return $this->redirect(['manage']);
+		Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR setting success deleted.'));
+		return $this->redirect(['index']);
 	}
 
 	/**

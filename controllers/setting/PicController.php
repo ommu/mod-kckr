@@ -1,7 +1,7 @@
 <?php
 /**
  * PicController
- * @var $this ommu\kckr\controllers\o\PicController
+ * @var $this ommu\kckr\controllers\setting\PicController
  * @var $model ommu\kckr\models\KckrPic
  *
  * PicController implements the CRUD actions for KckrPic model.
@@ -26,7 +26,7 @@
  *
  */
 
-namespace ommu\kckr\controllers\o;
+namespace ommu\kckr\controllers\setting;
 
 use Yii;
 use yii\filters\VerbFilter;
@@ -37,6 +37,15 @@ use ommu\kckr\models\search\KckrPic as KckrPicSearch;
 
 class PicController extends Controller
 {
+	/**
+	 * {@inheritdoc}
+	 */
+	public function init()
+	{
+		parent::init();
+		$this->subMenu = $this->module->params['setting_submenu'];
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

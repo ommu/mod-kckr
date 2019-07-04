@@ -45,7 +45,7 @@ class KckrCategory extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['category_desc_i', 'category_code', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $category_name_i;
 	public $category_desc_i;
@@ -83,17 +83,17 @@ class KckrCategory extends \app\components\ActiveRecord
 		return [
 			'id' => Yii::t('app', 'ID'),
 			'publish' => Yii::t('app', 'Publish'),
-			'category_name' => Yii::t('app', 'Category Name'),
-			'category_desc' => Yii::t('app', 'Category Desc'),
-			'category_type' => Yii::t('app', 'Category Type'),
-			'category_code' => Yii::t('app', 'Category Code'),
+			'category_name' => Yii::t('app', 'Category'),
+			'category_desc' => Yii::t('app', 'Description'),
+			'category_type' => Yii::t('app', 'Type'),
+			'category_code' => Yii::t('app', 'Code'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'creation_id' => Yii::t('app', 'Creation'),
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
-			'category_name_i' => Yii::t('app', 'Category Name'),
-			'category_desc_i' => Yii::t('app', 'Category Desc'),
+			'category_name_i' => Yii::t('app', 'Category'),
+			'category_desc_i' => Yii::t('app', 'Description'),
 			'media' => Yii::t('app', 'Media'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
@@ -103,7 +103,7 @@ class KckrCategory extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getMedia($count=false, $publish=1)
+	public function getMedias($count=false, $publish=1)
 	{
 		if($count == false)
 			return $this->hasMany(KckrMedia::className(), ['cat_id' => 'id'])
@@ -246,7 +246,7 @@ class KckrCategory extends \app\components\ActiveRecord
 		$this->templateColumns['media'] = [
 			'attribute' => 'media',
 			'value' => function($model, $key, $index, $column) {
-				$media = $model->getMedia(true);
+				$media = $model->getMedias(true);
 				return Html::a($media, ['media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
 			},
 			'filter' => false,
@@ -257,7 +257,7 @@ class KckrCategory extends \app\components\ActiveRecord
 			$this->templateColumns['publish'] = [
 				'attribute' => 'publish',
 				'value' => function($model, $key, $index, $column) {
-					$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+					$url = Url::to(['setting/category/publish', 'id'=>$model->primaryKey]);
 					return $this->quickAction($url, $model->publish);
 				},
 				'filter' => $this->filterYesNo(),

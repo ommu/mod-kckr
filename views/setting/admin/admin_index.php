@@ -16,14 +16,16 @@
 
 use yii\helpers\Url;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Settings'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Create');
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="kckr-setting-create">
-
-<?php echo $this->render('_form', [
-	'model' => $model,
+<?php echo $this->renderWidget('/setting/category/admin_manage', [
+	'contentMenu' => true,
+	'searchModel' => $searchModel,
+	'dataProvider' => $dataProvider,
+	'columns' => $columns,
 ]); ?>
 
-</div>
+<?php echo $this->renderWidget(!$model->isNewRecord ? 'admin_view' : 'admin_update', [
+	'model'=>$model,
+]); ?>

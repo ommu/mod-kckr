@@ -2,7 +2,7 @@
 /**
  * Kckr Pics (kckr-pic)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\PicController
+ * @var $this ommu\kckr\controllers\setting\PicController
  * @var $model ommu\kckr\models\KckrPic
  * @var $form app\components\widgets\ActiveForm
  *

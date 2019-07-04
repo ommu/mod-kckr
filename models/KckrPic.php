@@ -42,7 +42,7 @@ class KckrPic extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['pic_signature', 'kckrs', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $creationDisplayname;
 	public $modifiedDisplayname;
@@ -78,10 +78,10 @@ class KckrPic extends \app\components\ActiveRecord
 			'id' => Yii::t('app', 'ID'),
 			'publish' => Yii::t('app', 'Publish'),
 			'default' => Yii::t('app', 'Default'),
-			'pic_name' => Yii::t('app', 'Pic Name'),
-			'pic_nip' => Yii::t('app', 'Pic Nip'),
-			'pic_position' => Yii::t('app', 'Pic Position'),
-			'pic_signature' => Yii::t('app', 'Pic Signature'),
+			'pic_name' => Yii::t('app', 'Name'),
+			'pic_nip' => Yii::t('app', 'NIP'),
+			'pic_position' => Yii::t('app', 'Position'),
+			'pic_signature' => Yii::t('app', 'Signature'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'creation_id' => Yii::t('app', 'Creation'),
 			'modified_date' => Yii::t('app', 'Modified Date'),

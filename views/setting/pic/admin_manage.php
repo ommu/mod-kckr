@@ -2,7 +2,7 @@
 /**
  * Kckr Pics (kckr-pic)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\PicController
+ * @var $this ommu\kckr\controllers\setting\PicController
  * @var $model ommu\kckr\models\KckrPic
  * @var $searchModel ommu\kckr\models\search\KckrPic
  *
@@ -52,10 +52,10 @@ array_push($columnData, [
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Pic'), 'class'=>'modal-btn']);
+			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Pic')]);
 		},
 		'update' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Pic'), 'class'=>'modal-btn']);
+			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Pic')]);
 		},
 		'delete' => function ($url, $model, $key) {
 			return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [

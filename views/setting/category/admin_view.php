@@ -92,7 +92,7 @@ $attributes = [
 	[
 		'attribute' => 'media',
 		'value' => function ($model) {
-			$media = $model->getMedia(true);
+			$media = $model->getMedias(true);
 			return Html::a($media, ['media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
 		},
 		'format' => 'html',
