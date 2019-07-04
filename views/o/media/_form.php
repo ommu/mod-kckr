@@ -33,38 +33,34 @@ use ommu\kckr\models\KckrCategory;
 	],
 ]); ?>
 
-<?php //echo $form->errorSummary($model);?>
-
-<?php echo $form->field($model, 'kckr_id')
-	->textInput(['type'=>'number', 'min'=>'1'])
-	->label($model->getAttributeLabel('kckr_id')); ?>
-
 <?php $category = KckrCategory::getCategory();
 echo $form->field($model, 'cat_id')
 	->dropDownList($category, ['prompt'=>''])
 	->label($model->getAttributeLabel('cat_id')); ?>
 
 <?php echo $form->field($model, 'media_title')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows'=>2, 'cols'=>50])
 	->label($model->getAttributeLabel('media_title')); ?>
 
 <?php echo $form->field($model, 'media_desc')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows'=>3, 'cols'=>50])
 	->label($model->getAttributeLabel('media_desc')); ?>
+
+<?php echo $form->field($model, 'media_author')
+	->textInput()
+	->label($model->getAttributeLabel('media_author')); ?>
 
 <?php echo $form->field($model, 'media_publish_year')
 	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('media_publish_year')); ?>
 
-<?php echo $form->field($model, 'media_author')
-	->textarea(['rows'=>6, 'cols'=>50])
-	->label($model->getAttributeLabel('media_author')); ?>
-
 <?php echo $form->field($model, 'media_item')
 	->textInput(['type'=>'number', 'min'=>'1'])
 	->label($model->getAttributeLabel('media_item')); ?>
 
-<?php echo $form->field($model, 'publish')
+<?php if($model->isNewRecord && !$model->getErrors())
+	$model->publish = 1;
+echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>
 

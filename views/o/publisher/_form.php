@@ -41,18 +41,20 @@ echo $form->field($model, 'publisher_area')
 	->label($model->getAttributeLabel('publisher_area')); ?>
 
 <?php echo $form->field($model, 'publisher_name')
-	->textInput()
+	->textarea(['rows'=>3, 'cols'=>50])
 	->label($model->getAttributeLabel('publisher_name')); ?>
 
 <?php echo $form->field($model, 'publisher_address')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows'=>4, 'cols'=>50])
 	->label($model->getAttributeLabel('publisher_address')); ?>
 
 <?php echo $form->field($model, 'publisher_phone')
 	->textInput()
 	->label($model->getAttributeLabel('publisher_phone')); ?>
 
-<?php echo $form->field($model, 'publish')
+<?php if($model->isNewRecord && !$model->getErrors())
+	$model->publish = 1;
+echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>
 

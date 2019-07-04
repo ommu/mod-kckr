@@ -52,7 +52,9 @@ echo $form->field($model, 'category_type')
 	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('category_code')); ?>
 
-<?php echo $form->field($model, 'publish')
+<?php if($model->isNewRecord && !$model->getErrors())
+	$model->publish = 1;
+echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>
 

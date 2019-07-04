@@ -88,7 +88,9 @@ echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.
 	->fileInput()
 	->label($model->getAttributeLabel('photos')); ?>
 
-<?php echo $form->field($model, 'publish')
+<?php if($model->isNewRecord && !$model->getErrors())
+	$model->publish = 1;
+echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>
 

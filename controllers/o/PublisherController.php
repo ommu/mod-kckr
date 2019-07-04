@@ -121,7 +121,7 @@ class PublisherController extends Controller
 		$this->view->title = Yii::t('app', 'Create Publisher');
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_create', [
+		return $this->oRender('admin_create', [
 			'model' => $model,
 		]);
 	}
@@ -154,7 +154,7 @@ class PublisherController extends Controller
 		$this->view->title = Yii::t('app', 'Update Publisher: {publisher-name}', ['publisher-name' => $model->publisher_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_update', [
+		return $this->oRender('admin_update', [
 			'model' => $model,
 		]);
 	}

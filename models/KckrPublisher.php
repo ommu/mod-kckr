@@ -60,9 +60,10 @@ class KckrPublisher extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['publisher_area', 'publisher_name', 'publisher_address', 'publisher_phone'], 'required'],
+			[['publisher_area', 'publisher_name', 'publisher_address'], 'required'],
 			[['publish', 'publisher_area', 'creation_id', 'modified_id'], 'integer'],
 			[['publisher_name', 'publisher_address', 'publisher_phone'], 'string'],
+			[['publisher_phone'], 'safe'],
 		];
 	}
 

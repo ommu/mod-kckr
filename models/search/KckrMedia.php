@@ -28,7 +28,7 @@ class KckrMedia extends KckrMediaModel
 	{
 		return [
 			[['id', 'publish', 'kckr_id', 'cat_id', 'media_item', 'creation_id', 'modified_id'], 'integer'],
-			[['media_title', 'media_desc', 'media_publish_year', 'media_author', 'creation_date', 'modified_date', 'updated_date', 'kckrPicId', 'categoryName', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
+			[['media_title', 'media_desc', 'media_publish_year', 'media_author', 'creation_date', 'modified_date', 'updated_date', 'kckrPicId', 'categoryName', 'creationDisplayname', 'modifiedDisplayname', 'kckrPublisherName'], 'safe'],
 		];
 	}
 
@@ -65,10 +65,12 @@ class KckrMedia extends KckrMediaModel
 		else
 			$query = KckrMediaModel::find()->alias('t')->select($column);
 		$query->joinWith([
-			'kckr.pic kckr', 
+			'kckr kckr', 
 			'category.title category', 
 			'creation creation', 
-			'modified modified'
+			'modified modified',
+			'kckr.pic pic', 
+			'kckr.publisher publisher', 
 		]);
 
 		// add conditions that should always apply here
@@ -82,8 +84,8 @@ class KckrMedia extends KckrMediaModel
 
 		$attributes = array_keys($this->getTableSchema()->columns);
 		$attributes['kckrPicId'] = [
-			'asc' => ['kckr.pic_name' => SORT_ASC],
-			'desc' => ['kckr.pic_name' => SORT_DESC],
+			'asc' => ['pic.pic_name' => SORT_ASC],
+			'desc' => ['pic.pic_name' => SORT_DESC],
 		];
 		$attributes['cat_id'] = [
 			'asc' => ['category.message' => SORT_ASC],
@@ -100,6 +102,10 @@ class KckrMedia extends KckrMediaModel
 		$attributes['modifiedDisplayname'] = [
 			'asc' => ['modified.displayname' => SORT_ASC],
 			'desc' => ['modified.displayname' => SORT_DESC],
+		];
+		$attributes['kckrPublisherName'] = [
+			'asc' => ['publisher.publisher_name' => SORT_ASC],
+			'desc' => ['publisher.publisher_name' => SORT_DESC],
 		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
@@ -128,6 +134,7 @@ class KckrMedia extends KckrMediaModel
 			'cast(t.modified_date as date)' => $this->modified_date,
 			't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
 			'cast(t.updated_date as date)' => $this->updated_date,
+			'kckr.pic_id' => $this->kckrPicId,
 		]);
 
 		if(isset($params['trash']))
@@ -139,13 +146,16 @@ class KckrMedia extends KckrMediaModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
+		if(isset($params['kckrPublisherId']) && $params['kckrPublisherId'])
+			$query->andFilterWhere(['kckr.publisher_id' => $params['kckrPublisherId']]);
+
 		$query->andFilterWhere(['like', 't.media_title', $this->media_title])
 			->andFilterWhere(['like', 't.media_desc', $this->media_desc])
 			->andFilterWhere(['like', 't.media_author', $this->media_author])
-			->andFilterWhere(['like', 'kckr.pic_name', $this->kckrPicId])
 			->andFilterWhere(['like', 'category.message', $this->categoryName])
 			->andFilterWhere(['like', 'creation.displayname', $this->creationDisplayname])
-			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname]);
+			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname])
+			->andFilterWhere(['like', 'publisher.publisher_name', $this->kckrPublisherName]);
 
 		return $dataProvider;
 	}

@@ -48,8 +48,18 @@ $attributes = [
 		'value' => function ($model) {
 			$kckrPicId = isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
 			if($kckrPicId != '-')
-				return Html::a($kckrPicId, ['admin/view', 'id'=>$model->kckr_id], ['title'=>$kckrPicId, 'class'=>'modal-btn']);
+				return Html::a($kckrPicId, ['setting/pic/view', 'id'=>$model->kckr->pic_id], ['title'=>$kckrPicId, 'class'=>'modal-btn']);
 			return $kckrPicId;
+		},
+		'format' => 'html',
+	],
+	[
+		'attribute' => 'kckrPublisherName',
+		'value' => function ($model) {
+			$kckrPublisherName = isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
+			if($kckrPublisherName != '-')
+				return Html::a($kckrPublisherName, ['o/publisher/view', 'id'=>$model->kckr->publisher_id], ['title'=>$kckrPublisherName, 'class'=>'modal-btn']);
+			return $kckrPublisherName;
 		},
 		'format' => 'html',
 	],
@@ -58,7 +68,7 @@ $attributes = [
 		'value' => function ($model) {
 			$categoryName = isset($model->category) ? $model->category->title->message : '-';
 			if($categoryName != '-')
-				return Html::a($categoryName, ['category/view', 'id'=>$model->cat_id], ['title'=>$categoryName, 'class'=>'modal-btn']);
+				return Html::a($categoryName, ['setting/category/view', 'id'=>$model->cat_id], ['title'=>$categoryName, 'class'=>'modal-btn']);
 			return $categoryName;
 		},
 		'format' => 'html',

@@ -34,10 +34,10 @@ $this->params['menu']['option'] = [
 <?php Pjax::begin(); ?>
 
 <?php if($pic != null)
-	echo $this->render('/pic/admin_view', ['model'=>$pic, 'small'=>true]); ?>
+	echo $this->render('/setting/pic/admin_view', ['model'=>$pic, 'small'=>true]); ?>
 
 <?php if($publisher != null)
-	echo $this->render('/publisher/admin_view', ['model'=>$publisher, 'small'=>true]); ?>
+	echo $this->render('/o/publisher/admin_view', ['model'=>$publisher, 'small'=>true]); ?>
 
 <?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 

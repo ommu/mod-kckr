@@ -21,9 +21,11 @@ use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn btn-success']],
-];
+if(($id = Yii::$app->request->get('id')) != null) {
+	$this->params['menu']['content'] = [
+		['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create', 'id'=>$id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
+	];
+}
 $this->params['menu']['option'] = [
 	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],
 	['label' => Yii::t('app', 'Grid Option'), 'url' => 'javascript:void(0);'],
@@ -34,10 +36,10 @@ $this->params['menu']['option'] = [
 <?php Pjax::begin(); ?>
 
 <?php if($kckr != null)
-	echo $this->render('/kckr/admin_view', ['model'=>$kckr, 'small'=>true]); ?>
+	echo $this->render('/admin/admin_view', ['model'=>$kckr, 'small'=>true]); ?>
 
 <?php if($category != null)
-	echo $this->render('/category/admin_view', ['model'=>$category, 'small'=>true]); ?>
+	echo $this->render('/setting/category/admin_view', ['model'=>$category, 'small'=>true]); ?>
 
 <?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 
@@ -58,10 +60,10 @@ array_push($columnData, [
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Media')]);
+			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Media'), 'class'=>'modal-btn']);
 		},
 		'update' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Media')]);
+			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Media'), 'class'=>'modal-btn']);
 		},
 		'delete' => function ($url, $model, $key) {
 			return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [

@@ -34,6 +34,7 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\kckr\models\KckrPic;
 use ommu\kckr\models\search\KckrPic as KckrPicSearch;
+use yii\web\UploadedFile;
 
 class PicController extends Controller
 {
@@ -92,7 +93,7 @@ class PicController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
-		$this->view->title = Yii::t('app', 'Pics');
+		$this->view->title = Yii::t('app', 'Person In Charges');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
@@ -113,12 +114,12 @@ class PicController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
-			$model->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
+			$model->pic_signature = UploadedFile::getInstance($model, 'pic_signature');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr pic success created.'));
+				Yii::$app->session->setFlash('success', Yii::t('app', 'Person in charge success created.'));
 				return $this->redirect(['manage']);
 				//return $this->redirect(['view', 'id'=>$model->id]);
 
@@ -128,7 +129,7 @@ class PicController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Create Pic');
+		$this->view->title = Yii::t('app', 'Create PIC');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_create', [
@@ -148,12 +149,12 @@ class PicController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
-			$model->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
+			$model->pic_signature = UploadedFile::getInstance($model, 'pic_signature');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr pic success updated.'));
+				Yii::$app->session->setFlash('success', Yii::t('app', 'Person in charge success updated.'));
 				return $this->redirect(['manage']);
 
 			} else {
@@ -162,7 +163,7 @@ class PicController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Update Pic: {pic-name}', ['pic-name' => $model->pic_name]);
+		$this->view->title = Yii::t('app', 'Update PIC: {pic-name}', ['pic-name' => $model->pic_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_update', [
@@ -179,7 +180,7 @@ class PicController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		$this->view->title = Yii::t('app', 'Detail Pic: {pic-name}', ['pic-name' => $model->pic_name]);
+		$this->view->title = Yii::t('app', 'Detail PIC: {pic-name}', ['pic-name' => $model->pic_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [
@@ -199,7 +200,7 @@ class PicController extends Controller
 		$model->publish = 2;
 
 		if($model->save(false, ['publish','modified_id'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr pic success deleted.'));
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Person in charge success deleted.'));
 			return $this->redirect(['manage']);
 		}
 	}
@@ -217,7 +218,7 @@ class PicController extends Controller
 		$model->publish = $replace;
 
 		if($model->save(false, ['publish','modified_id'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr pic success updated.'));
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Person in charge success updated.'));
 			return $this->redirect(['manage']);
 		}
 	}

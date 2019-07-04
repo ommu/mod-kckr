@@ -40,6 +40,16 @@ class MediaController extends Controller
 	/**
 	 * {@inheritdoc}
 	 */
+	public function init()
+	{
+		parent::init();
+		if(Yii::$app->request->get('id'))
+			$this->subMenu = $this->module->params['kckr_submenu'];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function behaviors()
 	{
 		return [
@@ -71,6 +81,8 @@ class MediaController extends Controller
 	public function actionManage()
 	{
 		$searchModel = new KckrMediaSearch();
+		if(($id = Yii::$app->request->get('id')) != null)
+			$searchModel = new KckrMediaSearch(['kckr_id'=>$id]);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 		$gridColumn = Yii::$app->request->get('GridColumn', null);
@@ -83,12 +95,12 @@ class MediaController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
-		if(($kckr = Yii::$app->request->get('kckr')) != null)
+		if(($kckr = Yii::$app->request->get('kckr')) != null || ($kckr = Yii::$app->request->get('id')) != null)
 			$kckr = \ommu\kckr\models\Kckrs::findOne($kckr);
 		if(($category = Yii::$app->request->get('category')) != null)
 			$category = \ommu\kckr\models\KckrCategory::findOne($category);
 
-		$this->view->title = Yii::t('app', 'Media');
+		$this->view->title = Yii::t('app', 'Medias');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
@@ -107,7 +119,11 @@ class MediaController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new KckrMedia();
+		if(($id = Yii::$app->request->get('id')) == null)
+			throw new \yii\web\NotAcceptableHttpException(Yii::t('app', 'The requested page does not exist.'));
+
+		$model = new KckrMedia(['kckr_id'=>$id]);
+		$this->subMenuParam = $model->kckr_id;
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -116,7 +132,7 @@ class MediaController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success created.'));
-				return $this->redirect(['manage']);
+				return $this->redirect(['manage', 'id'=>$model->kckr_id]);
 				//return $this->redirect(['view', 'id'=>$model->id]);
 
 			} else {
@@ -128,7 +144,7 @@ class MediaController extends Controller
 		$this->view->title = Yii::t('app', 'Create Media');
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_create', [
+		return $this->oRender('admin_create', [
 			'model' => $model,
 		]);
 	}
@@ -142,6 +158,7 @@ class MediaController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
+		$this->subMenuParam = $model->kckr_id;
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -150,7 +167,7 @@ class MediaController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
-				return $this->redirect(['manage']);
+				return $this->redirect(['manage', 'id'=>$model->kckr_id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -161,7 +178,7 @@ class MediaController extends Controller
 		$this->view->title = Yii::t('app', 'Update Media: {media-title}', ['media-title' => $model->media_title]);
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_update', [
+		return $this->oRender('admin_update', [
 			'model' => $model,
 		]);
 	}
@@ -174,6 +191,7 @@ class MediaController extends Controller
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
+		$this->subMenuParam = $model->kckr_id;
 
 		$this->view->title = Yii::t('app', 'Detail Media: {media-title}', ['media-title' => $model->media_title]);
 		$this->view->description = '';
@@ -196,7 +214,7 @@ class MediaController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success deleted.'));
-			return $this->redirect(['manage']);
+			return $this->redirect(['manage', 'id'=>$model->kckr_id]);
 		}
 	}
 
@@ -214,7 +232,7 @@ class MediaController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
-			return $this->redirect(['manage']);
+			return $this->redirect(['manage', 'id'=>$model->kckr_id]);
 		}
 	}
 

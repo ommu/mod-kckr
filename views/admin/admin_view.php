@@ -46,15 +46,20 @@ $attributes = [
 	],
 	[
 		'attribute' => 'article_id',
-		'value' => $model->article_id ? $model->article_id : '-',
-		'visible' => !$small,
+		'value' => function ($model) {
+			$articleTitle = isset($model->article) ? $model->article->title : '-';
+			if($articleTitle != '-')
+				return Html::a($articleTitle, ['/article/admin/view', 'id'=>$model->article_id], ['title'=>$articleTitle, 'class'=>'modal-btn']);
+			return $articleTitle;
+		},
+		'format' => 'html',
 	],
 	[
 		'attribute' => 'picName',
 		'value' => function ($model) {
 			$picName = isset($model->pic) ? $model->pic->pic_name : '-';
 			if($picName != '-')
-				return Html::a($picName, ['pic/view', 'id'=>$model->pic_id], ['title'=>$picName, 'class'=>'modal-btn']);
+				return Html::a($picName, ['setting/pic/view', 'id'=>$model->pic_id], ['title'=>$picName, 'class'=>'modal-btn']);
 			return $picName;
 		},
 		'format' => 'html',
@@ -64,7 +69,7 @@ $attributes = [
 		'value' => function ($model) {
 			$publisherName = isset($model->publisher) ? $model->publisher->publisher_name : '-';
 			if($publisherName != '-')
-				return Html::a($publisherName, ['publisher/view', 'id'=>$model->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
+				return Html::a($publisherName, ['o/publisher/view', 'id'=>$model->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
 			return $publisherName;
 		},
 		'format' => 'html',
@@ -82,12 +87,10 @@ $attributes = [
 	[
 		'attribute' => 'send_date',
 		'value' => Yii::$app->formatter->asDate($model->send_date, 'medium'),
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'receipt_date',
 		'value' => Yii::$app->formatter->asDate($model->receipt_date, 'medium'),
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'thanks_date',
@@ -117,7 +120,7 @@ $attributes = [
 		'attribute' => 'media',
 		'value' => function ($model) {
 			$media = $model->getMedias(true);
-			return Html::a($media, ['media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
+			return Html::a($media, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} media', ['count'=>$media])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

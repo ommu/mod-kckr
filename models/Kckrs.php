@@ -48,6 +48,7 @@ use yii\helpers\Url;
 use yii\web\UploadedFile;
 use thamtech\uuid\helpers\UuidHelper;
 use ommu\users\models\Users;
+use ommu\article\models\Articles;
 
 class Kckrs extends \app\components\ActiveRecord
 {
@@ -79,7 +80,7 @@ class Kckrs extends \app\components\ActiveRecord
 		return [
 			[['pic_id', 'publisher_id', 'letter_number', 'send_type', 'send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'thanks_user_id'], 'required'],
 			[['publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id'], 'integer'],
-			[['send_type', 'photos'], 'string'],
+			[['send_type'], 'string'],
 			//[['thanks_document'], 'serialize'],
 			[['send_date', 'receipt_date', 'thanks_date', 'photos'], 'safe'],
 			[['letter_number'], 'string', 'max' => 64],
@@ -97,7 +98,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'id' => Yii::t('app', 'ID'),
 			'publish' => Yii::t('app', 'Publish'),
 			'article_id' => Yii::t('app', 'Article'),
-			'pic_id' => Yii::t('app', 'Pic'),
+			'pic_id' => Yii::t('app', 'Person In Charge'),
 			'publisher_id' => Yii::t('app', 'Publisher'),
 			'letter_number' => Yii::t('app', 'Letter Number'),
 			'send_type' => Yii::t('app', 'Send Type'),
@@ -114,7 +115,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'old_photos' => Yii::t('app', 'Old Photos'),
 			'media' => Yii::t('app', 'Media'),
-			'picName' => Yii::t('app', 'Pic'),
+			'picName' => Yii::t('app', 'Person In Charge'),
 			'publisherName' => Yii::t('app', 'Publisher'),
 			'thanksUserDisplayname' => Yii::t('app', 'Thanksuser'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
@@ -143,6 +144,14 @@ class Kckrs extends \app\components\ActiveRecord
 		$media = $model->count();
 
 		return $media ? $media : 0;
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getArticle()
+	{
+		return $this->hasOne(Articles::className(), ['id' => 'article_id']);
 	}
 
 	/**

@@ -67,7 +67,6 @@ class KckrPic extends \app\components\ActiveRecord
 		return [
 			[['pic_name', 'pic_nip', 'pic_position'], 'required'],
 			[['publish', 'default', 'creation_id', 'modified_id'], 'integer'],
-			[['pic_signature'], 'string'],
 			[['pic_signature'], 'safe'],
 			[['pic_name', 'pic_position'], 'string', 'max' => 64],
 			[['pic_nip'], 'string', 'max' => 32],
@@ -331,10 +330,10 @@ class KckrPic extends \app\components\ActiveRecord
 						'extensions'=>$this->formatFileType($picSignatureFileType, false),
 					]));
 				}
-			} /* else {
+			} else {
 				if($this->isNewRecord || (!$this->isNewRecord && $this->old_pic_signature == ''))
 					$this->addError('pic_signature', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('pic_signature')]));
-			} */
+			}
 
 			if($this->isNewRecord) {
 				if($this->creation_id == null)

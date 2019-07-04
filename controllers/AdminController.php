@@ -34,6 +34,7 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\search\Kckrs as KckrsSearch;
+use yii\web\UploadedFile;
 
 class AdminController extends Controller
 {
@@ -111,14 +112,13 @@ class AdminController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
-			$model->photos = UploadedFile::getInstance($this, 'photos');
+			$model->photos = UploadedFile::getInstance($model, 'photos');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr success created.'));
-				return $this->redirect(['manage']);
-				//return $this->redirect(['view', 'id'=>$model->id]);
+				return $this->redirect(['view', 'id'=>$model->id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -146,13 +146,13 @@ class AdminController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
-			$model->photos = UploadedFile::getInstance($this, 'photos');
+			$model->photos = UploadedFile::getInstance($model, 'photos');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr success updated.'));
-				return $this->redirect(['manage']);
+				return $this->redirect(['manage', 'id'=>$model->id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -160,6 +160,7 @@ class AdminController extends Controller
 			}
 		}
 
+		$this->subMenu = $this->module->params['kckr_submenu'];
 		$this->view->title = Yii::t('app', 'Update Kckr: {pic-id}', ['pic-id' => $model->pic->pic_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -177,6 +178,7 @@ class AdminController extends Controller
 	{
 		$model = $this->findModel($id);
 
+		$this->subMenu = $this->module->params['kckr_submenu'];
 		$this->view->title = Yii::t('app', 'Detail Kckr: {pic-id}', ['pic-id' => $model->pic->pic_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
