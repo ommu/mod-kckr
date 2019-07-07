@@ -67,7 +67,8 @@ class KckrPic extends KckrPicModel
 		$query->joinWith([
 			'creation creation', 
 			'modified modified'
-		]);
+		])
+		->groupBy(['id']);
 
 		// add conditions that should always apply here
 		$dataParams = [

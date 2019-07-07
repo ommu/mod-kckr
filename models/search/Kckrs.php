@@ -70,7 +70,8 @@ class Kckrs extends KckrsModel
 			'thanksUser thanksUser', 
 			'creation creation', 
 			'modified modified'
-		]);
+		])
+		->groupBy(['id']);
 
 		// add conditions that should always apply here
 		$dataParams = [
