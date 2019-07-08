@@ -41,7 +41,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['publisher_phone', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['publisher_phone', 'publisher_address', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $creationDisplayname;
 	public $modifiedDisplayname;
@@ -84,31 +84,44 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
-			'kckrs' => Yii::t('app', 'Kckrs'),
+			'kckrs' => Yii::t('app', 'KCKR'),
+			'medias' => Yii::t('app', 'Karya'),
+			'items' => Yii::t('app', 'Items'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 		];
 	}
 
 	/**
+	 * @param $type relation|count|media|item
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getKckrs($count=false, $publish=1)
+	public function getKckrs($type='relation', $publish=1)
 	{
-		if($count == false)
+		if($type == 'relation')
 			return $this->hasMany(Kckrs::className(), ['publisher_id' => 'id'])
-			->alias('kckrs')
-			->andOnCondition([sprintf('%s.publish', 'kckrs') => $publish]);
+				->alias('kckrs')
+				->andOnCondition([sprintf('%s.publish', 'kckrs') => $publish]);
 
 		$model = Kckrs::find()
-			->where(['publisher_id' => $this->id]);
+			->alias('t')
+			->where(['t.publisher_id' => $this->id]);
 		if($publish == 0)
 			$model->unpublish();
 		elseif($publish == 1)
 			$model->published();
 		elseif($publish == 2)
 			$model->deleted();
-		$kckrs = $model->count();
+
+		if($type == 'count')
+			$kckrs = $model->count();
+		else {
+			$model->joinWith('medias medias');
+			if($type == 'media')
+				$kckrs = $model->count('medias.id');
+			else if($type == 'item')
+				$kckrs = $model->sum('medias.media_item');
+		}
 
 		return $kckrs ? $kckrs : 0;
 	}
@@ -153,13 +166,6 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		$this->templateColumns['publisher_area'] = [
-			'attribute' => 'publisher_area',
-			'value' => function($model, $key, $index, $column) {
-				return self::getPublisherArea($model->publisher_area);
-			},
-			'filter' => self::getPublisherArea(),
-		];
 		$this->templateColumns['publisher_name'] = [
 			'attribute' => 'publisher_name',
 			'value' => function($model, $key, $index, $column) {
@@ -177,6 +183,13 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'value' => function($model, $key, $index, $column) {
 				return $model->publisher_phone;
 			},
+		];
+		$this->templateColumns['publisher_area'] = [
+			'attribute' => 'publisher_area',
+			'value' => function($model, $key, $index, $column) {
+				return self::getPublisherArea($model->publisher_area);
+			},
+			'filter' => self::getPublisherArea(),
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -220,8 +233,28 @@ class KckrPublisher extends \app\components\ActiveRecord
 		$this->templateColumns['kckrs'] = [
 			'attribute' => 'kckrs',
 			'value' => function($model, $key, $index, $column) {
-				$kckrs = $model->getKckrs(true);
+				$kckrs = $model->getKckrs('count');
 				return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		$this->templateColumns['medias'] = [
+			'attribute' => 'medias',
+			'value' => function($model, $key, $index, $column) {
+				$medias = $model->getKckrs('media');
+				return Html::a($medias, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		$this->templateColumns['items'] = [
+			'attribute' => 'items',
+			'value' => function($model, $key, $index, $column) {
+				$items = $model->getKckrs('item');
+				return Html::a($items, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],

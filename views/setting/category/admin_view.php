@@ -47,7 +47,6 @@ $attributes = [
 	[
 		'attribute' => 'category_name_i',
 		'value' => $model->category_name_i,
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'category_desc_i',
@@ -57,18 +56,25 @@ $attributes = [
 	[
 		'attribute' => 'category_type',
 		'value' => KckrCategory::getCategoryType($model->category_type),
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'category_code',
 		'value' => $model->category_code ? $model->category_code : '-',
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'medias',
 		'value' => function ($model) {
-			$medias = $model->getMedias(true);
-			return Html::a($medias, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
+			$medias = $model->getMedias('count');
+			return Html::a($medias, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'items',
+		'value' => function ($model) {
+			$items = $model->getMedias('sum');
+			return Html::a($items, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

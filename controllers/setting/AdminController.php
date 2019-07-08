@@ -29,6 +29,7 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\kckr\models\KckrSetting;
 use ommu\kckr\models\search\KckrCategory as KckrCategorySearch;
+use ommu\kckr\models\search\KckrPic as KckrPicSearch;
 
 class AdminController extends Controller
 {
@@ -90,6 +91,19 @@ class AdminController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
+		$picSearchModel = new KckrPicSearch();
+		$picDataProvider = $picSearchModel->search(Yii::$app->request->queryParams);
+
+		$gridColumn = Yii::$app->request->get('GridColumn', null);
+		$cols = [];
+		if($gridColumn != null && count($gridColumn) > 0) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
+					$cols[] = $key;
+			}
+		}
+		$picColumns = $picSearchModel->getGridColumn($cols);
+
 		$this->view->title = Yii::t('app', 'KCKR Settings');
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -98,6 +112,9 @@ class AdminController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
+			'picSearchModel' => $picSearchModel,
+			'picDataProvider' => $picDataProvider,
+			'picColumns' => $picColumns,
 		]);
 	}
 

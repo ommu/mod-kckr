@@ -45,7 +45,7 @@ class KckrCategory extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['category_desc_i', 'category_code', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['category_desc_i', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $category_name_i;
 	public $category_desc_i;
@@ -94,21 +94,23 @@ class KckrCategory extends \app\components\ActiveRecord
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'category_name_i' => Yii::t('app', 'Category'),
 			'category_desc_i' => Yii::t('app', 'Description'),
-			'medias' => Yii::t('app', 'Medias'),
+			'medias' => Yii::t('app', 'Karya'),
+			'items' => Yii::t('app', 'Items'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 		];
 	}
 
 	/**
+	 * @param $type relation|count|sum
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getMedias($count=false, $publish=1)
+	public function getMedias($type='relation', $publish=1)
 	{
-		if($count == false)
+		if($type == 'relation')
 			return $this->hasMany(KckrMedia::className(), ['cat_id' => 'id'])
-			->alias('media')
-			->andOnCondition([sprintf('%s.publish', 'media') => $publish]);
+				->alias('medias')
+				->andOnCondition([sprintf('%s.publish', 'medias') => $publish]);
 
 		$model = KckrMedia::find()
 			->where(['cat_id' => $this->id]);
@@ -118,7 +120,11 @@ class KckrCategory extends \app\components\ActiveRecord
 			$model->published();
 		elseif($publish == 2)
 			$model->deleted();
-		$media = $model->count();
+
+		if($type == 'sum')
+			$media = $model->sum('media_item');
+		else
+			$media = $model->count();
 
 		return $media ? $media : 0;
 	}
@@ -191,18 +197,20 @@ class KckrCategory extends \app\components\ActiveRecord
 				return $model->category_desc_i;
 			},
 		];
+		$this->templateColumns['category_code'] = [
+			'attribute' => 'category_code',
+			'value' => function($model, $key, $index, $column) {
+				return $model->category_code;
+			},
+		];
 		$this->templateColumns['category_type'] = [
 			'attribute' => 'category_type',
 			'value' => function($model, $key, $index, $column) {
 				return self::getCategoryType($model->category_type);
 			},
 			'filter' => self::getCategoryType(),
-		];
-		$this->templateColumns['category_code'] = [
-			'attribute' => 'category_code',
-			'value' => function($model, $key, $index, $column) {
-				return $model->category_code;
-			},
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -246,8 +254,18 @@ class KckrCategory extends \app\components\ActiveRecord
 		$this->templateColumns['medias'] = [
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
-				$medias = $model->getMedias(true);
-				return Html::a($medias, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
+				$medias = $model->getMedias('count');
+				return Html::a($medias, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		$this->templateColumns['items'] = [
+			'attribute' => 'items',
+			'value' => function($model, $key, $index, $column) {
+				$items = $model->getMedias('sum');
+				return Html::a($items, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],

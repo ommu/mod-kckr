@@ -119,8 +119,17 @@ $attributes = [
 	[
 		'attribute' => 'medias',
 		'value' => function ($model) {
-			$medias = $model->getMedias(true);
+			$medias = $model->getMedias('count');
 			return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'items',
+		'value' => function ($model) {
+			$items = $model->getMedias('sum');
+			return Html::a($items, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

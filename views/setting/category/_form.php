@@ -35,18 +35,18 @@ use ommu\kckr\models\KckrCategory;
 
 <?php //echo $form->errorSummary($model);?>
 
+<?php $categoryType = KckrCategory::getCategoryType();
+echo $form->field($model, 'category_type')
+	->dropDownList($categoryType, ['prompt'=>''])
+	->label($model->getAttributeLabel('category_type')); ?>
+
 <?php echo $form->field($model, 'category_name_i')
 	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('category_name_i')); ?>
 
 <?php echo $form->field($model, 'category_desc_i')
-	->textarea(['rows'=>6, 'cols'=>50, 'maxlength'=>true])
+	->textarea(['rows'=>3, 'cols'=>50, 'maxlength'=>true])
 	->label($model->getAttributeLabel('category_desc_i')); ?>
-
-<?php $categoryType = KckrCategory::getCategoryType();
-echo $form->field($model, 'category_type')
-	->dropDownList($categoryType, ['prompt'=>''])
-	->label($model->getAttributeLabel('category_type')); ?>
 
 <?php echo $form->field($model, 'category_code')
 	->textInput(['maxlength'=>true])

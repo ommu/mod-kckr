@@ -21,13 +21,16 @@ use ommu\kckr\models\Kckrs as KckrsModel;
 
 class Kckrs extends KckrsModel
 {
+	public $document;
+	public $article;
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['id', 'publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id'], 'integer'],
+			[['id', 'publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id', 'document', 'article'], 'integer'],
 			[['letter_number', 'send_type', 'send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'photos', 'creation_date', 'modified_date', 'updated_date', 'picName', 'publisherName', 'thanksUserDisplayname', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
@@ -147,6 +150,23 @@ class Kckrs extends KckrsModel
 				$query->andFilterWhere(['IN', 't.publish', [0,1]]);
 			else
 				$query->andFilterWhere(['t.publish' => $this->publish]);
+		}
+
+		if(isset($params['document']) && $params['document'] != '') {
+			if($params['document'] == 1)
+				$query->andFilterWhere(['<>', 't.thanks_date', '1970-01-01']);
+			else if($params['document'] == 0)
+				$query->andFilterWhere(['t.thanks_date' => '1970-01-01']);
+		}
+
+		if(isset($params['article']) && $params['article'] != '') {
+			if($params['article'] == 1) {
+				$query->andFilterWhere(['is not', 't.article_id', null])
+					->andFilterWhere(['<>', 't.article_id', '0']);
+			} else if($params['article'] == 0) {
+				$query->andFilterWhere(['is', 't.article_id', null])
+					->andFilterWhere(['t.article_id' => '0']);
+			}
 		}
 
 		$query->andFilterWhere(['like', 't.letter_number', $this->letter_number])

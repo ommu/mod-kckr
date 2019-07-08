@@ -26,6 +26,13 @@ $this->params['breadcrumbs'][] = $this->title;
 	'columns' => $columns,
 ]); ?>
 
+<?php echo $this->renderWidget('/setting/pic/admin_manage', [
+	'contentMenu' => true,
+	'searchModel' => $picSearchModel,
+	'dataProvider' => $picDataProvider,
+	'columns' => $picColumns,
+]); ?>
+
 <?php echo $this->renderWidget(!$model->isNewRecord ? 'admin_view' : 'admin_update', [
 	'model'=>$model,
 ]); ?>

@@ -47,28 +47,42 @@ $attributes = [
 	[
 		'attribute' => 'publisher_area',
 		'value' => KckrPublisher::getPublisherArea($model->publisher_area),
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'publisher_name',
 		'value' => $model->publisher_name ? $model->publisher_name : '-',
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'publisher_address',
 		'value' => $model->publisher_address ? $model->publisher_address : '-',
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'publisher_phone',
 		'value' => $model->publisher_phone ? $model->publisher_phone : '-',
-		'visible' => !$small,
 	],
 	[
 		'attribute' => 'kckrs',
 		'value' => function ($model) {
-			$kckrs = $model->getKckrs(true);
+			$kckrs = $model->getKckrs('count');
 			return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'medias',
+		'value' => function ($model) {
+			$medias = $model->getKckrs('media');
+			return Html::a($medias, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'items',
+		'value' => function ($model) {
+			$items = $model->getKckrs('item');
+			return Html::a($items, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

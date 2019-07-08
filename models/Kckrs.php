@@ -32,6 +32,7 @@
  *
  * The followings are the available model relations:
  * @property KckrMedia[] $media
+ * @property Articles $article
  * @property KckrPic $pic
  * @property KckrPublisher $publisher
  * @property Users $thanksUser
@@ -55,7 +56,7 @@ class Kckrs extends \app\components\ActiveRecord
 	use \ommu\traits\UtilityTrait;
 	use \ommu\traits\FileTrait;
 
-	public $gridForbiddenColumn = ['article_id', 'pic_id', 'thanks_date', 'thanks_document', 'thanksUserDisplayname', 'photos', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['pic_id', 'thanks_date', 'thanks_document', 'thanksUserDisplayname', 'photos', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $old_photos;
 	public $picName;
@@ -63,6 +64,8 @@ class Kckrs extends \app\components\ActiveRecord
 	public $thanksUserDisplayname;
 	public $creationDisplayname;
 	public $modifiedDisplayname;
+
+	const SCENARIO_DOCUMENT = 'documentForm';
 
 	/**
 	 * @return string the associated database table name
@@ -78,15 +81,26 @@ class Kckrs extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['pic_id', 'publisher_id', 'letter_number', 'send_type', 'send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'thanks_user_id'], 'required'],
+			[['pic_id', 'publisher_id', 'letter_number', 'send_type', 'send_date', 'receipt_date'], 'required'],
+			[['thanks_date'], 'required', 'on' => self::SCENARIO_DOCUMENT],
 			[['publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id'], 'integer'],
 			[['send_type'], 'string'],
 			//[['thanks_document'], 'serialize'],
-			[['send_date', 'receipt_date', 'thanks_date', 'photos'], 'safe'],
+			[['send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'thanks_user_id', 'photos'], 'safe'],
 			[['letter_number'], 'string', 'max' => 64],
 			[['pic_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrPic::className(), 'targetAttribute' => ['pic_id' => 'id']],
 			[['publisher_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrPublisher::className(), 'targetAttribute' => ['publisher_id' => 'id']],
 		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function scenarios()
+	{
+		$scenarios = parent::scenarios();
+		$scenarios[self::SCENARIO_DOCUMENT] = ['thanks_date', 'thanks_document', 'thanks_user_id'];
+		return $scenarios;
 	}
 
 	/**
@@ -114,24 +128,28 @@ class Kckrs extends \app\components\ActiveRecord
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'old_photos' => Yii::t('app', 'Old Photos'),
-			'medias' => Yii::t('app', 'Medias'),
+			'medias' => Yii::t('app', 'Karya'),
+			'items' => Yii::t('app', 'Items'),
 			'picName' => Yii::t('app', 'Person In Charge'),
 			'publisherName' => Yii::t('app', 'Publisher'),
 			'thanksUserDisplayname' => Yii::t('app', 'Thanksuser'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
+			'article' => Yii::t('app', 'Article'),
+			'document' => Yii::t('app', 'Document'),
 		];
 	}
 
 	/**
+	 * @param $type relation|count|sum
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getMedias($count=false, $publish=1)
+	public function getMedias($type='relation', $publish=1)
 	{
-		if($count == false)
+		if($type == 'relation')
 			return $this->hasMany(KckrMedia::className(), ['kckr_id' => 'id'])
-			->alias('media')
-			->andOnCondition([sprintf('%s.publish', 'media') => $publish]);
+				->alias('medias')
+				->andOnCondition([sprintf('%s.publish', 'medias') => $publish]);
 
 		$model = KckrMedia::find()
 			->where(['kckr_id' => $this->id]);
@@ -141,7 +159,11 @@ class Kckrs extends \app\components\ActiveRecord
 			$model->published();
 		elseif($publish == 2)
 			$model->deleted();
-		$media = $model->count();
+
+		if($type == 'sum')
+			$media = $model->sum('media_item');
+		else
+			$media = $model->count();
 
 		return $media ? $media : 0;
 	}
@@ -218,12 +240,6 @@ class Kckrs extends \app\components\ActiveRecord
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		$this->templateColumns['article_id'] = [
-			'attribute' => 'article_id',
-			'value' => function($model, $key, $index, $column) {
-				return $model->article_id;
-			},
-		];
 		if(!Yii::$app->request->get('pic')) {
 			$this->templateColumns['pic_id'] = [
 				'attribute' => 'pic_id',
@@ -251,6 +267,7 @@ class Kckrs extends \app\components\ActiveRecord
 		];
 		$this->templateColumns['send_type'] = [
 			'attribute' => 'send_type',
+			'label' => Yii::t('app', 'Send'),
 			'value' => function($model, $key, $index, $column) {
 				return self::getSendType($model->send_type);
 			},
@@ -300,6 +317,46 @@ class Kckrs extends \app\components\ActiveRecord
 			},
 			'format' => 'html',
 		];
+		$this->templateColumns['medias'] = [
+			'attribute' => 'medias',
+			'value' => function($model, $key, $index, $column) {
+				$medias = $model->getMedias('count');
+				return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		$this->templateColumns['items'] = [
+			'attribute' => 'items',
+			'value' => function($model, $key, $index, $column) {
+				$items = $model->getMedias('sum');
+				return Html::a($items, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		$this->templateColumns['document'] = [
+			'attribute' => 'document',
+			'value' => function($model, $key, $index, $column) {
+				return Html::a($model->thanks_date ? '<span class="glyphicon glyphicon-ok"></span>' : Yii::t('app', 'Document'), ['print', 'id'=>$model->primaryKey], ['title'=>$model->thanks_date ? Yii::t('app', 'Update Document') : Yii::t('app', 'Create Document'), 'class'=>'modal-btn']);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		$this->templateColumns['article_id'] = [
+			'attribute' => 'article',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->article) ? 
+					Html::a('<span class="glyphicon glyphicon-ok"></span>', ['article', 'id'=>$model->primaryKey, 'aid'=>$model->article_id], ['title'=>Yii::t('app', 'Update Article')]) : 
+					Html::a(Yii::t('app', 'Article'), ['article', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Create Article')]);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
 			'value' => function($model, $key, $index, $column) {
@@ -338,16 +395,6 @@ class Kckrs extends \app\components\ActiveRecord
 				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
-		];
-		$this->templateColumns['medias'] = [
-			'attribute' => 'medias',
-			'value' => function($model, $key, $index, $column) {
-				$medias = $model->getMedias(true);
-				return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
-			},
-			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
 		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
@@ -487,7 +534,8 @@ class Kckrs extends \app\components\ActiveRecord
 			}
 			$this->send_date = Yii::$app->formatter->asDate($this->send_date, 'php:Y-m-d');
 			$this->receipt_date = Yii::$app->formatter->asDate($this->receipt_date, 'php:Y-m-d');
-			$this->thanks_date = Yii::$app->formatter->asDate($this->thanks_date, 'php:Y-m-d');
+			if($this->scenario == self::SCENARIO_DOCUMENT)
+				$this->thanks_date = Yii::$app->formatter->asDate($this->thanks_date, 'php:Y-m-d');
 			$this->thanks_document = serialize($this->thanks_document);
 		}
 		return true;

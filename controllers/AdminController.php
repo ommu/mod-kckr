@@ -15,6 +15,7 @@
  *	Delete
  *	RunAction
  *	Publish
+ *	Print
  *
  *	findModel
  *
@@ -89,7 +90,7 @@ class AdminController extends Controller
 		if(($publisher = Yii::$app->request->get('publisher')) != null)
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
 
-		$this->view->title = Yii::t('app', 'Kckrs');
+		$this->view->title = Yii::t('app', 'KCKR(s)');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
@@ -117,7 +118,7 @@ class AdminController extends Controller
 			// $model->load($postData);
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr success created.'));
+				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success created.'));
 				return $this->redirect(['view', 'id'=>$model->id]);
 
 			} else {
@@ -126,7 +127,7 @@ class AdminController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Create Kckr');
+		$this->view->title = Yii::t('app', 'Create KCKR');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_create', [
@@ -151,7 +152,7 @@ class AdminController extends Controller
 			// $model->load($postData);
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr success updated.'));
+				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success updated.'));
 				return $this->redirect(['update', 'id'=>$model->id]);
 
 			} else {
@@ -161,7 +162,7 @@ class AdminController extends Controller
 		}
 
 		$this->subMenu = $this->module->params['kckr_submenu'];
-		$this->view->title = Yii::t('app', 'Update Kckr: {pic-id}', ['pic-id' => $model->pic->pic_name]);
+		$this->view->title = Yii::t('app', 'Update KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_update', [
@@ -179,7 +180,7 @@ class AdminController extends Controller
 		$model = $this->findModel($id);
 
 		$this->subMenu = $this->module->params['kckr_submenu'];
-		$this->view->title = Yii::t('app', 'Detail Kckr: {pic-id}', ['pic-id' => $model->pic->pic_name]);
+		$this->view->title = Yii::t('app', 'Detail KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [
@@ -199,7 +200,7 @@ class AdminController extends Controller
 		$model->publish = 2;
 
 		if($model->save(false, ['publish','modified_id'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr success deleted.'));
+			Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success deleted.'));
 			return $this->redirect(['manage']);
 		}
 	}
@@ -217,7 +218,7 @@ class AdminController extends Controller
 		$model->publish = $replace;
 
 		if($model->save(false, ['publish','modified_id'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr success updated.'));
+			Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success updated.'));
 			return $this->redirect(['manage']);
 		}
 	}
@@ -235,5 +236,39 @@ class AdminController extends Controller
 			return $model;
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+	}
+
+	/**
+	 * Prints an existing Kckrs model.
+	 * If print is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionPrint($id)
+	{
+		$model = $this->findModel($id);
+
+		if(Yii::$app->request->isPost) {
+			$model->load(Yii::$app->request->post());
+			// $postData = Yii::$app->request->post();
+			// $model->load($postData);
+
+			if($model->save()) {
+				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success generated document.'));
+				return $this->redirect(['manage']);
+
+			} else {
+				if(Yii::$app->request->isAjax)
+					return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+			}
+		}
+
+		$this->subMenu = $this->module->params['kckr_submenu'];
+		$this->view->title = Yii::t('app', 'Print KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
+		$this->view->description = Yii::t('app', 'Are you sure you want to generated document print?');
+		$this->view->keywords = '';
+		return $this->oRender('admin_print', [
+			'model' => $model,
+		]);
 	}
 }
