@@ -67,7 +67,7 @@ $attributes = [
 		'attribute' => 'pic_signature',
 		'value' => function ($model) {
 			$uploadPath = KckrPic::getUploadPath(false);
-			return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['class'=>'mb-3']).$model->pic_signature : '-';
+			return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['alt'=>$model->pic_signature, 'class'=>'mb-3']).'<br/>'.$model->pic_signature : '-';
 		},
 		'format' => 'html',
 		'visible' => !$small,

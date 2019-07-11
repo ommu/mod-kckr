@@ -196,7 +196,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'pic_signature',
 			'value' => function($model, $key, $index, $column) {
 				$uploadPath = self::getUploadPath(false);
-				return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['alt' => $model->pic_signature]) : '-';
+				return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['alt'=>$model->pic_signature]) : '-';
 			},
 			'format' => 'html',
 		];
@@ -333,7 +333,7 @@ class KckrPic extends \app\components\ActiveRecord
 	 */
 	public static function getUploadPath($returnAlias=true) 
 	{
-		return ($returnAlias ? Yii::getAlias('@public/kckr') : 'kckr');
+		return ($returnAlias ? Yii::getAlias('@public/kckr/pic') : 'kckr/pic');
 	}
 
 	/**

@@ -17,16 +17,11 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
+use ommu\kckr\models\Kckrs;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Kckrs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->pic->pic_name, 'url' => ['view', 'id'=>$model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
-
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->id]), 'icon' => 'eye', 'htmlOptions' => ['class'=>'btn btn-success']],
-	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
-];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 ?>
 
 <div class="kckrs-update">
@@ -49,7 +44,20 @@ $this->params['menu']['content'] = [
 
 <?php //echo $form->errorSummary($model);?>
 
-<?php echo $this->description ? Html::tag('p', $this->description, ['class'=>'mb-4']) : '';?>
+<?php echo $this->description && !$model->thanks_date && Yii::$app->request->isAjax ? Html::tag('p', $this->description, ['class'=>'mb-4']) : '';?>
+
+<?php if($model->document) {
+	$thanksDocument = Kckrs::parseDocument($model->thanks_document);
+	echo $form->field($model, 'thanks_document', ['template' => '{label}{beginWrapper}'.$thanksDocument.'{endWrapper}'])
+		->textInput()
+		->label($model->getAttributeLabel('thanks_document')); ?>
+
+	<div class="ln_solid"></div>
+
+	<?php echo $form->field($model, 'regenerate')
+		->checkbox()
+		->label($model->getAttributeLabel('regenerate'));
+} ?>
 
 <?php echo $form->field($model, 'thanks_date')
 	->textInput(['type'=>'date'])
@@ -58,7 +66,7 @@ $this->params['menu']['content'] = [
 <div class="ln_solid"></div>
 
 <?php echo $form->field($model, 'submitButton')
-	->submitButton(); ?>
+	->submitButton(['button'=>Html::submitButton(Yii::t('app', 'Generate'), ['class' => 'btn btn-primary'])]); ?>
 
 <?php ActiveForm::end(); ?>
 

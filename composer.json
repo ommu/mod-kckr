@@ -36,6 +36,7 @@
 	"require": {
 		"php": "~7.0",
 		"yiisoft/yii2": "~2.0.13",
+		"spipu/html2pdf": "^5.1",
 		"ommu/article": "dev-master"
 	},
 	"autoload": {

@@ -53,7 +53,7 @@ use ommu\kckr\models\KckrPic;
 	->label($model->getAttributeLabel('pic_position')); ?>
 
 <?php $uploadPath = KckrPic::getUploadPath(false);
-$picSignature = !$model->isNewRecord && $model->old_pic_signature != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_pic_signature])), ['class'=>'mb-3']) : '';
+$picSignature = !$model->isNewRecord && $model->old_pic_signature != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_pic_signature])), ['alt'=>$model->old_pic_signature, 'class'=>'mb-3']) : '';
 echo $form->field($model, 'pic_signature', ['template' => '{label}{beginWrapper}<div>'.$picSignature.'</div>{input}{error}{hint}{endWrapper}'])
 	->fileInput()
 	->label($model->getAttributeLabel('pic_signature')); ?>

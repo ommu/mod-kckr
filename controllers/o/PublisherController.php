@@ -59,6 +59,23 @@ class PublisherController extends Controller
 	/**
 	 * {@inheritdoc}
 	 */
+	public function allowAction(): array {
+		return ['suggest'];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function actions()
+	{
+		return [
+			'suggest' => 'ommu\kckr\actions\PublisherSuggestAction',
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function actionIndex()
 	{
 		return $this->redirect(['manage']);

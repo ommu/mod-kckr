@@ -42,8 +42,26 @@ use yii\helpers\ArrayHelper;
 
 <?php //echo $form->errorSummary($model);?>
 
-<?php echo $form->field($model, 'publisher_id')
-	->textInput(['type'=>'number', 'min'=>'1'])
+<?php $publisherSuggestUrl = Url::to(['o/publisher/suggest']);
+$publisher = [];
+if($model->publisher_id && isset($model->publisher))
+	$publisher = [$model->publisher_id => $model->publisher->publisher_name];
+
+echo $form->field($model, 'publisher_id')
+	->widget(Selectize::className(), [
+		'options' => [
+			'placeholder' => Yii::t('app', 'Select a publisher...'),
+		],
+		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a publisher..')], $publisher),
+		'url' => $publisherSuggestUrl,
+		'queryParam' => 'term',
+		'pluginOptions' => [
+			'valueField' => 'id',
+			'labelField' => 'label',
+			'searchField' => ['label'],
+			'persist' => false,
+		],
+	])
 	->label($model->getAttributeLabel('publisher_id')); ?>
 
 <?php echo $form->field($model, 'letter_number')
@@ -77,7 +95,7 @@ use yii\helpers\ArrayHelper;
 	->label($model->getAttributeLabel('receipt_date')); ?>
 
 <?php $uploadPath = Kckrs::getUploadPath(false);
-$photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['class'=>'mb-3']) : '';
+$photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['alt'=>$model->old_photos, 'class'=>'mb-3']) : '';
 echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.$photo.'</div>{input}{error}{hint}{endWrapper}'])
 	->fileInput()
 	->label($model->getAttributeLabel('photos')); ?>

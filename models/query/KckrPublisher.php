@@ -50,6 +50,15 @@ class KckrPublisher extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
+	 */
+	public function suggest() 
+	{
+		return $this->select(['id', 'publisher_name'])
+			->published();
+	}
+
+	/**
+	 * {@inheritdoc}
 	 * @return \ommu\kckr\models\KckrPublisher[]|array
 	 */
 	public function all($db = null)

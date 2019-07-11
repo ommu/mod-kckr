@@ -64,6 +64,9 @@ class Kckrs extends \app\components\ActiveRecord
 	public $thanksUserDisplayname;
 	public $creationDisplayname;
 	public $modifiedDisplayname;
+	public $document;
+	public $article;
+	public $regenerate;
 
 	const SCENARIO_DOCUMENT = 'documentForm';
 
@@ -86,7 +89,7 @@ class Kckrs extends \app\components\ActiveRecord
 			[['publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id'], 'integer'],
 			[['send_type'], 'string'],
 			//[['thanks_document'], 'serialize'],
-			[['send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'thanks_user_id', 'photos'], 'safe'],
+			[['send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'thanks_user_id', 'photos', 'regenerate'], 'safe'],
 			[['letter_number'], 'string', 'max' => 64],
 			[['pic_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrPic::className(), 'targetAttribute' => ['pic_id' => 'id']],
 			[['publisher_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrPublisher::className(), 'targetAttribute' => ['publisher_id' => 'id']],
@@ -99,7 +102,7 @@ class Kckrs extends \app\components\ActiveRecord
 	public function scenarios()
 	{
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_DOCUMENT] = ['thanks_date', 'thanks_document', 'thanks_user_id'];
+		$scenarios[self::SCENARIO_DOCUMENT] = ['thanks_date', 'thanks_document', 'thanks_user_id', 'regenerate'];
 		return $scenarios;
 	}
 
@@ -132,11 +135,13 @@ class Kckrs extends \app\components\ActiveRecord
 			'items' => Yii::t('app', 'Items'),
 			'picName' => Yii::t('app', 'Person In Charge'),
 			'publisherName' => Yii::t('app', 'Publisher'),
-			'thanksUserDisplayname' => Yii::t('app', 'Thanksuser'),
+			'thanksUserDisplayname' => Yii::t('app', 'Thanks User'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 			'article' => Yii::t('app', 'Article'),
 			'document' => Yii::t('app', 'Document'),
+			'regenerate' => Yii::t('app', 'Regenerate Document'),
+			'documents' => Yii::t('app', 'Documents'),
 		];
 	}
 
@@ -287,18 +292,28 @@ class Kckrs extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'receipt_date'),
 		];
+		$this->templateColumns['photos'] = [
+			'attribute' => 'photos',
+			'value' => function($model, $key, $index, $column) {
+				$uploadPath = self::getUploadPath(false);
+				return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos]) : '-';
+			},
+			'format' => 'html',
+		];
+		$this->templateColumns['thanks_document'] = [
+			'attribute' => 'thanks_document',
+			'value' => function($model, $key, $index, $column) {
+				return Kckrs::parseDocument($model->thanks_document);
+			},
+			'filter' => false,
+			'format' => 'raw',
+		];
 		$this->templateColumns['thanks_date'] = [
 			'attribute' => 'thanks_date',
 			'value' => function($model, $key, $index, $column) {
 				return Yii::$app->formatter->asDate($model->thanks_date, 'medium');
 			},
 			'filter' => $this->filterDatepicker($this, 'thanks_date'),
-		];
-		$this->templateColumns['thanks_document'] = [
-			'attribute' => 'thanks_document',
-			'value' => function($model, $key, $index, $column) {
-				return serialize($model->thanks_document);
-			},
 		];
 		if(!Yii::$app->request->get('thanksUser')) {
 			$this->templateColumns['thanksUserDisplayname'] = [
@@ -309,14 +324,6 @@ class Kckrs extends \app\components\ActiveRecord
 				},
 			];
 		}
-		$this->templateColumns['photos'] = [
-			'attribute' => 'photos',
-			'value' => function($model, $key, $index, $column) {
-				$uploadPath = self::getUploadPath(false);
-				return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt' => $model->photos]) : '-';
-			},
-			'format' => 'html',
-		];
 		$this->templateColumns['medias'] = [
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
@@ -346,7 +353,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
-		$this->templateColumns['article_id'] = [
+		$this->templateColumns['article'] = [
 			'attribute' => 'article',
 			'value' => function($model, $key, $index, $column) {
 				return isset($model->article) ? 
@@ -454,6 +461,43 @@ class Kckrs extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * function parseDocument
+	 */
+	public static function parseDocument($documents, $sep='li')
+	{
+		if(!is_array($documents) || (is_array($documents) && empty($documents)))
+			return '-';
+
+		$items = self::getDocumentUrl($documents, true);
+
+		if($sep == 'li') {
+			return Html::ul($items, ['item' => function($item, $index) {
+				return Html::tag('li', $item);
+			}, 'class'=>'list-boxed']);
+		}
+
+		return implode($sep, $items);
+	}
+
+	/**
+	 * function getDocumentUrl
+	 */
+	public static function getDocumentUrl($documents, $hyperlink=false)
+	{
+		$uploadPath = self::getUploadPath(false);
+
+		$items = [];
+		foreach ($documents as $val) {
+			if($hyperlink)
+				$items[$val] = Html::a($val, join('/', ['@webpublic', $uploadPath, 'document', $val]), ['title'=>$val, 'target'=>'_blank']);
+			else
+				$items[$val] = Url::to(join('/', ['@webpublic', $uploadPath, 'document', $val]));
+		}
+
+		return $items;
+	}
+
+	/**
 	 * after find attributes
 	 */
 	public function afterFind()
@@ -474,6 +518,7 @@ class Kckrs extends \app\components\ActiveRecord
 		// $this->thanksUserDisplayname = isset($this->thanksUser) ? $this->thanksUser->displayname : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+		$this->document = $this->thanks_date ? 1 : 0;
 	}
 
 	/**

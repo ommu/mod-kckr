@@ -39,6 +39,9 @@ use yii\web\UploadedFile;
 
 class AdminController extends Controller
 {
+	use \ommu\kckr\components\traits\DocumentTrait;
+	use \ommu\traits\FileTrait;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -247,6 +250,13 @@ class AdminController extends Controller
 	public function actionPrint($id)
 	{
 		$model = $this->findModel($id);
+		$model->scenario = Kckrs::SCENARIO_DOCUMENT;
+
+		if(!$model->getErrors()) {
+			$thanksDocument = $model->thanks_document;
+			if(!is_array($thanksDocument))
+				$thanksDocument = [];
+		}
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -254,8 +264,59 @@ class AdminController extends Controller
 			// $model->load($postData);
 
 			if($model->save()) {
+				ini_set('max_execution_time', 0);
+				ob_start();
+
+				if(!$model->document || ($model->document && $model->regenerate)) {
+					$documents = [];
+
+					$kckrPath = Kckrs::getUploadPath();
+					$documentPath = join('/', [$kckrPath, 'document']);
+					$verwijderenPath = join('/', [$kckrPath, 'verwijderen']);
+					$this->createUploadDirectory($kckrPath, 'document');
+
+					$kckrAsset = \ommu\kckr\components\assets\KckrAsset::register($this->getView());
+
+					$templatePath = Yii::getAlias('@ommu/kckr/components/templates');
+					$letterTemplate = join('/', [$templatePath, 'document_letter.php']);
+
+					$letterName = join('-', [$model->id, $model->publisher->publisher_name, $model->receipt_date]); 
+					$fileName = $this->getPdf([
+						'model' => $model, 
+						'kckrAsset' => $kckrAsset,
+					], $letterTemplate, $documentPath, $letterName, false, false, 'P', 'Legal');
+					array_push($documents, $fileName);
+
+					$medias = $model->getMedias('count');
+					if($medias > 0) {
+						$attachmentTemplate = join('/', [$templatePath, 'document_attachment.php']);
+						$attachmentName = join('-', [$model->id, 'attachment', $model->publisher->publisher_name, $model->receipt_date]); 
+						$fileName = $this->getPdf([
+							'model' => $model, 
+							'medias' => $model->medias,
+							'kckrAsset' => $kckrAsset,
+						], $attachmentTemplate, $documentPath, $attachmentName, false, false, 'L', 'FOLIO');
+						array_push($documents, $fileName);
+					}
+
+					$model->thanks_document = $documents;
+					if($model->thanks_user_id == null)
+						$model->thanks_user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+
+					if($model->save()) {
+						if(!empty($thanksDocument)) {
+							foreach ($thanksDocument as $key => $val) {
+								if(file_exists(join('/', [$documentPath, $val])))
+									rename(join('/', [$documentPath, $val]), join('/', [$verwijderenPath, time().'-'.$model->id.'_change_'.$val]));
+							}
+						}
+					}
+				}
+
 				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success generated document.'));
 				return $this->redirect(['manage']);
+	
+				ob_end_flush();
 
 			} else {
 				if(Yii::$app->request->isAjax)

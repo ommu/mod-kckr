@@ -20,14 +20,7 @@ use ommu\kckr\models\Kckrs;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Kckrs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->pic->pic_name;
-
-if(!$small) {
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->id]), 'icon' => 'eye', 'htmlOptions' => ['class'=>'btn btn-success']],
-	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
-];
-} ?>
+?>
 
 <div class="kckrs-view">
 
@@ -93,27 +86,28 @@ $attributes = [
 		'value' => Yii::$app->formatter->asDate($model->receipt_date, 'medium'),
 	],
 	[
+		'attribute' => 'photos',
+		'value' => function ($model) {
+			$uploadPath = Kckrs::getUploadPath(false);
+			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos, 'class'=>'mb-3']).'<br/>'.$model->photos : '-';
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'thanks_document',
+		'value' => Kckrs::parseDocument($model->thanks_document),
+		'format' => 'raw',
+		'visible' => !$small,
+	],
+	[
 		'attribute' => 'thanks_date',
 		'value' => Yii::$app->formatter->asDate($model->thanks_date, 'medium'),
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'thanks_document',
-		'value' => serialize($model->thanks_document),
-		'visible' => !$small,
-	],
-	[
 		'attribute' => 'thanksUserDisplayname',
 		'value' => isset($model->thanksUser) ? $model->thanksUser->displayname : '-',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'photos',
-		'value' => function ($model) {
-			$uploadPath = Kckrs::getUploadPath(false);
-			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['class'=>'mb-3']).$model->photos : '-';
-		},
-		'format' => 'html',
 		'visible' => !$small,
 	],
 	[

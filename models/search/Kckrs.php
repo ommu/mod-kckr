@@ -21,9 +21,6 @@ use ommu\kckr\models\Kckrs as KckrsModel;
 
 class Kckrs extends KckrsModel
 {
-	public $document;
-	public $article;
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -154,9 +151,9 @@ class Kckrs extends KckrsModel
 
 		if(isset($params['document']) && $params['document'] != '') {
 			if($params['document'] == 1)
-				$query->andFilterWhere(['<>', 't.thanks_date', '1970-01-01']);
+				$query->andFilterWhere(['NOT IN', 't.thanks_date', ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']]);
 			else if($params['document'] == 0)
-				$query->andFilterWhere(['t.thanks_date' => '1970-01-01']);
+				$query->andFilterWhere(['IN', 't.thanks_date', ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']]);
 		}
 
 		if(isset($params['article']) && $params['article'] != '') {
