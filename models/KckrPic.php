@@ -328,15 +328,6 @@ class KckrPic extends \app\components\ActiveRecord
 	}
 
 	/**
-	 * @param returnAlias set true jika ingin kembaliannya path alias atau false jika ingin string
-	 * relative path. default true.
-	 */
-	public static function getUploadPath($returnAlias=true) 
-	{
-		return ($returnAlias ? Yii::getAlias('@public/kckr/pic') : 'kckr/pic');
-	}
-
-	/**
 	 * after find attributes
 	 */
 	public function afterFind()
@@ -386,13 +377,13 @@ class KckrPic extends \app\components\ActiveRecord
 	{
 		if(parent::beforeSave($insert)) {
 			if(!$insert) {
-				$uploadPath = self::getUploadPath();
-				$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
-				$this->createUploadDirectory(self::getUploadPath());
+				$uploadPath = join('/', [Kckrs::getUploadPath(), 'pic']);
+				$verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
+				$this->createUploadDirectory(Kckrs::getUploadPath(), 'pic');
 
 				// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
 				if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
-					$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
+					$fileName = join('-', [time(), UuidHelper::uuid(), 'pic', $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
 					if($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName]))) {
 						if($this->old_pic_signature != '' && file_exists(join('/', [$uploadPath, $this->old_pic_signature])))
 							rename(join('/', [$uploadPath, $this->old_pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_pic_signature]));
@@ -415,14 +406,14 @@ class KckrPic extends \app\components\ActiveRecord
 	{
 		parent::afterSave($insert, $changedAttributes);
 
-		$uploadPath = self::getUploadPath();
-		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
-		$this->createUploadDirectory(self::getUploadPath());
+		$uploadPath = join('/', [Kckrs::getUploadPath(), 'pic']);
+		$verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
+		$this->createUploadDirectory(Kckrs::getUploadPath(), 'pic');
 
 		if($insert) {
 			// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
 			if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
-				$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
+				$fileName = join('-', [time(), UuidHelper::uuid(), 'pic', $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
 				if($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName])))
 					self::updateAll(['pic_signature' => $fileName], ['id' => $this->id]);
 			}
@@ -437,8 +428,8 @@ class KckrPic extends \app\components\ActiveRecord
 	{
 		parent::afterDelete();
 
-		$uploadPath = self::getUploadPath();
-		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+		$uploadPath = join('/', [Kckrs::getUploadPath()]);
+		$verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
 
 		if($this->pic_signature != '' && file_exists(join('/', [$uploadPath, $this->pic_signature])))
 			rename(join('/', [$uploadPath, $this->pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_deleted_'.$this->pic_signature]));

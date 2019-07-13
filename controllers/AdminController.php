@@ -279,8 +279,7 @@ class AdminController extends Controller
 
 					$templatePath = Yii::getAlias('@ommu/kckr/components/templates');
 					$letterTemplate = join('/', [$templatePath, 'document_letter.php']);
-
-					$letterName = join('-', [$model->id, $model->publisher->publisher_name, $model->receipt_date]); 
+					$letterName = $model->id; 
 					$fileName = $this->getPdf([
 						'model' => $model, 
 						'kckrAsset' => $kckrAsset,
@@ -290,7 +289,7 @@ class AdminController extends Controller
 					$medias = $model->getMedias('count');
 					if($medias > 0) {
 						$attachmentTemplate = join('/', [$templatePath, 'document_attachment.php']);
-						$attachmentName = join('-', [$model->id, 'attachment', $model->publisher->publisher_name, $model->receipt_date]); 
+						$attachmentName = join('-', [$model->id, 'attachment']); 
 						$fileName = $this->getPdf([
 							'model' => $model, 
 							'medias' => $model->medias,
@@ -307,7 +306,7 @@ class AdminController extends Controller
 						if(!empty($thanksDocument)) {
 							foreach ($thanksDocument as $key => $val) {
 								if(file_exists(join('/', [$documentPath, $val])))
-									rename(join('/', [$documentPath, $val]), join('/', [$verwijderenPath, time().'-'.$model->id.'_change_'.$val]));
+									rename(join('/', [$documentPath, $val]), join('/', [$verwijderenPath, $model->id.'-'.time().'_change_'.$val]));
 							}
 						}
 					}

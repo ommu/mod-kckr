@@ -1,5 +1,5 @@
 <?php
-use ommu\kckr\models\KckrPic;
+use ommu\kckr\models\Kckrs;
 ?>
 
 <style type="text/css">
@@ -102,7 +102,7 @@ use ommu\kckr\models\KckrPic;
 				Yogyakarta, <?php echo Yii::$app->formatter->asDate($model->thanks_date, 'long');?><br/>
 				<?php echo $model->pic->pic_position?>
 				<?php if($model->pic->pic_signature != '') {
-					$images = join('/', [KckrPic::getUploadPath(), $model->pic->pic_signature]);?>
+					$images = join('/', [Kckrs::getUploadPath(), 'pic', $model->pic->pic_signature]);?>
 					<br/><br/>
 					<img src="<?php echo $images;?>" style="height: 100px;">
 					<br/><br/>

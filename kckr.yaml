@@ -12,9 +12,15 @@ kckr_submenu:
       id: $_GET*id
     select: action
   print:
-    label: Print
+    label: Print Document
     url:
       0: 'admin/print'
+      id: $_GET*id
+    select: action
+  article:
+    label: Article
+    url:
+      0: 'admin/article'
       id: $_GET*id
     select: action
   media:
