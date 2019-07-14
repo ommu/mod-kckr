@@ -17,13 +17,14 @@
 use yii\helpers\Html;
 use app\components\widgets\ActiveForm;
 use ommu\kckr\models\KckrSetting;
+use ommu\article\models\ArticleCategory;
 ?>
 
 <div class="kckr-setting-form">
 
 <?php $form = ActiveForm::begin([
 	'options' => ['class'=>'form-horizontal form-label-left'],
-	'enableClientValidation' => true,
+	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
 	'fieldConfig' => [
@@ -42,7 +43,7 @@ echo $form->field($model, 'license')
 	->label($model->getAttributeLabel('license'))
 	->hint(Yii::t('app', 'Enter the your license key that is provided to you when you purchased this plugin. If you do not know your license key, please contact support team.').'<br/>'.Yii::t('app', 'Format: XXXX-XXXX-XXXX-XXXX')); ?>
 
-<?php $permission = KckrSetting::getPermission();
+<?php $permission = $model::getPermission();
 echo $form->field($model, 'permission', ['template' => '{label}{beginWrapper}{hint}{input}{error}{endWrapper}'])
 	->radioList($permission)
 	->label($model->getAttributeLabel('permission'))
@@ -56,25 +57,57 @@ echo $form->field($model, 'permission', ['template' => '{label}{beginWrapper}{hi
 	->textarea(['rows'=>6, 'cols'=>50])
 	->label($model->getAttributeLabel('meta_keyword')); ?>
 
-<?php echo $form->field($model, 'photo_resize_size')
-	->textarea(['rows'=>6, 'cols'=>50])
-	->label($model->getAttributeLabel('photo_resize_size')); ?>
+<div class="ln_solid"></div>
 
-<?php echo $form->field($model, 'photo_view_size')
-	->textarea(['rows'=>6, 'cols'=>50])
+<?php $photoResize = $model::getPhotoResize();
+echo $form->field($model, 'photo_resize')
+	->radioList($photoResize)
+	->label($model->getAttributeLabel('photo_resize')); ?>
+
+<?php $photo_resize_size_height = $form->field($model, 'photo_resize_size[height]', ['template' => '{beginWrapper}{input}{endWrapper}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-5 col-xs-6'], 'options' => ['tag' => null]])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('height')])
+	->label($model->getAttributeLabel('photo_resize_size[height]')); ?>
+
+<?php echo $form->field($model, 'photo_resize_size[width]', ['template' => '{hint}{beginWrapper}{input}{endWrapper}'.$photo_resize_size_height.'{error}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-4 col-xs-6 col-sm-offset-3', 'error'=>'col-sm-9 col-xs-12 col-sm-offset-3', 'hint'=>'col-sm-9 col-xs-12 col-sm-offset-3']])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('width')])
+	->label($model->getAttributeLabel('photo_resize_size'))
+	->hint(Yii::t('app', 'If you have selected "Yes" above, please input the maximum dimensions for the project image. If your users upload a image that is larger than these dimensions, the server will attempt to scale them down automatically. This feature requires that your PHP server is compiled with support for the GD Libraries.')); ?>
+
+<?php $photo_view_size_small_height = $form->field($model, 'photo_view_size[small][height]', ['template' => '{beginWrapper}{input}{endWrapper}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-5 col-xs-6'], 'options' => ['tag' => null]])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('height')])
+	->label($model->getAttributeLabel('photo_view_size[small][height]')); ?>
+
+<?php echo $form->field($model, 'photo_view_size[small][width]', ['template' => '{label}<div class="h5 col-sm-9 col-xs-12">'.$model->getAttributeLabel('photo_view_size[small]').'</div>{beginWrapper}{input}{endWrapper}'.$photo_view_size_small_height.'{error}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-4 col-xs-6 col-sm-offset-3', 'error'=>'col-sm-9 col-xs-12 col-sm-offset-3']])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('width')])
 	->label($model->getAttributeLabel('photo_view_size')); ?>
 
+<?php $photo_view_size_medium_height = $form->field($model, 'photo_view_size[medium][height]', ['template' => '{beginWrapper}{input}{endWrapper}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-5 col-xs-6'], 'options' => ['tag' => null]])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('height')])
+	->label($model->getAttributeLabel('photo_view_size[medium][height]')); ?>
+
+<?php echo $form->field($model, 'photo_view_size[medium][width]', ['template' => '<div class="h5 col-sm-9 col-xs-12 col-sm-offset-3 mt-0">'.$model->getAttributeLabel('photo_view_size[medium]').'</div>{beginWrapper}{input}{endWrapper}'.$photo_view_size_medium_height.'{error}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-4 col-xs-6 col-sm-offset-3', 'error'=>'col-sm-9 col-xs-12 col-sm-offset-3']])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('width')])
+	->label($model->getAttributeLabel('photo_view_size[medium][width]')); ?>
+
+<?php $photo_view_size_large_height = $form->field($model, 'photo_view_size[large][height]', ['template' => '{beginWrapper}{input}{endWrapper}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-5 col-xs-6'], 'options' => ['tag' => null]])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('height')])
+	->label($model->getAttributeLabel('photo_view_size[large][height]')); ?>
+
+<?php echo $form->field($model, 'photo_view_size[large][width]', ['template' => '<div class="h5 col-sm-9 col-xs-12 col-sm-offset-3 mt-0">'.$model->getAttributeLabel('photo_view_size[large]').'</div>{beginWrapper}{input}{endWrapper}'.$photo_view_size_large_height.'{error}', 'horizontalCssClasses' => ['wrapper'=>'col-sm-4 col-xs-6 col-sm-offset-3', 'error'=>'col-sm-9 col-xs-12 col-sm-offset-3']])
+	->textInput(['type'=>'number', 'min'=>0, 'maxlength'=>'4', 'placeholder'=>$model->getAttributeLabel('width')])
+	->label($model->getAttributeLabel('photo_view_size[large][width]')); ?>
+
 <?php echo $form->field($model, 'photo_file_type')
-	->textarea(['rows'=>6, 'cols'=>50])
-	->label($model->getAttributeLabel('photo_file_type')); ?>
+	->textInput()
+	->label($model->getAttributeLabel('photo_file_type'))
+	->hint(Yii::t('app', 'pisahkan jenis file dengan koma (,). example: "jpg, png, bmp, jpeg"')); ?>
 
-<?php echo $form->field($model, 'article_cat_id')
-	->textInput(['type'=>'number', 'min'=>'1'])
+<div class="ln_solid"></div>
+
+<?php $category = ArticleCategory::getCategory();
+echo $form->field($model, 'article_cat_id')
+	->dropDownList($category, ['prompt'=>''])
 	->label($model->getAttributeLabel('article_cat_id')); ?>
-
-<?php echo $form->field($model, 'photo_resize')
-	->checkbox()
-	->label($model->getAttributeLabel('photo_resize')); ?>
 
 <div class="ln_solid"></div>
 

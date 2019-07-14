@@ -58,7 +58,7 @@ class AdminController extends Controller
 	{
 		$this->layout = 'admin_default';
 
-		$model = new KckrSetting();
+		$model = KckrSetting::findOne(1);
 		if ($model === null) 
 			$model = new KckrSetting(['id'=>1]);
 
@@ -126,7 +126,7 @@ class AdminController extends Controller
 	 */
 	public function actionUpdate()
 	{
-		$model = new KckrSetting();
+		$model = KckrSetting::findOne(1);
 		if ($model === null) 
 			$model = new KckrSetting(['id'=>1]);
 
@@ -160,13 +160,13 @@ class AdminController extends Controller
 	 * @param integer $id
 	 * @return mixed
 	 */
-	public function actionDelete($id)
+	public function actionDelete()
 	{
-		$model = $this->findModel($id);
+		$model = $this->findModel(1);
 		$model->delete();
 
 		Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR setting success deleted.'));
-		return $this->redirect(['index']);
+		return $this->redirect(Yii::$app->request->referrer ?: ['index']);
 	}
 
 	/**

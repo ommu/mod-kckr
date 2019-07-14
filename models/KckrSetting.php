@@ -25,6 +25,7 @@
  * @property integer $modified_id
  *
  * The followings are the available model relations:
+ * @property ArticleCategory $articleCategory
  * @property Users $modified
  *
  */
@@ -32,11 +33,14 @@
 namespace ommu\kckr\models;
 
 use Yii;
+use yii\helpers\Html;
 use ommu\users\models\Users;
+use ommu\article\models\ArticleCategory;
 
 class KckrSetting extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
+	use \ommu\traits\FileTrait;
 
 	public $gridForbiddenColumn = [];
 
@@ -56,9 +60,10 @@ class KckrSetting extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['license', 'permission', 'meta_description', 'meta_keyword', 'photo_resize', 'photo_resize_size', 'photo_view_size', 'photo_file_type', 'article_cat_id'], 'required'],
+			[['license', 'permission', 'meta_description', 'meta_keyword', 'photo_file_type', 'article_cat_id'], 'required'],
 			[['permission', 'photo_resize', 'article_cat_id', 'modified_id'], 'integer'],
 			[['meta_description', 'meta_keyword'], 'string'],
+			[['photo_resize', 'photo_resize_size', 'photo_view_size'], 'safe'],
 			//[['photo_resize_size', 'photo_view_size', 'photo_file_type'], 'serialize'],
 			[['license'], 'string', 'max' => 32],
 		];
@@ -78,12 +83,25 @@ class KckrSetting extends \app\components\ActiveRecord
 			'photo_resize' => Yii::t('app', 'Photo Resize'),
 			'photo_resize_size' => Yii::t('app', 'Photo Resize Size'),
 			'photo_view_size' => Yii::t('app', 'Photo View Size'),
+			'photo_view_size[small]' => Yii::t('app', 'Small'),
+			'photo_view_size[medium]' => Yii::t('app', 'Medium'),
+			'photo_view_size[large]' => Yii::t('app', 'Large'),
 			'photo_file_type' => Yii::t('app', 'Photo File Type'),
-			'article_cat_id' => Yii::t('app', 'Article Cat'),
+			'article_cat_id' => Yii::t('app', 'Article Category'),
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
+			'width' => Yii::t('app', 'Width'),
+			'height' => Yii::t('app', 'Height'),
 		];
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getArticleCategory()
+	{
+		return $this->hasOne(ArticleCategory::className(), ['id' => 'article_cat_id']);
 	}
 
 	/**
@@ -133,28 +151,37 @@ class KckrSetting extends \app\components\ActiveRecord
 				return $model->meta_keyword;
 			},
 		];
+		$this->templateColumns['photo_resize'] = [
+			'attribute' => 'photo_resize',
+			'value' => function($model, $key, $index, $column) {
+				return self::getPhotoResize($model->photo_resize);
+			},
+			'filter' => self::getPhotoResize(),
+			'contentOptions' => ['class'=>'center'],
+		];
 		$this->templateColumns['photo_resize_size'] = [
 			'attribute' => 'photo_resize_size',
 			'value' => function($model, $key, $index, $column) {
-				return serialize($model->photo_resize_size);
+				return self::getSize($model->photo_resize_size);
 			},
 		];
 		$this->templateColumns['photo_view_size'] = [
 			'attribute' => 'photo_view_size',
 			'value' => function($model, $key, $index, $column) {
-				return serialize($model->photo_view_size);
+				return self::parsePhotoViewSize($model->photo_view_size);
 			},
+			'format' => 'html',
 		];
 		$this->templateColumns['photo_file_type'] = [
 			'attribute' => 'photo_file_type',
 			'value' => function($model, $key, $index, $column) {
-				return serialize($model->photo_file_type);
+				return $model->photo_file_type;
 			},
 		];
 		$this->templateColumns['article_cat_id'] = [
 			'attribute' => 'article_cat_id',
 			'value' => function($model, $key, $index, $column) {
-				return $model->article_cat_id;
+				return isset($model->articleCategory) ? $model->articleCategory->name_i : '-';
 			},
 		];
 		$this->templateColumns['modified_date'] = [
@@ -173,14 +200,6 @@ class KckrSetting extends \app\components\ActiveRecord
 				},
 			];
 		}
-		$this->templateColumns['photo_resize'] = [
-			'attribute' => 'photo_resize',
-			'value' => function($model, $key, $index, $column) {
-				return $this->filterYesNo($model->photo_resize);
-			},
-			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
-		];
 	}
 
 	/**
@@ -218,6 +237,50 @@ class KckrSetting extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * function getPhotoResize
+	 */
+	public static function getPhotoResize($value=null)
+	{
+		$items = array(
+			1 => Yii::t('app', 'Yes, resize photo after upload.'),
+			0 => Yii::t('app', 'No, not resize photo after upload.'),
+		);
+
+		if($value !== null)
+			return $items[$value];
+		else
+			return $items;
+	}
+
+	/**
+	 * function getSize
+	 */
+	public function getSize($size)
+	{
+		if(empty($size))
+			return '-';
+
+		$width = $size['width'] ? $size['width'] : '~';
+		$height = $size['height'] ? $size['height'] : '~';
+		return $width.' x '.$height;
+	}
+
+	/**
+	 * function parsePhotoViewSize
+	 */
+	public function parsePhotoViewSize($view_size)
+	{
+		if(empty($view_size))
+			return '-';
+
+		$views = [];
+		foreach ($view_size as $key => $value) {
+			$views[] = ucfirst($key).": ".self::getSize($value);
+		}
+		return Html::ul($views, ['encode'=>false, 'class'=>'list-boxed']);
+	}
+
+	/**
 	 * after find attributes
 	 */
 	public function afterFind()
@@ -226,7 +289,9 @@ class KckrSetting extends \app\components\ActiveRecord
 
 		$this->photo_resize_size = unserialize($this->photo_resize_size);
 		$this->photo_view_size = unserialize($this->photo_view_size);
-		$this->photo_file_type = unserialize($this->photo_file_type);
+		$photo_file_type = unserialize($this->photo_file_type);
+		if(!empty($photo_file_type))
+			$this->photo_file_type = $this->formatFileType($photo_file_type, false);
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 	}
 
@@ -240,6 +305,12 @@ class KckrSetting extends \app\components\ActiveRecord
 				if($this->modified_id == null)
 					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 			}
+
+			if($this->photo_resize_size['width'] == '')
+				$this->addError('photo_resize_size', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photo_resize_size')]));
+
+			if($this->photo_view_size['small']['width'] == '' || $this->photo_view_size['medium']['width'] == '' || $this->photo_view_size['large']['width'] == '')
+				$this->addError('photo_view_size', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photo_view_size')]));
 		}
 		return true;
 	}
@@ -252,7 +323,7 @@ class KckrSetting extends \app\components\ActiveRecord
 		if(parent::beforeSave($insert)) {
 			$this->photo_resize_size = serialize($this->photo_resize_size);
 			$this->photo_view_size = serialize($this->photo_view_size);
-			$this->photo_file_type = serialize($this->photo_file_type);
+			$this->photo_file_type = serialize($this->formatFileType($this->photo_file_type));
 		}
 		return true;
 	}

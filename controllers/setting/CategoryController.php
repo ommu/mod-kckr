@@ -198,7 +198,7 @@ class CategoryController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr category success deleted.'));
-			return $this->redirect(['manage']);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
 	}
 
@@ -216,7 +216,7 @@ class CategoryController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr category success updated.'));
-			return $this->redirect(['manage']);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
 	}
 
