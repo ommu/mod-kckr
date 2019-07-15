@@ -16,7 +16,6 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\KckrPic;
 ?>
 
@@ -40,7 +39,7 @@ use ommu\kckr\models\KckrPic;
 
 		<?php echo $form->field($model, 'letter_number');?>
 
-		<?php $sendType = Kckrs::getSendType();
+		<?php $sendType = $model::getSendType();
 			echo $form->field($model, 'send_type')
 			->dropDownList($sendType, ['prompt'=>'']);?>
 

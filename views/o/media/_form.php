@@ -16,9 +16,9 @@
 
 use yii\helpers\Html;
 use app\components\widgets\ActiveForm;
-use ommu\kckr\models\KckrCategory;
 use ommu\selectize\Selectize;
 use yii\helpers\ArrayHelper;
+use ommu\kckr\models\KckrCategory;
 ?>
 
 <div class="kckr-media-form">

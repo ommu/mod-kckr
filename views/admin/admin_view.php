@@ -16,7 +16,6 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
-use ommu\kckr\models\Kckrs;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Kckrs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->pic->pic_name;
@@ -74,7 +73,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'send_type',
-		'value' => Kckrs::getSendType($model->send_type),
+		'value' => $model::getSendType($model->send_type),
 		'visible' => !$small,
 	],
 	[
@@ -88,7 +87,7 @@ $attributes = [
 	[
 		'attribute' => 'photos',
 		'value' => function ($model) {
-			$uploadPath = Kckrs::getUploadPath(false);
+			$uploadPath = $model::getUploadPath(false);
 			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos, 'class'=>'mb-3']).'<br/>'.$model->photos : '-';
 		},
 		'format' => 'html',
@@ -96,7 +95,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'thanks_document',
-		'value' => Kckrs::parseDocument($model->thanks_document),
+		'value' => $model::parseDocument($model->thanks_document),
 		'format' => 'raw',
 		'visible' => !$small,
 	],

@@ -250,7 +250,7 @@ class AdminController extends Controller
 	public function actionPrint($id)
 	{
 		$model = $this->findModel($id);
-		$model->scenario = Kckrs::SCENARIO_DOCUMENT;
+		$model->scenario = $model::SCENARIO_DOCUMENT;
 
 		if(!$model->getErrors()) {
 			$thanksDocument = $model->thanks_document;
@@ -270,7 +270,7 @@ class AdminController extends Controller
 				if(!$model->document || ($model->document && $model->regenerate)) {
 					$documents = [];
 
-					$kckrPath = Kckrs::getUploadPath();
+					$kckrPath = $model::getUploadPath();
 					$documentPath = join('/', [$kckrPath, 'document']);
 					$verwijderenPath = join('/', [$kckrPath, 'verwijderen']);
 					$this->createUploadDirectory($kckrPath, 'document');

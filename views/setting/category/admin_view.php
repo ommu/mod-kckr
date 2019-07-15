@@ -16,7 +16,6 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
-use ommu\kckr\models\KckrCategory;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Categories'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->title->message;
@@ -55,7 +54,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'category_type',
-		'value' => KckrCategory::getCategoryType($model->category_type),
+		'value' => $model::getCategoryType($model->category_type),
 	],
 	[
 		'attribute' => 'category_code',

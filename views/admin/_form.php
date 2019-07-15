@@ -17,7 +17,6 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
-use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\KckrPic;
 use ommu\selectize\Selectize;
 use yii\helpers\ArrayHelper;
@@ -82,7 +81,7 @@ echo $form->field($model, 'publisher_id')
 		'options' => [
 			'placeholder' => Yii::t('app', 'Select a send type..'),
 		],
-		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a send type..')], Kckrs::getSendType()),
+		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a send type..')], $model::getSendType()),
 	])
 	->label($model->getAttributeLabel('send_type')); ?>
 
@@ -94,7 +93,7 @@ echo $form->field($model, 'publisher_id')
 	->textInput(['type'=>'date'])
 	->label($model->getAttributeLabel('receipt_date')); ?>
 
-<?php $uploadPath = Kckrs::getUploadPath(false);
+<?php $uploadPath = $model::getUploadPath(false);
 $photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['alt'=>$model->old_photos, 'class'=>'mb-3']) : '';
 echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.$photo.'</div>{input}{error}{hint}{endWrapper}'])
 	->fileInput()

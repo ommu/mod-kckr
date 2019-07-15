@@ -16,7 +16,6 @@
 
 use yii\helpers\Html;
 use app\components\widgets\ActiveForm;
-use ommu\kckr\models\KckrCategory;
 ?>
 
 <div class="kckr-category-form">
@@ -35,7 +34,7 @@ use ommu\kckr\models\KckrCategory;
 
 <?php //echo $form->errorSummary($model);?>
 
-<?php $categoryType = KckrCategory::getCategoryType();
+<?php $categoryType = $model::getCategoryType();
 echo $form->field($model, 'category_type')
 	->dropDownList($categoryType, ['prompt'=>''])
 	->label($model->getAttributeLabel('category_type')); ?>

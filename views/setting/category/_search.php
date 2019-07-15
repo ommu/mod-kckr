@@ -33,7 +33,7 @@ use ommu\kckr\models\KckrCategory;
 
 		<?php echo $form->field($model, 'category_desc_i');?>
 
-		<?php $categoryType = KckrCategory::getCategoryType();
+		<?php $categoryType = $model::getCategoryType();
 			echo $form->field($model, 'category_type')
 			->dropDownList($categoryType, ['prompt'=>'']);?>
 

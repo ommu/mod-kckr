@@ -16,7 +16,6 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
-use ommu\kckr\models\KckrPublisher;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publishers'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->publisher_name;
@@ -46,7 +45,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'publisher_area',
-		'value' => KckrPublisher::getPublisherArea($model->publisher_area),
+		'value' => $model::getPublisherArea($model->publisher_area),
 	],
 	[
 		'attribute' => 'publisher_name',
