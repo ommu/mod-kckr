@@ -436,6 +436,22 @@ class Kckrs extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * function getSetting
+	 */
+	public function getSetting($field=[])
+	{
+		if(empty($field))
+			$field = ['photo_resize', 'photo_resize_size', 'photo_view_size', 'photo_file_type', 'article_cat_id'];
+
+		$setting = KckrSetting::find()
+			->select($field)
+			->where(['id' => 1])
+			->one();
+		
+		return $setting;
+	}
+
+	/**
 	 * function getSendType
 	 */
 	public static function getSendType($value=null)
@@ -526,14 +542,16 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
+		$setting = $this->getSetting(['photo_file_type']);
+
 		if(parent::beforeValidate()) {
 			// $this->photos = UploadedFile::getInstance($this, 'photos');
 			if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
-				$photoFileType = ['jpg', 'jpeg', 'png', 'bmp', 'gif'];
+				$photoFileType = $this->formatFileType($setting->photo_file_type);
 				if(!in_array(strtolower($this->photos->getExtension()), $photoFileType)) {
 					$this->addError('photos', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
 						'name'=>$this->photos->name,
-						'extensions'=>$this->formatFileType($photoFileType, false),
+						'extensions'=>$setting->photo_file_type,
 					]));
 				}
 			} /* else {
@@ -557,6 +575,8 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public function beforeSave($insert)
 	{
+		$setting = $this->getSetting(['photo_resize', 'photo_resize_size']);
+
 		if(parent::beforeSave($insert)) {
 			if(!$insert) {
 				$uploadPath = self::getUploadPath();
@@ -567,6 +587,9 @@ class Kckrs extends \app\components\ActiveRecord
 				if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
 					$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension()); 
 					if($this->photos->saveAs(join('/', [$uploadPath, $fileName]))) {
+						$photoResize = $setting->photo_resize_size;
+						if($setting->photo_resize)
+							$this->resizeImage(join('/', [$uploadPath, $fileName]), $photoResize['width'], $photoResize['height']);
 						if($this->old_photos != '' && file_exists(join('/', [$uploadPath, $this->old_photos])))
 							rename(join('/', [$uploadPath, $this->old_photos]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_photos]));
 						$this->photos = $fileName;
@@ -591,6 +614,8 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes)
 	{
+		$setting = $this->getSetting(['photo_resize', 'photo_resize_size']);
+
 		parent::afterSave($insert, $changedAttributes);
 
 		$uploadPath = self::getUploadPath();
@@ -601,8 +626,12 @@ class Kckrs extends \app\components\ActiveRecord
 			// $this->photos = UploadedFile::getInstance($this, 'photos');
 			if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
 				$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension()); 
-				if($this->photos->saveAs(join('/', [$uploadPath, $fileName])))
+				if($this->photos->saveAs(join('/', [$uploadPath, $fileName]))) {
+					$photoResize = $setting->photo_resize_size;
+					if($setting->photo_resize)
+						$this->resizeImage(join('/', [$uploadPath, $fileName]), $photoResize['width'], $photoResize['height']);
 					self::updateAll(['photos' => $fileName], ['id' => $this->id]);
+				}
 			}
 
 		}

@@ -16,7 +16,6 @@
 
 use yii\helpers\Html;
 use app\components\widgets\ActiveForm;
-use ommu\kckr\models\KckrSetting;
 use ommu\article\models\ArticleCategory;
 ?>
 
