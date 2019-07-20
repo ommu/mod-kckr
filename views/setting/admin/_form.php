@@ -99,7 +99,7 @@ echo $form->field($model, 'photo_resize')
 <?php echo $form->field($model, 'photo_file_type')
 	->textInput()
 	->label($model->getAttributeLabel('photo_file_type'))
-	->hint(Yii::t('app', 'pisahkan jenis file dengan koma (,). example: "jpg, png, bmp, jpeg"')); ?>
+	->hint(Yii::t('app', 'pisahkan jenis file dengan koma (,). example: "jpg, jpeg, bmp, gif, png"')); ?>
 
 <div class="ln_solid"></div>
 
