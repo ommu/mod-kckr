@@ -4,7 +4,7 @@
  *
  * Kckrs represents the model behind the search form about `ommu\kckr\models\Kckrs`.
  *
- * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @author Putra Sudaryanto <putra@ommu.co>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
  * @created date 4 July 2019, 21:56 WIB
