@@ -4,7 +4,7 @@
  *
  * Contains many function that most used :
  *
- * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @author Putra Sudaryanto <putra@ommu.co>
  * @contact (+62)856-299-4114
  * @created date 4 October 2016, 18:58 WIB
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
