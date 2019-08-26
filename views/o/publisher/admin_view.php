@@ -80,8 +80,7 @@ $attributes = [
 	[
 		'attribute' => 'items',
 		'value' => function ($model) {
-			$items = $model->getKckrs('item');
-			return Html::a($items, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
+			return $model->getKckrs('item');
 		},
 		'format' => 'html',
 		'visible' => !$small,

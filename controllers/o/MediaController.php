@@ -43,7 +43,7 @@ class MediaController extends Controller
 	public function init()
 	{
 		parent::init();
-		if(Yii::$app->request->get('id'))
+		if(Yii::$app->request->get('id') || Yii::$app->request->get('kckr'))
 			$this->subMenu = $this->module->params['kckr_submenu'];
 		if(Yii::$app->request->get('publisher'))
 			$this->subMenu = $this->module->params['publisher_submenu'];
@@ -99,8 +99,10 @@ class MediaController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
-		if(($kckr = Yii::$app->request->get('kckr')) != null || ($kckr = Yii::$app->request->get('id')) != null)
+		if(($kckr = Yii::$app->request->get('kckr')) != null || ($kckr = $id) != null) {
+			$this->subMenuParam = $kckr;
 			$kckr = \ommu\kckr\models\Kckrs::findOne($kckr);
+		}
 		if(($category = Yii::$app->request->get('category')) != null)
 			$category = \ommu\kckr\models\KckrCategory::findOne($category);
 		if($publisher != null) {

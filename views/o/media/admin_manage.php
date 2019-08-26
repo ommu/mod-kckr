@@ -21,7 +21,7 @@ use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = $this->title;
 
-if(($id = Yii::$app->request->get('id')) != null) {
+if(($id = Yii::$app->request->get('id')) != null || ($id = Yii::$app->request->get('kckr')) != null) {
 	$this->params['menu']['content'] = [
 		['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create', 'id'=>$id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
 	];

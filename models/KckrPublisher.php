@@ -253,8 +253,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 		$this->templateColumns['items'] = [
 			'attribute' => 'items',
 			'value' => function($model, $key, $index, $column) {
-				$items = $model->getKckrs('item');
-				return Html::a($items, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items]), 'data-pjax' => 0]);
+				return $model->getKckrs('item');
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
