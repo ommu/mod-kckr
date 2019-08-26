@@ -332,7 +332,7 @@ class AdminController extends Controller
 				}
 
 				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success generated document.'));
-				return $this->redirect(['manage']);
+				return $this->redirect(['print', 'id'=>$model->id]);
 	
 				ob_end_flush();
 
