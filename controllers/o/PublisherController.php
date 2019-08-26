@@ -40,6 +40,16 @@ class PublisherController extends Controller
 	/**
 	 * {@inheritdoc}
 	 */
+	public function init()
+	{
+		parent::init();
+		if(Yii::$app->request->get('id'))
+			$this->subMenu = $this->module->params['publisher_submenu'];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function behaviors()
 	{
 		return [
@@ -162,6 +172,8 @@ class PublisherController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher success updated.'));
+				if(!Yii::$app->request->isAjax)
+					return $this->redirect(['update', 'id'=>$model->id]);
 				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
 			} else {

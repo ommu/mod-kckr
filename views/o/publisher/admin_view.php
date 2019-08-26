@@ -72,7 +72,7 @@ $attributes = [
 		'attribute' => 'medias',
 		'value' => function ($model) {
 			$medias = $model->getKckrs('media');
-			return Html::a($medias, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+			return Html::a($medias, ['o/media/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

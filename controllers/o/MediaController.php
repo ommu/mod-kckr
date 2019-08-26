@@ -45,6 +45,8 @@ class MediaController extends Controller
 		parent::init();
 		if(Yii::$app->request->get('id'))
 			$this->subMenu = $this->module->params['kckr_submenu'];
+		if(Yii::$app->request->get('publisher'))
+			$this->subMenu = $this->module->params['publisher_submenu'];
 	}
 
 	/**
@@ -83,6 +85,8 @@ class MediaController extends Controller
 		$searchModel = new KckrMediaSearch();
 		if(($id = Yii::$app->request->get('id')) != null)
 			$searchModel = new KckrMediaSearch(['kckr_id'=>$id]);
+		if(($publisher = Yii::$app->request->get('publisher')) != null)
+			$searchModel = new KckrMediaSearch(['publisherId'=>$publisher]);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 		$gridColumn = Yii::$app->request->get('GridColumn', null);
@@ -99,8 +103,17 @@ class MediaController extends Controller
 			$kckr = \ommu\kckr\models\Kckrs::findOne($kckr);
 		if(($category = Yii::$app->request->get('category')) != null)
 			$category = \ommu\kckr\models\KckrCategory::findOne($category);
+		if($publisher != null) {
+			$this->subMenuParam = $publisher;
+			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
+		}
 
 		$this->view->title = Yii::t('app', 'Medias');
+		if($category)
+			$this->view->title = Yii::t('app', 'Medias: Category {category-name}', ['category-name'=>$category->category_name_i]);
+		if($publisher)
+			$this->view->title = Yii::t('app', 'Medias: Publisher {publisher-name}', ['publisher-name'=>$publisher->publisher_name]);
+
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
@@ -109,6 +122,7 @@ class MediaController extends Controller
 			'columns' => $columns,
 			'kckr' => $kckr,
 			'category' => $category,
+			'publisher' => $publisher,
 		]);
 	}
 
@@ -169,7 +183,9 @@ class MediaController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
-				return $this->redirect(['manage', 'id'=>$model->kckr_id]);
+				if(!Yii::$app->request->isAjax)
+					return $this->redirect(['update', 'id'=>$model->id]);
+				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'id'=>$model->kckr_id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)

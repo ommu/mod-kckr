@@ -247,7 +247,7 @@ class KckrPic extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['medias'] = [
 			'attribute' => 'medias',
@@ -257,7 +257,7 @@ class KckrPic extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
 			'attribute' => 'items',
@@ -267,7 +267,7 @@ class KckrPic extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['default'] = [
 			'attribute' => 'default',

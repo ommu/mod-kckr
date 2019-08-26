@@ -46,11 +46,12 @@ class KckrMedia extends \app\components\ActiveRecord
 
 	public $gridForbiddenColumn = ['media_desc', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
-	public $kckrPicId;
+	public $picId;
 	public $categoryName;
 	public $creationDisplayname;
 	public $modifiedDisplayname;
-	public $kckrPublisherName;
+	public $publisherName;
+	public $publisherId;
 
 	/**
 	 * @return string the associated database table name
@@ -95,11 +96,11 @@ class KckrMedia extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
-			'kckrPicId' => Yii::t('app', 'Person In Charge'),
+			'picId' => Yii::t('app', 'Person In Charge'),
 			'categoryName' => Yii::t('app', 'Category'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
-			'kckrPublisherName' => Yii::t('app', 'Publisher'),
+			'publisherName' => Yii::t('app', 'Publisher'),
 		];
 	}
 
@@ -160,22 +161,24 @@ class KckrMedia extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 		];
 		if(!Yii::$app->request->get('kckr') && !Yii::$app->request->get('id')) {
-			$this->templateColumns['kckrPicId'] = [
-				'attribute' => 'kckrPicId',
+			$this->templateColumns['picId'] = [
+				'attribute' => 'picId',
 				'label' => Yii::t('app', 'PIC'),
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
-					// return $model->kckrPicId;
+					// return $model->picId;
 				},
 				'filter' => KckrPic::getPic(),
 			];
-			$this->templateColumns['kckrPublisherName'] = [
-				'attribute' => 'kckrPublisherName',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
-					// return $model->kckrPublisherName;
-				},
-			];
+			if(!Yii::$app->request->get('publisher')) {
+				$this->templateColumns['publisherName'] = [
+					'attribute' => 'publisherName',
+					'value' => function($model, $key, $index, $column) {
+						return isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
+						// return $model->publisherName;
+					},
+				];
+			}
 		}
 		if(!Yii::$app->request->get('category')) {
 			$this->templateColumns['cat_id'] = [
@@ -303,11 +306,11 @@ class KckrMedia extends \app\components\ActiveRecord
 		if(in_array($this->media_publish_year, ['0000','1970','0002','-0001']))
 			$this->media_publish_year = '';
 
-		// $this->kckrPicId = isset($this->kckr) ? $this->kckr->pic->pic_name : '-';
+		// $this->picId = isset($this->kckr) ? $this->kckr->pic->pic_name : '-';
 		// $this->categoryName = isset($this->category) ? $this->category->title->message : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
-		// $this->kckrPublisherName = isset($this->kckr) ? $this->kckr->publisher->publisher_name : '-';
+		// $this->publisherName = isset($this->kckr) ? $this->kckr->publisher->publisher_name : '-';
 	}
 
 	/**
@@ -323,17 +326,6 @@ class KckrMedia extends \app\components\ActiveRecord
 				if($this->modified_id == null)
 					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 			}
-		}
-		return true;
-	}
-
-	/**
-	 * before save attributes
-	 */
-	public function beforeSave($insert)
-	{
-		if(parent::beforeSave($insert)) {
-			$this->media_publish_year = Yii::$app->formatter->asDate($this->media_publish_year, 'php:Y-m-d');
 		}
 		return true;
 	}

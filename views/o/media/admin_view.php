@@ -44,22 +44,22 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'kckrPicId',
+		'attribute' => 'picId',
 		'value' => function ($model) {
-			$kckrPicId = isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
-			if($kckrPicId != '-')
-				return Html::a($kckrPicId, ['setting/pic/view', 'id'=>$model->kckr->pic_id], ['title'=>$kckrPicId, 'class'=>'modal-btn']);
-			return $kckrPicId;
+			$picId = isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
+			if($picId != '-')
+				return Html::a($picId, ['setting/pic/view', 'id'=>$model->kckr->pic_id], ['title'=>$picId, 'class'=>'modal-btn']);
+			return $picId;
 		},
 		'format' => 'html',
 	],
 	[
-		'attribute' => 'kckrPublisherName',
+		'attribute' => 'publisherName',
 		'value' => function ($model) {
-			$kckrPublisherName = isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
-			if($kckrPublisherName != '-')
-				return Html::a($kckrPublisherName, ['o/publisher/view', 'id'=>$model->kckr->publisher_id], ['title'=>$kckrPublisherName, 'class'=>'modal-btn']);
-			return $kckrPublisherName;
+			$publisherName = isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
+			if($publisherName != '-')
+				return Html::a($publisherName, ['o/publisher/view', 'id'=>$model->kckr->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
+			return $publisherName;
 		},
 		'format' => 'html',
 	],

@@ -41,6 +41,9 @@ $this->params['menu']['option'] = [
 <?php if($category != null)
 	echo $this->render('/setting/category/admin_view', ['model'=>$category, 'small'=>true]); ?>
 
+<?php if($publisher != null)
+	echo $this->render('/o/publisher/admin_view', ['model'=>$publisher, 'small'=>true]); ?>
+
 <?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 
 <?php echo $this->render('_option_form', ['model'=>$searchModel, 'gridColumns'=>$searchModel->activeDefaultColumns($columns), 'route'=>$this->context->route]); ?>

@@ -259,7 +259,7 @@ class KckrCategory extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
 			'attribute' => 'items',
@@ -269,7 +269,7 @@ class KckrCategory extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [

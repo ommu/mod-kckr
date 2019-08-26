@@ -157,6 +157,8 @@ class PicController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Person in charge success updated.'));
+				if(!Yii::$app->request->isAjax)
+					return $this->redirect(['update', 'id'=>$model->id]);
 				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
 			} else {

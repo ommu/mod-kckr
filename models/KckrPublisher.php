@@ -60,10 +60,10 @@ class KckrPublisher extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['publisher_area', 'publisher_name', 'publisher_address'], 'required'],
+			[['publisher_name'], 'required'],
 			[['publish', 'publisher_area', 'creation_id', 'modified_id'], 'integer'],
 			[['publisher_name', 'publisher_address', 'publisher_phone'], 'string'],
-			[['publisher_phone'], 'safe'],
+			[['publisher_area', 'publisher_address', 'publisher_phone'], 'safe'],
 		];
 	}
 
@@ -238,17 +238,17 @@ class KckrPublisher extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['medias'] = [
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getKckrs('media');
-				return Html::a($medias, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax' => 0]);
+				return Html::a($medias, ['o/media/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
 			'attribute' => 'items',
@@ -258,7 +258,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [

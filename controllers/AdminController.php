@@ -45,6 +45,16 @@ class AdminController extends Controller
 	/**
 	 * {@inheritdoc}
 	 */
+	public function init()
+	{
+		parent::init();
+		if(Yii::$app->request->get('publisher'))
+			$this->subMenu = $this->module->params['publisher_submenu'];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function behaviors()
 	{
 		return [
@@ -90,8 +100,10 @@ class AdminController extends Controller
 
 		if(($pic = Yii::$app->request->get('pic')) != null)
 			$pic = \ommu\kckr\models\KckrPic::findOne($pic);
-		if(($publisher = Yii::$app->request->get('publisher')) != null)
+		if(($publisher = Yii::$app->request->get('publisher')) != null) {
+			$this->subMenuParam = $publisher;
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
+		}
 
 		$this->view->title = Yii::t('app', 'KCKR(s)');
 		$this->view->description = '';
@@ -113,6 +125,8 @@ class AdminController extends Controller
 	public function actionCreate()
 	{
 		$model = new Kckrs();
+		if(($publisher = Yii::$app->request->get('id')) != null)
+			$model = new Kckrs(['publisher_id'=>$publisher]);
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -132,6 +146,8 @@ class AdminController extends Controller
 		}
 
 		$this->view->title = Yii::t('app', 'Create KCKR');
+		if(isset($model->publisher))
+			$this->view->title = Yii::t('app', 'Create KCKR: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_create', [

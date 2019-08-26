@@ -21,8 +21,9 @@ use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = $this->title;
 
+if(($id = Yii::$app->request->get('publisher')) != null)
 $this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Add KCKR'), 'url' => Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn btn-success']],
+	['label' => Yii::t('app', 'Add KCKR'), 'url' => $id ? Url::to(['create', 'id'=>$id]) : Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn btn-success']],
 ];
 $this->params['menu']['option'] = [
 	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],

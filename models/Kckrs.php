@@ -332,7 +332,7 @@ class Kckrs extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
 			'attribute' => 'items',
@@ -342,7 +342,7 @@ class Kckrs extends \app\components\ActiveRecord
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['document'] = [
 			'attribute' => 'document',

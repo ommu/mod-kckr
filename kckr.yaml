@@ -38,6 +38,27 @@ kckr_submenu:
       data-confirm: Are you sure you want to delete this item?
       data-method: post
     select: action
+publisher_submenu:
+  publisher:
+    label: Publisher
+    url:
+      0: 'o/publisher/view'
+      id: $_GET*id
+    select: controller
+  kckr:
+    label: KCKR(s)
+    url:
+      0: 'admin/manage'
+      publisher: $_GET*id
+      publish: 1
+    select: controller
+  media:
+    label: Media(s)
+    url:
+      0: 'o/media/manage'
+      publisher: $_GET*id
+      publish: 1
+    select: controller
 setting_submenu:
   update:
     label: Settings

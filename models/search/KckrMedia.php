@@ -27,8 +27,8 @@ class KckrMedia extends KckrMediaModel
 	public function rules()
 	{
 		return [
-			[['id', 'publish', 'kckr_id', 'cat_id', 'media_item', 'creation_id', 'modified_id'], 'integer'],
-			[['media_title', 'media_desc', 'media_publish_year', 'media_author', 'creation_date', 'modified_date', 'updated_date', 'kckrPicId', 'categoryName', 'creationDisplayname', 'modifiedDisplayname', 'kckrPublisherName'], 'safe'],
+			[['id', 'publish', 'kckr_id', 'cat_id', 'media_item', 'creation_id', 'modified_id', 'publisherId'], 'integer'],
+			[['media_title', 'media_desc', 'media_publish_year', 'media_author', 'creation_date', 'modified_date', 'updated_date', 'picId', 'categoryName', 'creationDisplayname', 'modifiedDisplayname', 'publisherName'], 'safe'],
 		];
 	}
 
@@ -84,7 +84,7 @@ class KckrMedia extends KckrMediaModel
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
-		$attributes['kckrPicId'] = [
+		$attributes['picId'] = [
 			'asc' => ['pic.pic_name' => SORT_ASC],
 			'desc' => ['pic.pic_name' => SORT_DESC],
 		];
@@ -104,7 +104,7 @@ class KckrMedia extends KckrMediaModel
 			'asc' => ['modified.displayname' => SORT_ASC],
 			'desc' => ['modified.displayname' => SORT_DESC],
 		];
-		$attributes['kckrPublisherName'] = [
+		$attributes['publisherName'] = [
 			'asc' => ['publisher.publisher_name' => SORT_ASC],
 			'desc' => ['publisher.publisher_name' => SORT_DESC],
 		];
@@ -135,7 +135,8 @@ class KckrMedia extends KckrMediaModel
 			'cast(t.modified_date as date)' => $this->modified_date,
 			't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
 			'cast(t.updated_date as date)' => $this->updated_date,
-			'kckr.pic_id' => $this->kckrPicId,
+			'kckr.pic_id' => $this->picId,
+			'kckr.publisher_id' => $this->publisherId,
 		]);
 
 		if(isset($params['trash']))
@@ -156,7 +157,7 @@ class KckrMedia extends KckrMediaModel
 			->andFilterWhere(['like', 'category.message', $this->categoryName])
 			->andFilterWhere(['like', 'creation.displayname', $this->creationDisplayname])
 			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname])
-			->andFilterWhere(['like', 'publisher.publisher_name', $this->kckrPublisherName]);
+			->andFilterWhere(['like', 'publisher.publisher_name', $this->publisherName]);
 
 		return $dataProvider;
 	}
