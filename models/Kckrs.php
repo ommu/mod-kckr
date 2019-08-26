@@ -328,7 +328,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getMedias('count');
-				return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+				return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
@@ -338,7 +338,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'attribute' => 'items',
 			'value' => function($model, $key, $index, $column) {
 				$items = $model->getMedias('sum');
-				return Html::a($items, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
+				return Html::a($items, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],

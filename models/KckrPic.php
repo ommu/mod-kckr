@@ -243,7 +243,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'kckrs',
 			'value' => function($model, $key, $index, $column) {
 				$kckrs = $model->getKckrs('count');
-				return Html::a($kckrs, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs])]);
+				return Html::a($kckrs, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
@@ -253,7 +253,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getKckrs('media');
-				return Html::a($medias, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+				return Html::a($medias, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
@@ -263,7 +263,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'items',
 			'value' => function($model, $key, $index, $column) {
 				$items = $model->getKckrs('item');
-				return Html::a($items, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
+				return Html::a($items, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],

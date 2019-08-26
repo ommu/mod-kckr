@@ -216,7 +216,7 @@ class MediaController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success deleted.'));
-			return $this->redirect(['manage', 'id'=>$model->kckr_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'id'=>$model->kckr_id]);
 		}
 	}
 
@@ -234,7 +234,7 @@ class MediaController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
-			return $this->redirect(['manage', 'id'=>$model->kckr_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'id'=>$model->kckr_id]);
 		}
 	}
 
