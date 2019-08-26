@@ -27,7 +27,7 @@ kckr_submenu:
     label: Media(s)
     url:
       0: 'o/media/manage'
-      id: $_GET*id
+      kckr: $_GET*id
     select: controller
   delete:
     label: Delete

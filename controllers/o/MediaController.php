@@ -83,8 +83,8 @@ class MediaController extends Controller
 	public function actionManage()
 	{
 		$searchModel = new KckrMediaSearch();
-		if(($id = Yii::$app->request->get('id')) != null)
-			$searchModel = new KckrMediaSearch(['kckr_id'=>$id]);
+		if(($kckr = Yii::$app->request->get('kckr')) != null)
+			$searchModel = new KckrMediaSearch(['kckr_id'=>$kckr]);
 		if(($publisher = Yii::$app->request->get('publisher')) != null)
 			$searchModel = new KckrMediaSearch(['publisherId'=>$publisher]);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -99,7 +99,7 @@ class MediaController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
-		if(($kckr = Yii::$app->request->get('kckr')) != null || ($kckr = $id) != null) {
+		if(($kckr = Yii::$app->request->get('kckr')) != null) {
 			$this->subMenuParam = $kckr;
 			$kckr = \ommu\kckr\models\Kckrs::findOne($kckr);
 		}
@@ -149,7 +149,7 @@ class MediaController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success created.'));
-				return $this->redirect(['manage', 'id'=>$model->kckr_id]);
+				return $this->redirect(['manage', 'kckr'=>$model->kckr_id]);
 				//return $this->redirect(['view', 'id'=>$model->id]);
 
 			} else {
@@ -186,8 +186,8 @@ class MediaController extends Controller
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
 				if(!Yii::$app->request->isAjax)
-					return $this->redirect(['update', 'id'=>$model->id]);
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'id'=>$model->kckr_id]);
+					return $this->redirect(['update', 'kckr'=>$model->id]);
+				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -234,7 +234,7 @@ class MediaController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success deleted.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'id'=>$model->kckr_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
 		}
 	}
 
@@ -252,7 +252,7 @@ class MediaController extends Controller
 
 		if($model->save(false, ['publish','modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'id'=>$model->kckr_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
 		}
 	}
 
