@@ -39,6 +39,8 @@ use ommu\kckr\models\KckrCategory;
 
 		<?php echo $form->field($model, 'media_desc');?>
 
+		<?php echo $form->field($model, 'isbn');?>
+
 		<?php echo $form->field($model, 'media_publish_year');?>
 
 		<?php echo $form->field($model, 'media_author');?>

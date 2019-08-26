@@ -28,7 +28,7 @@ class KckrMedia extends KckrMediaModel
 	{
 		return [
 			[['id', 'publish', 'kckr_id', 'cat_id', 'media_item', 'creation_id', 'modified_id', 'publisherId'], 'integer'],
-			[['media_title', 'media_desc', 'media_publish_year', 'media_author', 'creation_date', 'modified_date', 'updated_date', 'picId', 'categoryName', 'creationDisplayname', 'modifiedDisplayname', 'publisherName'], 'safe'],
+			[['media_title', 'media_desc', 'isbn', 'media_publish_year', 'media_author', 'creation_date', 'modified_date', 'updated_date', 'picId', 'categoryName', 'creationDisplayname', 'modifiedDisplayname', 'publisherName'], 'safe'],
 		];
 	}
 
@@ -153,6 +153,7 @@ class KckrMedia extends KckrMediaModel
 
 		$query->andFilterWhere(['like', 't.media_title', $this->media_title])
 			->andFilterWhere(['like', 't.media_desc', $this->media_desc])
+			->andFilterWhere(['like', 't.isbn', $this->isbn])
 			->andFilterWhere(['like', 't.media_author', $this->media_author])
 			->andFilterWhere(['like', 'category.message', $this->categoryName])
 			->andFilterWhere(['like', 'creation.displayname', $this->creationDisplayname])

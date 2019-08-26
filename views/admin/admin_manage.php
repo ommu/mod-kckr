@@ -21,7 +21,7 @@ use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = $this->title;
 
-if(($id = Yii::$app->request->get('publisher')) != null)
+$id = Yii::$app->request->get('publisher');
 $this->params['menu']['content'] = [
 	['label' => Yii::t('app', 'Add KCKR'), 'url' => $id ? Url::to(['create', 'id'=>$id]) : Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn btn-success']],
 ];

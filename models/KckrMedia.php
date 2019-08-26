@@ -17,6 +17,7 @@
  * @property integer $cat_id
  * @property string $media_title
  * @property string $media_desc
+ * @property string $isbn
  * @property string $media_publish_year
  * @property string $media_author
  * @property integer $media_item
@@ -67,10 +68,11 @@ class KckrMedia extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['kckr_id', 'cat_id', 'media_title', 'media_item'], 'required'],
+			[['kckr_id', 'cat_id', 'media_title', 'isbn', 'media_item'], 'required'],
 			[['publish', 'kckr_id', 'cat_id', 'media_item', 'creation_id', 'modified_id'], 'integer'],
-			[['media_title', 'media_desc', 'media_author'], 'string'],
+			[['media_title', 'media_desc', 'isbn', 'media_author'], 'string'],
 			[['media_desc', 'media_publish_year', 'media_author'], 'safe'],
+			[['isbn'], 'string', 'max' => 32],
 			[['kckr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kckrs::className(), 'targetAttribute' => ['kckr_id' => 'id']],
 			[['cat_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrCategory::className(), 'targetAttribute' => ['cat_id' => 'id']],
 		];
@@ -88,6 +90,7 @@ class KckrMedia extends \app\components\ActiveRecord
 			'cat_id' => Yii::t('app', 'Category'),
 			'media_title' => Yii::t('app', 'Title'),
 			'media_desc' => Yii::t('app', 'Description'),
+			'isbn' => Yii::t('app', 'ISBN'),
 			'media_publish_year' => Yii::t('app', 'Publish Year'),
 			'media_author' => Yii::t('app', 'Author'),
 			'media_item' => Yii::t('app', 'Item'),
@@ -190,6 +193,12 @@ class KckrMedia extends \app\components\ActiveRecord
 				'filter' => KckrCategory::getCategory(),
 			];
 		}
+		$this->templateColumns['isbn'] = [
+			'attribute' => 'isbn',
+			'value' => function($model, $key, $index, $column) {
+				return $model->isbn;
+			},
+		];
 		$this->templateColumns['media_title'] = [
 			'attribute' => 'media_title',
 			'value' => function($model, $key, $index, $column) {

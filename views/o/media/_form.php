@@ -44,6 +44,10 @@ use ommu\kckr\models\KckrCategory;
 	])
 	->label($model->getAttributeLabel('cat_id')); ?>
 
+<?php echo $form->field($model, 'isbn')
+	->textInput(['maxlength'=>true])
+	->label($model->getAttributeLabel('isbn')); ?>
+
 <?php echo $form->field($model, 'media_title')
 	->textarea(['rows'=>2, 'cols'=>50])
 	->label($model->getAttributeLabel('media_title')); ?>
