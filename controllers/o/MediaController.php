@@ -83,8 +83,6 @@ class MediaController extends Controller
 	public function actionManage()
 	{
 		$searchModel = new KckrMediaSearch();
-		if(($kckr = Yii::$app->request->get('kckr')) != null)
-			$searchModel = new KckrMediaSearch(['kckr_id'=>$kckr]);
 		if(($publisher = Yii::$app->request->get('publisher')) != null)
 			$searchModel = new KckrMediaSearch(['publisherId'=>$publisher]);
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -186,7 +184,7 @@ class MediaController extends Controller
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
 				if(!Yii::$app->request->isAjax)
-					return $this->redirect(['update', 'kckr'=>$model->id]);
+					return $this->redirect(['update', 'id'=>$model->id]);
 				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
 
 			} else {
