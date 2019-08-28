@@ -137,6 +137,8 @@ class PublisherController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher success created.'));
+				if(!Yii::$app->request->isAjax)
+					return $this->redirect(['manage']);
 				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 				//return $this->redirect(['view', 'id'=>$model->id]);
 
