@@ -234,7 +234,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'attribute' => 'kckrs',
 			'value' => function($model, $key, $index, $column) {
 				$kckrs = $model->getKckrs('count');
-				return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs]), 'data-pjax' => 0]);
+				return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
@@ -244,7 +244,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getKckrs('media');
-				return Html::a($medias, ['o/media/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax' => 0]);
+				return Html::a($medias, ['o/media/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
