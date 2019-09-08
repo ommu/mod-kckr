@@ -157,7 +157,8 @@ class Kckrs extends \app\components\ActiveRecord
 				->andOnCondition([sprintf('%s.publish', 'medias') => $publish]);
 
 		$model = KckrMedia::find()
-			->where(['kckr_id' => $this->id]);
+			->alias('t')
+			->where(['t.kckr_id' => $this->id]);
 		if($publish == 0)
 			$model->unpublish();
 		elseif($publish == 1)

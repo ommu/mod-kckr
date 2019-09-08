@@ -113,7 +113,8 @@ class KckrCategory extends \app\components\ActiveRecord
 				->andOnCondition([sprintf('%s.publish', 'medias') => $publish]);
 
 		$model = KckrMedia::find()
-			->where(['cat_id' => $this->id]);
+			->alias('t')
+			->where(['t.cat_id' => $this->id]);
 		if($publish == 0)
 			$model->unpublish();
 		elseif($publish == 1)
