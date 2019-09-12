@@ -38,8 +38,9 @@ class PublisherSuggestAction extends \yii\base\Action
 		if($term == null) return [];
 
 		$model = KckrPublisher::find()
+			->alias('t')
 			->suggest()
-			->andWhere(['like', 'publisher_name', $term])
+			->andWhere(['like', 't.publisher_name', $term])
 			->limit(15)
 			->all();
 
