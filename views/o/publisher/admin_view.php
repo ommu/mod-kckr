@@ -59,6 +59,15 @@ $attributes = [
 		'value' => $model->publisher_phone ? $model->publisher_phone : '-',
 	],
 	[
+		'attribute' => 'obligations',
+		'value' => function ($model) {
+			$obligations = $model->getObligations('count');
+			return Html::a($obligations, ['o/obligation/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} obligations', ['count'=>$obligations])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
 		'attribute' => 'kckrs',
 		'value' => function ($model) {
 			$kckrs = $model->getKckrs('count');

@@ -45,17 +45,17 @@ publisher_submenu:
       0: 'o/publisher/view'
       id: $_GET*id
     select: controller
-  kckr:
-    label: KCKR(s)
-    url:
-      0: 'admin/manage'
-      publisher: $_GET*id
-      publish: 1
-    select: controller
   obligation:
     label: Obligation(s)
     url:
       0: 'o/obligation/manage'
+      publisher: $_GET*id
+      publish: 1
+    select: controller
+  kckr:
+    label: KCKR(s)
+    url:
+      0: 'admin/manage'
       publisher: $_GET*id
       publish: 1
     select: controller

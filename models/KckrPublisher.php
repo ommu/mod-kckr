@@ -24,6 +24,7 @@
  * @property string $updated_date
  *
  * The followings are the available model relations:
+ * @property KckrPublisherObligation[] $obligations
  * @property Kckrs[] $kckrs
  * @property Users $creation
  * @property Users $modified
@@ -84,6 +85,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
+			'obligations' => Yii::t('app', 'Obligations'),
 			'kckrs' => Yii::t('app', 'KCKR'),
 			'medias' => Yii::t('app', 'Karya'),
 			'items' => Yii::t('app', 'Items'),
@@ -124,6 +126,32 @@ class KckrPublisher extends \app\components\ActiveRecord
 		}
 
 		return $kckrs ? $kckrs : 0;
+	}
+
+	/**
+	 * @param $type relation|count
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getObligations($type='relation', $publish=1)
+	{
+		if($type == 'relation')
+			return $this->hasMany(KckrPublisherObligation::className(), ['publisher_id' => 'id'])
+				->alias('obligations')
+				->andOnCondition([sprintf('%s.publish', 'obligations') => $publish]);
+
+		$model = KckrPublisherObligation::find()
+			->alias('t')
+			->where(['t.publisher_id' => $this->id]);
+		if($publish == 0)
+			$model->unpublish();
+		elseif($publish == 1)
+			$model->published();
+		elseif($publish == 2)
+			$model->deleted();
+
+		$obligations = $model->count();
+
+		return $obligations ? $obligations : 0;
 	}
 
 	/**
@@ -229,6 +257,16 @@ class KckrPublisher extends \app\components\ActiveRecord
 				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
+		];
+		$this->templateColumns['obligations'] = [
+			'attribute' => 'obligations',
+			'value' => function($model, $key, $index, $column) {
+				$obligations = $model->getObligations('count');
+				return Html::a($obligations, ['o/obligation/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} obligations', ['count'=>$obligations]), 'data-pjax'=>0]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'raw',
 		];
 		$this->templateColumns['kckrs'] = [
 			'attribute' => 'kckrs',
