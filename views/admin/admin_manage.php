@@ -59,6 +59,8 @@ array_push($columnData, [
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {
+			if(($publisher = Yii::$app->request->get('publisher')) != null)
+				return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title'=>Yii::t('app', 'Detail Kckr'), 'class'=>'modal-btn']);
 			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title'=>Yii::t('app', 'Detail Kckr'), 'data-pjax'=>0]);
 		},
 		'update' => function ($url, $model, $key) {

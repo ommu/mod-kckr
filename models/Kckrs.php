@@ -246,27 +246,27 @@ class Kckrs extends \app\components\ActiveRecord
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		if(!Yii::$app->request->get('pic')) {
-			$this->templateColumns['pic_id'] = [
-				'attribute' => 'pic_id',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->pic) ? $model->pic->pic_name : '-';
-					// return $model->picName;
-				},
-				'filter' => KckrPic::getPic(),
-			];
-		}
-		if(!Yii::$app->request->get('publisher')) {
-			$this->templateColumns['publisherName'] = [
-				'attribute' => 'publisherName',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->publisher) ? $model->publisher->publisher_name : '-';
-					// return $model->publisherName;
-				},
-			];
-		}
+		$this->templateColumns['pic_id'] = [
+			'attribute' => 'pic_id',
+			'label' => Yii::t('app', 'PIC'),
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->pic) ? $model->pic->pic_name : '-';
+				// return $model->picName;
+			},
+			'filter' => KckrPic::getPic(),
+			'visible' => !Yii::$app->request->get('pic') ? true : false,
+		];
+		$this->templateColumns['publisherName'] = [
+			'attribute' => 'publisherName',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->publisher) ? $model->publisher->publisher_name : '-';
+				// return $model->publisherName;
+			},
+			'visible' => !Yii::$app->request->get('publisher') ? true : false,
+		];
 		$this->templateColumns['letter_number'] = [
 			'attribute' => 'letter_number',
+			'label' => Yii::t('app', 'Letter'),
 			'value' => function($model, $key, $index, $column) {
 				return $model->letter_number;
 			},

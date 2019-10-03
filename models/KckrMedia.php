@@ -45,7 +45,7 @@ class KckrMedia extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['media_desc', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['media_desc', 'creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'picId'];
 
 	public $picId;
 	public $categoryName;
@@ -68,10 +68,10 @@ class KckrMedia extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['kckr_id', 'cat_id', 'media_title', 'isbn', 'media_item'], 'required'],
+			[['kckr_id', 'cat_id', 'media_title', 'media_item'], 'required'],
 			[['publish', 'kckr_id', 'cat_id', 'media_item', 'creation_id', 'modified_id'], 'integer'],
-			[['media_title', 'media_desc', 'isbn', 'media_author'], 'string'],
-			[['media_desc', 'media_publish_year', 'media_author'], 'safe'],
+			[['media_title', 'media_desc', 'media_author'], 'string'],
+			[['media_desc', 'isbn', 'media_publish_year', 'media_author'], 'safe'],
 			[['isbn'], 'string', 'max' => 32],
 			[['kckr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kckrs::className(), 'targetAttribute' => ['kckr_id' => 'id']],
 			[['cat_id'], 'exist', 'skipOnError' => true, 'targetClass' => KckrCategory::className(), 'targetAttribute' => ['cat_id' => 'id']],
@@ -163,36 +163,33 @@ class KckrMedia extends \app\components\ActiveRecord
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		if(!Yii::$app->request->get('kckr') && !Yii::$app->request->get('id')) {
-			$this->templateColumns['picId'] = [
-				'attribute' => 'picId',
-				'label' => Yii::t('app', 'PIC'),
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
-					// return $model->picId;
-				},
-				'filter' => KckrPic::getPic(),
-			];
-			if(!Yii::$app->request->get('publisher')) {
-				$this->templateColumns['publisherName'] = [
-					'attribute' => 'publisherName',
-					'value' => function($model, $key, $index, $column) {
-						return isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
-						// return $model->publisherName;
-					},
-				];
-			}
-		}
-		if(!Yii::$app->request->get('category')) {
-			$this->templateColumns['cat_id'] = [
-				'attribute' => 'cat_id',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->category) ? $model->category->title->message : '-';
-					// return $model->categoryName;
-				},
-				'filter' => KckrCategory::getCategory(),
-			];
-		}
+		$this->templateColumns['publisherName'] = [
+			'attribute' => 'publisherName',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
+				// return $model->publisherName;
+			},
+			'visible' => !Yii::$app->request->get('kckr') && !Yii::$app->request->get('publisher') ? true : false,
+		];
+		$this->templateColumns['picId'] = [
+			'attribute' => 'picId',
+			'label' => Yii::t('app', 'PIC'),
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
+				// return $model->picId;
+			},
+			'filter' => KckrPic::getPic(),
+			'visible' => !Yii::$app->request->get('kckr') ? true : false,
+		];
+		$this->templateColumns['cat_id'] = [
+			'attribute' => 'cat_id',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->category) ? $model->category->title->message : '-';
+				// return $model->categoryName;
+			},
+			'filter' => KckrCategory::getCategory(),
+			'visible' => !Yii::$app->request->get('category') ? true : false,
+		];
 		$this->templateColumns['isbn'] = [
 			'attribute' => 'isbn',
 			'value' => function($model, $key, $index, $column) {

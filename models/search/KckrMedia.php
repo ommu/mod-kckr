@@ -148,9 +148,6 @@ class KckrMedia extends KckrMediaModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
-		if(isset($params['kckrPublisherId']) && $params['kckrPublisherId'])
-			$query->andFilterWhere(['kckr.publisher_id' => $params['kckrPublisherId']]);
-
 		$query->andFilterWhere(['like', 't.media_title', $this->media_title])
 			->andFilterWhere(['like', 't.media_desc', $this->media_desc])
 			->andFilterWhere(['like', 't.isbn', $this->isbn])
