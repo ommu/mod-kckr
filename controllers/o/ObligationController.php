@@ -1,10 +1,10 @@
 <?php
 /**
- * MediaController
- * @var $this ommu\kckr\controllers\o\MediaController
- * @var $model ommu\kckr\models\KckrMedia
+ * ObligationController
+ * @var $this ommu\kckr\controllers\o\ObligationController
+ * @var $model ommu\kckr\models\KckrPublisherObligation
  *
- * MediaController implements the CRUD actions for KckrMedia model.
+ * ObligationController implements the CRUD actions for KckrPublisherObligation model.
  * Reference start
  * TOC :
  *	Index
@@ -21,7 +21,7 @@
  * @author Putra Sudaryanto <putra@ommu.co>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
- * @created date 4 July 2019, 21:55 WIB
+ * @created date 3 October 2019, 21:39 WIB
  * @link https://bitbucket.org/ommu/kckr
  *
  */
@@ -32,10 +32,10 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use ommu\kckr\models\KckrMedia;
-use ommu\kckr\models\search\KckrMedia as KckrMediaSearch;
+use ommu\kckr\models\KckrPublisherObligation;
+use ommu\kckr\models\search\KckrPublisherObligation as KckrPublisherObligationSearch;
 
-class MediaController extends Controller
+class ObligationController extends Controller
 {
 	/**
 	 * {@inheritdoc}
@@ -43,9 +43,7 @@ class MediaController extends Controller
 	public function init()
 	{
 		parent::init();
-		if(Yii::$app->request->get('id') || Yii::$app->request->get('kckr'))
-			$this->subMenu = $this->module->params['kckr_submenu'];
-		if(Yii::$app->request->get('publisher'))
+		if(Yii::$app->request->get('id') || Yii::$app->request->get('publisher'))
 			$this->subMenu = $this->module->params['publisher_submenu'];
 	}
 
@@ -77,14 +75,12 @@ class MediaController extends Controller
 	}
 
 	/**
-	 * Lists all KckrMedia models.
+	 * Lists all KckrPublisherObligation models.
 	 * @return mixed
 	 */
 	public function actionManage()
 	{
-		$searchModel = new KckrMediaSearch();
-		if(($publisher = Yii::$app->request->get('publisher')) != null)
-			$searchModel = new KckrMediaSearch(['publisherId'=>$publisher]);
+		$searchModel = new KckrPublisherObligationSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 		$gridColumn = Yii::$app->request->get('GridColumn', null);
@@ -97,22 +93,18 @@ class MediaController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
-		if(($kckr = Yii::$app->request->get('kckr')) != null) {
-			$this->subMenuParam = $kckr;
-			$kckr = \ommu\kckr\models\Kckrs::findOne($kckr);
-		}
-		if(($category = Yii::$app->request->get('category')) != null)
-			$category = \ommu\kckr\models\KckrCategory::findOne($category);
-		if($publisher != null) {
+		if(($publisher = Yii::$app->request->get('publisher')) != null) {
 			$this->subMenuParam = $publisher;
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
 		}
+		if(($category = Yii::$app->request->get('category')) != null)
+			$category = \ommu\kckr\models\KckrCategory::findOne($category);
 
-		$this->view->title = Yii::t('app', 'Medias');
-		if($category)
-			$this->view->title = Yii::t('app', 'Medias: Category {category-name}', ['category-name'=>$category->category_name_i]);
+		$this->view->title = Yii::t('app', 'Obligations');
 		if($publisher)
-			$this->view->title = Yii::t('app', 'Medias: Publisher {publisher-name}', ['publisher-name'=>$publisher->publisher_name]);
+			$this->view->title = Yii::t('app', 'Obligations: Publisher {publisher-name}', ['publisher-name'=>$publisher->publisher_name]);
+		if($category)
+			$this->view->title = Yii::t('app', 'Obligations: Category {category-name}', ['category-name'=>$category->category_name_i]);
 
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -120,14 +112,13 @@ class MediaController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
-			'kckr' => $kckr,
-			'category' => $category,
 			'publisher' => $publisher,
+			'category' => $category,
 		]);
 	}
 
 	/**
-	 * Creates a new KckrMedia model.
+	 * Creates a new KckrPublisherObligation model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
@@ -136,8 +127,8 @@ class MediaController extends Controller
 		if(($id = Yii::$app->request->get('id')) == null)
 			throw new \yii\web\NotAcceptableHttpException(Yii::t('app', 'The requested page does not exist.'));
 
-		$model = new KckrMedia(['kckr_id'=>$id]);
-		$this->subMenuParam = $model->kckr_id;
+		$model = new KckrPublisherObligation(['publisher_id'=>$id]);
+		$this->subMenuParam = $model->publisher_id;
 
 		if(Yii::$app->request->isPost) {
 			$postData = Yii::$app->request->post();
@@ -145,10 +136,10 @@ class MediaController extends Controller
 			$model->media_publish_year = $postData['media_publish_year'] ? $postData['media_publish_year'] : '0000';
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success created.'));
+				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success created.'));
 				if(!Yii::$app->request->isAjax)
-					return $this->redirect(['manage', 'kckr'=>$model->kckr_id]);
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+					return $this->redirect(['manage', 'publisher'=>$model->publisher_id]);
+				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -156,7 +147,7 @@ class MediaController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Create Media');
+		$this->view->title = Yii::t('app', 'Create Obligation');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_create', [
@@ -165,7 +156,7 @@ class MediaController extends Controller
 	}
 
 	/**
-	 * Updates an existing KckrMedia model.
+	 * Updates an existing KckrPublisherObligation model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -173,7 +164,7 @@ class MediaController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
-		$this->subMenuParam = $model->kckr_id;
+		$this->subMenuParam = $model->publisher_id;
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -182,10 +173,10 @@ class MediaController extends Controller
 			// $model->order = $postData['order'] ? $postData['order'] : 0;
 
 			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
+				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success updated.'));
 				if(!Yii::$app->request->isAjax)
 					return $this->redirect(['update', 'id'=>$model->id]);
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -193,7 +184,7 @@ class MediaController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Update Media: {media-title}', ['media-title' => $model->media_title]);
+		$this->view->title = Yii::t('app', 'Update Obligation: {media-title}', ['media-title' => $model->media_title]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_update', [
@@ -202,16 +193,16 @@ class MediaController extends Controller
 	}
 
 	/**
-	 * Displays a single KckrMedia model.
+	 * Displays a single KckrPublisherObligation model.
 	 * @param integer $id
 	 * @return mixed
 	 */
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
-		$this->subMenuParam = $model->kckr_id;
+		$this->subMenuParam = $model->publisher_id;
 
-		$this->view->title = Yii::t('app', 'Detail Media: {media-title}', ['media-title' => $model->media_title]);
+		$this->view->title = Yii::t('app', 'Detail Obligation: {media-title}', ['media-title' => $model->media_title]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [
@@ -220,7 +211,7 @@ class MediaController extends Controller
 	}
 
 	/**
-	 * Deletes an existing KckrMedia model.
+	 * Deletes an existing KckrPublisherObligation model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -231,13 +222,13 @@ class MediaController extends Controller
 		$model->publish = 2;
 
 		if($model->save(false, ['publish','modified_id'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success deleted.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success deleted.'));
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
 		}
 	}
 
 	/**
-	 * actionPublish an existing KckrMedia model.
+	 * actionPublish an existing KckrPublisherObligation model.
 	 * If publish is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -249,21 +240,21 @@ class MediaController extends Controller
 		$model->publish = $replace;
 
 		if($model->save(false, ['publish','modified_id'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success updated.'));
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
 		}
 	}
 
 	/**
-	 * Finds the KckrMedia model based on its primary key value.
+	 * Finds the KckrPublisherObligation model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return KckrMedia the loaded model
+	 * @return KckrPublisherObligation the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if(($model = KckrMedia::findOne($id)) !== null)
+		if(($model = KckrPublisherObligation::findOne($id)) !== null)
 			return $model;
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));

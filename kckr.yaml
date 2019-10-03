@@ -52,6 +52,13 @@ publisher_submenu:
       publisher: $_GET*id
       publish: 1
     select: controller
+  obligation:
+    label: Obligation(s)
+    url:
+      0: 'o/obligation/manage'
+      publisher: $_GET*id
+      publish: 1
+    select: controller
   media:
     label: Media(s)
     url:
