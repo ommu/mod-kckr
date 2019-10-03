@@ -27,7 +27,7 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 	public function rules()
 	{
 		return [
-			[['id', 'publish', 'publisher_id', 'cat_id', 'creation_id', 'modified_id'], 'integer'],
+			[['id', 'publish', 'publisher_id', 'cat_id', 'creation_id', 'modified_id', 'handover'], 'integer'],
 			[['media_title', 'media_desc', 'isbn', 'media_publish_year', 'media_author', 'creation_date', 'modified_date', 'updated_date', 'publisherName', 'categoryName', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
@@ -69,6 +69,7 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 			'category.title category', 
 			'creation creation', 
 			'modified modified',
+			'handovers handovers',
 		])
 		->groupBy(['id']);
 
@@ -137,6 +138,13 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 				$query->andFilterWhere(['IN', 't.publish', [0,1]]);
 			else
 				$query->andFilterWhere(['t.publish' => $this->publish]);
+		}
+
+		if(isset($params['handover']) && $params['handover'] != '') {
+			if($this->handover == 1)
+				$query->andWhere(['is not', 'handovers.id', null]);
+			else if($this->handover == 0)
+				$query->andWhere(['is', 'handovers.id', null]);
 		}
 
 		$query->andFilterWhere(['like', 't.media_title', $this->media_title])

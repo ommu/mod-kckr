@@ -50,6 +50,7 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	public $categoryName;
 	public $creationDisplayname;
 	public $modifiedDisplayname;
+	public $handover;
 
 	/**
 	 * @return string the associated database table name
@@ -99,6 +100,7 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 			'categoryName' => Yii::t('app', 'Category'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
+			'handover' => Yii::t('app', 'Handover'),
 		];
 	}
 
@@ -132,6 +134,32 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	public function getModified()
 	{
 		return $this->hasOne(Users::className(), ['user_id' => 'modified_id']);
+	}
+
+	/**
+	 * @param $type relation|count
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getHandovers($type='relation', $publish=1)
+	{
+		if($type == 'relation')
+			return $this->hasMany(KckrMedia::className(), ['isbn' => 'isbn'])
+				->alias('handovers')
+				->andOnCondition([sprintf('%s.publish', 'handovers') => $publish]);
+
+		$model = KckrMedia::find()
+			->alias('t')
+			->where(['t.isbn' => $this->isbn]);
+		if($publish == 0)
+			$model->unpublish();
+		elseif($publish == 1)
+			$model->published();
+		elseif($publish == 2)
+			$model->deleted();
+			
+		$media = $model->count();
+
+		return $media ? $media : 0;
 	}
 
 	/**
@@ -246,6 +274,14 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
+		$this->templateColumns['handover'] = [
+			'attribute' => 'handover',
+			'value' => function($model, $key, $index, $column) {
+				return $this->filterYesNo($model->handover);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'center'],
+		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
 				'attribute' => 'publish',
@@ -294,6 +330,7 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 		// $this->categoryName = isset($this->category) ? $this->category->title->message : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+		$this->handover = $this->getHandovers('count') ? 1 : 0;
 	}
 
 	/**
