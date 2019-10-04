@@ -36,6 +36,7 @@ use ommu\kckr\models\KckrPublisherObligation;
 use ommu\kckr\models\search\KckrPublisherObligation as KckrPublisherObligationSearch;
 use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\KckrCategory;
+use ommu\kckr\models\KckrMedia;
 use yii\web\UploadedFile;
 use thamtech\uuid\helpers\UuidHelper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -305,6 +306,16 @@ class ObligationController extends Controller
 								$media_desc				= trim($value[3]);
 								$media_publish_year		= trim($value[4]);
 								$media_author			= trim($value[5]);
+
+								if($isbn != '') {
+									$media = KckrMedia::find()
+										->select(['id'])
+										->andWhere(['publish' => 1])
+										->andWhere(['isbn' => $isbn])
+										->one();
+									if($media)
+										continue;
+								}
 
 								$cat_id = 1;
 								if($category_code) {
