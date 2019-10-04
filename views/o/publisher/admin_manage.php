@@ -52,7 +52,7 @@ array_push($columnData, [
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title'=>Yii::t('app', 'Detail Publisher'), 'class'=>'modal-btn']);
+			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title'=>Yii::t('app', 'Detail Publisher'), 'data-pjax'=>0]);
 		},
 		'update' => function ($url, $model, $key) {
 			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title'=>Yii::t('app', 'Update Publisher'), 'class'=>'modal-btn']);

@@ -156,7 +156,9 @@ class MediaController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Create Media');
+		$this->view->title = Yii::t('app', 'Add Media');
+		if(isset($model->kckr))
+			$this->view->title = Yii::t('app', 'Add Media: Publisher {publisher-name}', ['publisher-name'=>$model->kckr->publisher->publisher_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_create', [

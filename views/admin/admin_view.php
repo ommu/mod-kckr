@@ -94,22 +94,6 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'thanks_document',
-		'value' => $model::parseDocument($model->thanks_document),
-		'format' => 'raw',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'thanks_date',
-		'value' => Yii::$app->formatter->asDate($model->thanks_date, 'medium'),
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'thanksUserDisplayname',
-		'value' => isset($model->thanksUser) ? $model->thanksUser->displayname : '-',
-		'visible' => !$small,
-	],
-	[
 		'attribute' => 'medias',
 		'value' => function ($model) {
 			$medias = $model->getMedias('count');
@@ -124,6 +108,22 @@ $attributes = [
 			return $model->getMedias('sum');
 		},
 		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'thanks_document',
+		'value' => $model::parseDocument($model->thanks_document),
+		'format' => 'raw',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'thanks_date',
+		'value' => Yii::$app->formatter->asDate($model->thanks_date, 'medium'),
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'thanksUserDisplayname',
+		'value' => isset($model->thanksUser) ? $model->thanksUser->displayname : '-',
 		'visible' => !$small,
 	],
 	[

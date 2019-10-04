@@ -24,6 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
 if($publisher != null) {
 	$this->params['menu']['content'] = [
 		['label' => Yii::t('app', 'Add Obligation'), 'url' => Url::to(['create', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
+		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
+		['label' => Yii::t('app', 'Export'), 'url' => Url::to(['export', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
 	];
 }
 $this->params['menu']['option'] = [

@@ -147,7 +147,9 @@ class ObligationController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Create Obligation');
+		$this->view->title = Yii::t('app', 'Add Obligation');
+		if(isset($model->publisher))
+			$this->view->title = Yii::t('app', 'Add Obligation: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_create', [

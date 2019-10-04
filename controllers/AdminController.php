@@ -344,7 +344,9 @@ class AdminController extends Controller
 
 		$this->subMenu = $this->module->params['kckr_submenu'];
 		$this->view->title = Yii::t('app', 'Print KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
-		$this->view->description = Yii::t('app', 'Are you sure you want to generated document print?');
+		$this->view->description = '';
+		if(Yii::$app->request->isAjax)
+			$this->view->description = Yii::t('app', 'Are you sure you want to generated document print?');
 		$this->view->keywords = '';
 		return $this->oRender('admin_print', [
 			'model' => $model,
