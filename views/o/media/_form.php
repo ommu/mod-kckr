@@ -35,6 +35,8 @@ use ommu\kckr\models\KckrCategory;
 	],
 ]); ?>
 
+<?php //echo $form->errorSummary($model);?>
+
 <?php echo $form->field($model, 'cat_id')
 	->widget(Selectize::className(), [
 		'options' => [

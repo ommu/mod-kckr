@@ -87,7 +87,7 @@ $attributes = [
 	[
 		'attribute' => 'photos',
 		'value' => function ($model) {
-			$uploadPath = $model::getUploadPath(false);
+			$uploadPath = join('/', [$model::getUploadPath(false), 'photo']);
 			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos, 'class'=>'mb-3']).'<br/>'.$model->photos : '-';
 		},
 		'format' => 'html',

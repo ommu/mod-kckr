@@ -296,7 +296,7 @@ class Kckrs extends \app\components\ActiveRecord
 		$this->templateColumns['photos'] = [
 			'attribute' => 'photos',
 			'value' => function($model, $key, $index, $column) {
-				$uploadPath = self::getUploadPath(false);
+				$uploadPath = join('/', [self::getUploadPath(false), 'photo']);
 				return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos]) : '-';
 			},
 			'format' => 'html',
@@ -502,14 +502,14 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public static function getDocumentUrl($documents, $hyperlink=false)
 	{
-		$uploadPath = self::getUploadPath(false);
+		$uploadPath = join('/', [self::getUploadPath(false), 'document']);
 
 		$items = [];
 		foreach ($documents as $val) {
 			if($hyperlink)
-				$items[$val] = Html::a($val, join('/', ['@webpublic', $uploadPath, 'document', $val]), ['title'=>$val, 'target'=>'_blank']);
+				$items[$val] = Html::a($val, join('/', ['@webpublic', $uploadPath, $val]), ['title'=>$val, 'target'=>'_blank']);
 			else
-				$items[$val] = Url::to(join('/', ['@webpublic', $uploadPath, 'document', $val]));
+				$items[$val] = Url::to(join('/', ['@webpublic', $uploadPath, $val]));
 		}
 
 		return $items;
@@ -581,9 +581,9 @@ class Kckrs extends \app\components\ActiveRecord
 
 		if(parent::beforeSave($insert)) {
 			if(!$insert) {
-				$uploadPath = self::getUploadPath();
+				$uploadPath = join('/', [self::getUploadPath(), 'photo']);
 				$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
-				$this->createUploadDirectory(self::getUploadPath());
+				$this->createUploadDirectory(self::getUploadPath(), 'photo');
 
 				// $this->photos = UploadedFile::getInstance($this, 'photos');
 				if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
@@ -620,9 +620,9 @@ class Kckrs extends \app\components\ActiveRecord
 
 		parent::afterSave($insert, $changedAttributes);
 
-		$uploadPath = self::getUploadPath();
+		$uploadPath = join('/', [self::getUploadPath(), 'photo']);
 		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
-		$this->createUploadDirectory(self::getUploadPath());
+		$this->createUploadDirectory(self::getUploadPath(), 'photo');
 
 		if($insert) {
 			// $this->photos = UploadedFile::getInstance($this, 'photos');
@@ -646,7 +646,7 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		parent::afterDelete();
 
-		$uploadPath = self::getUploadPath();
+		$uploadPath = join('/', [self::getUploadPath(), 'photo']);
 		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
 
 		if($this->photos != '' && file_exists(join('/', [$uploadPath, $this->photos])))

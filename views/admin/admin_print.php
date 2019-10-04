@@ -24,14 +24,10 @@ $this->params['breadcrumbs'][] = ['label' => $model->pic->pic_name, 'url' => ['v
 $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 ?>
 
-<div class="kckrs-update">
-<div class="kckrs-form">
+<div class="kckrs-print">
 
 <?php $form = ActiveForm::begin([
-	'options' => [
-		'class' => 'form-horizontal form-label-left',
-		'enctype' => 'multipart/form-data',
-	],
+	'options' => ['class'=>'form-horizontal form-label-left'],
 	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -70,5 +66,4 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 
 <?php ActiveForm::end(); ?>
 
-</div>
 </div>

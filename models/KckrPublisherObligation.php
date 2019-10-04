@@ -317,6 +317,22 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * function getSetting
+	 */
+	public function getSetting($field=[])
+	{
+		if(empty($field))
+			$field = ['import_file_type'];
+
+		$setting = KckrSetting::find()
+			->select($field)
+			->where(['id' => 1])
+			->one();
+		
+		return $setting;
+	}
+
+	/**
 	 * after find attributes
 	 */
 	public function afterFind()

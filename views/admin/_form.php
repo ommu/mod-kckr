@@ -93,11 +93,12 @@ echo $form->field($model, 'publisher_id')
 	->textInput(['type'=>'date'])
 	->label($model->getAttributeLabel('receipt_date')); ?>
 
-<?php $uploadPath = $model::getUploadPath(false);
+<?php $uploadPath = join('/', [$model::getUploadPath(false), 'photo']);
 $photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['alt'=>$model->old_photos, 'class'=>'mb-3']) : '';
 echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.$photo.'</div>{input}{error}{hint}{endWrapper}'])
 	->fileInput()
-	->label($model->getAttributeLabel('photos')); ?>
+	->label($model->getAttributeLabel('photos'))
+	->hint(Yii::t('app', 'extensions are allowed: {extensions}', ['extensions'=>$setting->photo_file_type])); ?>
 
 <?php if($model->isNewRecord && !$model->getErrors())
 	$model->publish = 1;

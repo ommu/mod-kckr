@@ -34,9 +34,17 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\kckr\models\KckrPublisherObligation;
 use ommu\kckr\models\search\KckrPublisherObligation as KckrPublisherObligationSearch;
+use ommu\kckr\models\Kckrs;
+use ommu\kckr\models\KckrCategory;
+use yii\web\UploadedFile;
+use thamtech\uuid\helpers\UuidHelper;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use yii\helpers\ArrayHelper;
 
 class ObligationController extends Controller
 {
+	use \ommu\traits\FileTrait;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -245,6 +253,114 @@ class ObligationController extends Controller
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success updated.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
 		}
+	}
+
+	/**
+	 * Creates a new KckrPublisherObligation model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionImport()
+	{
+		if(($id = Yii::$app->request->get('id')) == null)
+			throw new \yii\web\NotAcceptableHttpException(Yii::t('app', 'The requested page does not exist.'));
+
+		$model = new KckrPublisherObligation(['publisher_id'=>$id]);
+		$this->subMenuParam = $model->publisher_id;
+
+		$setting = $model->setting;
+		$category = KckrCategory::find()
+			->select(['id', 'category_code'])
+			->andWhere(['publish' => 1])
+			->all();
+		$category = ArrayHelper::map($category, 'id', 'category_code');
+		$category = array_flip($category);
+
+		if(Yii::$app->request->isPost) {
+			$kckrPath = Kckrs::getUploadPath();
+			$obligationImportPath = join('/', [$kckrPath, 'obligation_import']);
+			$verwijderenPath = join('/', [$kckrPath, 'verwijderen']);
+			$this->createUploadDirectory($kckrPath, 'obligation_import');
+
+			$errors = [];
+			$importFilename = UploadedFile::getInstanceByName('importFilename');
+			if($importFilename instanceof UploadedFile && !$importFilename->getHasError()) {
+				$importFileType = $this->formatFileType($setting->import_file_type);
+				if(in_array(strtolower($importFilename->getExtension()), $importFileType)) {
+					$fileName = join('-', [time(), UuidHelper::uuid()]);
+					$fileNameExtension = $fileName.'.'.strtolower($importFilename->getExtension()); 
+					if($importFilename->saveAs(join('/', [$obligationImportPath, $fileNameExtension]))) {
+						$spreadsheet = IOFactory::load(join('/', [$obligationImportPath, $fileNameExtension]));
+						$sheetData = $spreadsheet->getActiveSheet()->toArray();
+						echo '<pre>';
+						print_r($sheetData);
+
+						try {
+							foreach ($sheetData as $key => $value) {
+								if($key == 0)
+									continue;
+								$category_code			= trim($value[0]);
+								$isbn					= trim($value[1]);
+								$media_title			= trim($value[2]);
+								$media_desc				= trim($value[3]);
+								$media_publish_year		= trim($value[4]);
+								$media_author			= trim($value[5]);
+
+								$cat_id = 1;
+								if($category_code) {
+									if(ArrayHelper::keyExists($category_code, $category))
+										$cat_id = trim($category[$category_code]);
+								}
+
+								$model=new KckrPublisherObligation;
+								$model->publisher_id = $id;
+								$model->cat_id = $cat_id;
+								$model->isbn = $isbn;
+								$model->media_title = $media_title;
+								$model->media_desc = $media_desc;
+								$model->media_publish_year = $media_publish_year;
+								$model->media_author = $media_author;
+								if(!$model->save())
+									$errors['row#'.$key+1] = $model->getErrors();
+							}
+							Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success imported.'));
+						} catch (\Exception $e) {
+							throw $e;
+						} catch (\Throwable $e) {
+							throw $e;
+						}
+					}
+	
+				} else {
+					Yii::$app->session->setFlash('error', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
+						'name'=>$importFilename->name,
+						'extensions'=>$setting->import_file_type,
+					]));
+				}
+			} else
+				Yii::$app->session->setFlash('error', Yii::t('app', 'Import file cannot be blank.'));
+
+			if(!empty($errors)) {
+				$obligationImportErrorFile = join('/', [$obligationImportPath, $fileName.'.json']);
+				if(!file_exists($obligationImportErrorFile))
+					file_put_contents($obligationImportErrorFile, Json::encode($errors));
+			}
+
+			if(!Yii::$app->request->isAjax)
+				return $this->redirect(['import', 'id'=>$id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['import', 'id'=>$id]);
+		}
+
+		$this->view->title = Yii::t('app', 'Import Obligation');
+		if(isset($model->publisher))
+			$this->view->title = Yii::t('app', 'Import Obligation: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
+		$this->view->description = '';
+		if(Yii::$app->request->isAjax)
+			$this->view->description = Yii::t('app', 'Are you sure you want to import obligation data?');
+		$this->view->keywords = '';
+		return $this->oRender('admin_import', [
+			'model' => $model,
+		]);
 	}
 
 	/**

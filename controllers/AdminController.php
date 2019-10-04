@@ -128,6 +128,8 @@ class AdminController extends Controller
 		if(($publisher = Yii::$app->request->get('id')) != null)
 			$model = new Kckrs(['publisher_id'=>$publisher]);
 
+		$setting = $model->getSetting(['photo_file_type']);
+
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
 			$model->photos = UploadedFile::getInstance($model, 'photos');
@@ -152,6 +154,7 @@ class AdminController extends Controller
 		$this->view->keywords = '';
 		return $this->render('admin_create', [
 			'model' => $model,
+			'setting' => $setting,
 		]);
 	}
 
@@ -164,6 +167,8 @@ class AdminController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
+
+		$setting = $model->getSetting(['photo_file_type']);
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -188,6 +193,7 @@ class AdminController extends Controller
 		$this->view->keywords = '';
 		return $this->render('admin_update', [
 			'model' => $model,
+			'setting' => $setting,
 		]);
 	}
 

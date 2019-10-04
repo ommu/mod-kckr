@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
 <?php echo $this->render('_form', [
 	'model' => $model,
+	'setting' => $setting,
 ]); ?>
 
 </div>
