@@ -20,6 +20,7 @@
  * @property string $photo_resize_size
  * @property string $photo_view_size
  * @property string $photo_file_type
+ * @property string $import_file_type
  * @property integer $article_cat_id
  * @property string $modified_date
  * @property integer $modified_id
@@ -36,6 +37,7 @@ use Yii;
 use yii\helpers\Html;
 use ommu\users\models\Users;
 use ommu\article\models\ArticleCategory;
+use yii\helpers\Json;
 
 class KckrSetting extends \app\components\ActiveRecord
 {
@@ -60,11 +62,12 @@ class KckrSetting extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['license', 'permission', 'meta_description', 'meta_keyword', 'photo_file_type', 'article_cat_id'], 'required'],
+			[['license', 'permission', 'meta_description', 'meta_keyword', 'photo_file_type', 'import_file_type', 'article_cat_id'], 'required'],
 			[['permission', 'photo_resize', 'article_cat_id', 'modified_id'], 'integer'],
 			[['meta_description', 'meta_keyword'], 'string'],
 			[['photo_resize', 'photo_resize_size', 'photo_view_size'], 'safe'],
 			//[['photo_resize_size', 'photo_view_size', 'photo_file_type'], 'serialize'],
+			//[['import_file_type'], 'json'],
 			[['license'], 'string', 'max' => 32],
 		];
 	}
@@ -87,6 +90,7 @@ class KckrSetting extends \app\components\ActiveRecord
 			'photo_view_size[medium]' => Yii::t('app', 'Medium'),
 			'photo_view_size[large]' => Yii::t('app', 'Large'),
 			'photo_file_type' => Yii::t('app', 'Photo File Type'),
+			'import_file_type' => Yii::t('app', 'Import File Type'),
 			'article_cat_id' => Yii::t('app', 'Article Category'),
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
@@ -176,6 +180,12 @@ class KckrSetting extends \app\components\ActiveRecord
 			'attribute' => 'photo_file_type',
 			'value' => function($model, $key, $index, $column) {
 				return $model->photo_file_type;
+			},
+		];
+		$this->templateColumns['import_file_type'] = [
+			'attribute' => 'import_file_type',
+			'value' => function($model, $key, $index, $column) {
+				return $model->import_file_type;
 			},
 		];
 		$this->templateColumns['article_cat_id'] = [
@@ -294,6 +304,9 @@ class KckrSetting extends \app\components\ActiveRecord
 		$photo_file_type = unserialize($this->photo_file_type);
 		if(!empty($photo_file_type))
 			$this->photo_file_type = $this->formatFileType($photo_file_type, false);
+		$import_file_type = Json::decode($this->import_file_type);
+		if(!empty($import_file_type))
+			$this->import_file_type = $this->formatFileType($import_file_type, false);
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 	}
 
@@ -326,6 +339,7 @@ class KckrSetting extends \app\components\ActiveRecord
 			$this->photo_resize_size = serialize($this->photo_resize_size);
 			$this->photo_view_size = serialize($this->photo_view_size);
 			$this->photo_file_type = serialize($this->formatFileType($this->photo_file_type));
+			$this->import_file_type = Json::encode($this->formatFileType($this->import_file_type));
 		}
 		return true;
 	}

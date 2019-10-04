@@ -103,6 +103,13 @@ echo $form->field($model, 'photo_resize')
 
 <div class="ln_solid"></div>
 
+<?php echo $form->field($model, 'import_file_type')
+	->textInput()
+	->label($model->getAttributeLabel('import_file_type'))
+	->hint(Yii::t('app', 'pisahkan jenis file dengan koma (,). example: "xls, xlsx, ods, csv"')); ?>
+
+<div class="ln_solid"></div>
+
 <?php $category = ArticleCategory::getCategory();
 echo $form->field($model, 'article_cat_id')
 	->dropDownList($category, ['prompt'=>''])

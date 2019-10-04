@@ -76,6 +76,11 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
+		'attribute' => 'import_file_type',
+		'value' => $model->import_file_type,
+		'visible' => !$small,
+	],
+	[
 		'attribute' => 'article_cat_id',
 		'value' => isset($model->articleCategory) ? $model->articleCategory->name_i : '-',
 		'visible' => !$small,
