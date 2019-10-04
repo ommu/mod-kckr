@@ -15,6 +15,7 @@
  *	Delete
  *	RunAction
  *	Publish
+ *	Import
  *
  *	findModel
  *
@@ -34,13 +35,13 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\kckr\models\KckrPublisherObligation;
 use ommu\kckr\models\search\KckrPublisherObligation as KckrPublisherObligationSearch;
-use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\KckrCategory;
+use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\KckrMedia;
+use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 use thamtech\uuid\helpers\UuidHelper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use yii\helpers\ArrayHelper;
 
 class ObligationController extends Controller
 {
@@ -257,7 +258,7 @@ class ObligationController extends Controller
 	}
 
 	/**
-	 * Creates a new KckrPublisherObligation model.
+	 * Import a new KckrPublisherObligation model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
@@ -293,8 +294,6 @@ class ObligationController extends Controller
 					if($importFilename->saveAs(join('/', [$obligationImportPath, $fileNameExtension]))) {
 						$spreadsheet = IOFactory::load(join('/', [$obligationImportPath, $fileNameExtension]));
 						$sheetData = $spreadsheet->getActiveSheet()->toArray();
-						echo '<pre>';
-						print_r($sheetData);
 
 						try {
 							foreach ($sheetData as $key => $value) {

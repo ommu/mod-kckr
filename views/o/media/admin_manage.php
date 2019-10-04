@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 if(($id = Yii::$app->request->get('kckr')) != null) {
 	$this->params['menu']['content'] = [
 		['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create', 'id'=>$id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
+		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id'=>$id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
 	];
 }
 $this->params['menu']['option'] = [

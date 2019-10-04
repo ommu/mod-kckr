@@ -15,6 +15,7 @@
  *	Delete
  *	RunAction
  *	Publish
+ *	Import
  *
  *	findModel
  *
@@ -34,9 +35,17 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\kckr\models\KckrMedia;
 use ommu\kckr\models\search\KckrMedia as KckrMediaSearch;
+use ommu\kckr\models\KckrCategory;
+use ommu\kckr\models\Kckrs;
+use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
+use thamtech\uuid\helpers\UuidHelper;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class MediaController extends Controller
 {
+	use \ommu\traits\FileTrait;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -254,6 +263,114 @@ class MediaController extends Controller
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
 		}
+	}
+
+	/**
+	 * Import a new KckrMedia model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionImport()
+	{
+		if(($id = Yii::$app->request->get('id')) == null)
+			throw new \yii\web\NotAcceptableHttpException(Yii::t('app', 'The requested page does not exist.'));
+
+		$model = new KckrMedia(['kckr_id'=>$id]);
+		$this->subMenuParam = $model->kckr_id;
+
+		$setting = $model->setting;
+		$category = KckrCategory::find()
+			->select(['id', 'category_code'])
+			->andWhere(['publish' => 1])
+			->all();
+		$category = ArrayHelper::map($category, 'id', 'category_code');
+		$category = array_flip($category);
+
+		if(Yii::$app->request->isPost) {
+			$kckrPath = Kckrs::getUploadPath();
+			$mediaImportPath = join('/', [$kckrPath, 'media_import']);
+			$verwijderenPath = join('/', [$kckrPath, 'verwijderen']);
+			$this->createUploadDirectory($kckrPath, 'media_import');
+
+			$errors = [];
+			$importFilename = UploadedFile::getInstanceByName('importFilename');
+			if($importFilename instanceof UploadedFile && !$importFilename->getHasError()) {
+				$importFileType = $this->formatFileType($setting->import_file_type);
+				if(in_array(strtolower($importFilename->getExtension()), $importFileType)) {
+					$fileName = join('-', [time(), UuidHelper::uuid()]);
+					$fileNameExtension = $fileName.'.'.strtolower($importFilename->getExtension()); 
+					if($importFilename->saveAs(join('/', [$mediaImportPath, $fileNameExtension]))) {
+						$spreadsheet = IOFactory::load(join('/', [$mediaImportPath, $fileNameExtension]));
+						$sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+						try {
+							foreach ($sheetData as $key => $value) {
+								if($key == 0)
+									continue;
+								$category_code			= trim($value[0]);
+								$isbn					= trim($value[1]);
+								$media_title			= trim($value[2]);
+								$media_desc				= trim($value[3]);
+								$media_publish_year		= trim($value[4]);
+								$media_author			= trim($value[5]);
+								$media_item				= trim($value[6]);
+
+								$cat_id = 1;
+								if($category_code) {
+									if(ArrayHelper::keyExists($category_code, $category))
+										$cat_id = trim($category[$category_code]);
+								}
+
+								$model=new KckrMedia;
+								$model->kckr_id = $id;
+								$model->cat_id = $cat_id;
+								$model->isbn = $isbn;
+								$model->media_title = $media_title;
+								$model->media_desc = $media_desc;
+								$model->media_publish_year = $media_publish_year;
+								$model->media_author = $media_author;
+								$model->media_item = $media_item;
+								if(!$model->save())
+									$errors['row#'.$key+1] = $model->getErrors();
+							}
+							Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher media success imported.'));
+						} catch (\Exception $e) {
+							throw $e;
+						} catch (\Throwable $e) {
+							throw $e;
+						}
+					}
+	
+				} else {
+					Yii::$app->session->setFlash('error', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
+						'name'=>$importFilename->name,
+						'extensions'=>$setting->import_file_type,
+					]));
+				}
+			} else
+				Yii::$app->session->setFlash('error', Yii::t('app', 'Import file cannot be blank.'));
+
+			if(!empty($errors)) {
+				$mediaImportErrorFile = join('/', [$mediaImportPath, $fileName.'.json']);
+				if(!file_exists($mediaImportErrorFile))
+					file_put_contents($mediaImportErrorFile, Json::encode($errors));
+			}
+
+			if(!Yii::$app->request->isAjax)
+				return $this->redirect(['import', 'id'=>$id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['import', 'id'=>$id]);
+		}
+
+		$this->view->title = Yii::t('app', 'Import Media');
+		if(isset($model->kckr->publisher))
+			$this->view->title = Yii::t('app', 'Import Media: Publisher {publisher-name}', ['publisher-name'=>$model->kckr->publisher->publisher_name]);
+		$this->view->description = '';
+		if(Yii::$app->request->isAjax)
+			$this->view->description = Yii::t('app', 'Are you sure you want to import media data?');
+		$this->view->keywords = '';
+		return $this->oRender('admin_import', [
+			'model' => $model,
+		]);
 	}
 
 	/**
