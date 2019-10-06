@@ -47,16 +47,6 @@ $attributes = [
 		'format' => 'html',
 	],
 	[
-		'attribute' => 'picName',
-		'value' => function ($model) {
-			$picName = isset($model->pic) ? $model->pic->pic_name : '-';
-			if($picName != '-')
-				return Html::a($picName, ['setting/pic/view', 'id'=>$model->pic_id], ['title'=>$picName, 'class'=>'modal-btn']);
-			return $picName;
-		},
-		'format' => 'html',
-	],
-	[
 		'attribute' => 'publisherName',
 		'value' => function ($model) {
 			$publisherName = isset($model->publisher) ? $model->publisher->publisher_name : '-';
@@ -83,6 +73,16 @@ $attributes = [
 	[
 		'attribute' => 'receipt_date',
 		'value' => Yii::$app->formatter->asDate($model->receipt_date, 'medium'),
+	],
+	[
+		'attribute' => 'picName',
+		'value' => function ($model) {
+			$picName = isset($model->pic) ? $model->pic->pic_name : '-';
+			if($picName != '-')
+				return Html::a($picName, ['setting/pic/view', 'id'=>$model->pic_id], ['title'=>$picName, 'class'=>'modal-btn']);
+			return $picName;
+		},
+		'format' => 'html',
 	],
 	[
 		'attribute' => 'photos',

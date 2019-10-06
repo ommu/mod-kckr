@@ -118,6 +118,8 @@ class MediaController extends Controller
 		}
 
 		$this->view->title = Yii::t('app', 'Medias');
+		if($kckr)
+			$this->view->title = Yii::t('app', 'Medias: Publisher {publisher-name}', ['publisher-name'=>$kckr->publisher->publisher_name]);
 		if($category)
 			$this->view->title = Yii::t('app', 'Medias: Category {category-name}', ['category-name'=>$category->category_name_i]);
 		if($publisher)
