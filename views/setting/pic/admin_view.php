@@ -19,7 +19,7 @@ use yii\widgets\DetailView;
 use ommu\kckr\models\Kckrs;
 
 if(!$small) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Person In Charge'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->pic_name;

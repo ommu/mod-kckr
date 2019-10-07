@@ -18,7 +18,7 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 if(!$small) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->publisher_name;
 

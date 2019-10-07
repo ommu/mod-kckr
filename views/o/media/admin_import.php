@@ -18,7 +18,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
 $this->params['breadcrumbs'][] = ['label' => $model->kckr->publisher->publisher_name, 'url' => ['admin/view', 'id'=>$model->kckr_id]];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Media'), 'url' => ['manage', 'kckr'=>$model->kckr_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Import');

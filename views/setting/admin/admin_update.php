@@ -17,7 +17,7 @@
 use yii\helpers\Url;
 
 if($breadcrumb) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Settings');
 }
 

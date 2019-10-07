@@ -16,7 +16,7 @@
 
 use yii\helpers\Url;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->publisher_name, 'url' => ['view', 'id'=>$model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');

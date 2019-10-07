@@ -105,7 +105,7 @@ class AdminController extends Controller
 		}
 		$picColumns = $picSearchModel->getGridColumn($cols);
 
-		$this->view->title = Yii::t('app', 'KCKR Settings');
+		$this->view->title = Yii::t('app', 'Deposit Settings');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_index', [
@@ -148,7 +148,7 @@ class AdminController extends Controller
 		}
 
 		$this->subMenu = $this->module->params['setting_submenu'];
-		$this->view->title = Yii::t('app', 'KCKR Settings');
+		$this->view->title = Yii::t('app', 'Deposit Settings');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_update', [

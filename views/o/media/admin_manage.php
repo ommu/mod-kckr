@@ -19,7 +19,7 @@ use yii\helpers\Url;
 use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
 if($kckr != null) {
 	$this->params['breadcrumbs'][] = ['label' => $kckr->publisher->publisher_name, 'url' => ['admin/view', 'id'=>$kckr->id]];
 	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
