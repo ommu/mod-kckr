@@ -19,11 +19,22 @@ use yii\helpers\Url;
 use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
-$this->params['breadcrumbs'][] = $this->title;
+if($pic != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Person In Charge'), 'url' => ['setting/pic/index']];
+	$this->params['breadcrumbs'][] = ['label' => $pic->pic_name, 'url' => ['setting/pic/view', 'id'=>$pic->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'KCKR(s)');
+} else if($publisher != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
+	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id'=>$publisher->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'KCKR(s)');
+} else
+	$this->params['breadcrumbs'][] = $this->title;
 
-$id = Yii::$app->request->get('publisher');
 $this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Add KCKR'), 'url' => $id ? Url::to(['create', 'id'=>$id]) : Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn btn-success']],
+	['label' => Yii::t('app', 'Add KCKR'), 'url' => $publisher != null ? Url::to(['create', 'id'=>$publisher->id]) : Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn btn-success']],
 ];
 $this->params['menu']['option'] = [
 	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],

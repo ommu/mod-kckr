@@ -19,12 +19,31 @@ use yii\helpers\Url;
 use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+if($kckr != null) {
+	$this->params['breadcrumbs'][] = ['label' => $kckr->publisher->publisher_name, 'url' => ['admin/view', 'id'=>$kckr->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
+} else if($category != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Category'), 'url' => ['setting/category/index']];
+	$this->params['breadcrumbs'][] = ['label' => $category->title->message, 'url' => ['setting/category/view', 'id'=>$category->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
+} else if($publisher != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
+	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id'=>$publisher->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
+} else if($pic != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Person In Charge'), 'url' => ['setting/pic/index']];
+	$this->params['breadcrumbs'][] = ['label' => $pic->pic_name, 'url' => ['setting/pic/view', 'id'=>$pic->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
+} else
+	$this->params['breadcrumbs'][] = $this->title;
 
-if(($id = Yii::$app->request->get('kckr')) != null) {
+if($kckr != null) {
 	$this->params['menu']['content'] = [
-		['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create', 'id'=>$id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
-		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id'=>$id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
+		['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create', 'id'=>$kckr->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
+		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id'=>$kckr->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
 	];
 }
 $this->params['menu']['option'] = [
@@ -44,6 +63,9 @@ $this->params['menu']['option'] = [
 
 <?php if($publisher != null)
 	echo $this->render('/o/publisher/admin_view', ['model'=>$publisher, 'small'=>true]); ?>
+
+<?php if($pic != null)
+	echo $this->render('/setting/pic/admin_view', ['model'=>$pic, 'small'=>true]); ?>
 
 <?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 

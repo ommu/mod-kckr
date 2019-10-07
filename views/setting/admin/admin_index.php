@@ -16,7 +16,8 @@
 
 use yii\helpers\Url;
 
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Settings');
 ?>
 
 <?php echo $this->renderWidget('/setting/category/admin_manage', [
@@ -24,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	'searchModel' => $searchModel,
 	'dataProvider' => $dataProvider,
 	'columns' => $columns,
+	'breadcrumb' => false,
 ]); ?>
 
 <?php echo $this->renderWidget('/setting/pic/admin_manage', [
@@ -31,9 +33,11 @@ $this->params['breadcrumbs'][] = $this->title;
 	'searchModel' => $picSearchModel,
 	'dataProvider' => $picDataProvider,
 	'columns' => $picColumns,
+	'breadcrumb' => false,
 ]); ?>
 
 <?php echo $this->renderWidget(!$model->isNewRecord ? 'admin_view' : 'admin_update', [
 	'contentMenu' => true,
 	'model'=>$model,
+	'breadcrumb' => false,
 ]); ?>

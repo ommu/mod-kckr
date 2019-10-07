@@ -100,6 +100,7 @@ class PicController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
+			'breadcrumb' => true,
 		]);
 	}
 

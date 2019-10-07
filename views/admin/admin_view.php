@@ -17,9 +17,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Kckrs'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->pic->pic_name;
-?>
+if(!$small) {
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $model->publisher->publisher_name;
+} ?>
 
 <div class="kckrs-view">
 

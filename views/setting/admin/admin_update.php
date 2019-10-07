@@ -16,7 +16,10 @@
 
 use yii\helpers\Url;
 
-$this->params['breadcrumbs'][] = $this->title;
+if($breadcrumb) {
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Settings');
+}
 
 $this->params['menu']['content'] = [
 	['label' => Yii::t('app', 'Reset'), 'url' => Url::to(['delete']), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to reset this setting?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],

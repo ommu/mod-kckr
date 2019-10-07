@@ -19,8 +19,8 @@ use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
 use ommu\kckr\models\Kckrs;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Kckrs'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->pic->pic_name, 'url' => ['view', 'id'=>$model->id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['view', 'id'=>$model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 ?>
 

@@ -116,6 +116,8 @@ class MediaController extends Controller
 			$this->subMenuParam = $publisher;
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
 		}
+		if(($pic = Yii::$app->request->get('picId')) != null)
+			$pic = \ommu\kckr\models\KckrPic::findOne($pic);
 
 		$this->view->title = Yii::t('app', 'Medias');
 		if($kckr)
@@ -134,6 +136,7 @@ class MediaController extends Controller
 			'kckr' => $kckr,
 			'category' => $category,
 			'publisher' => $publisher,
+			'pic' => $pic,
 		]);
 	}
 

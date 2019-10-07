@@ -18,10 +18,12 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 use ommu\kckr\models\Kckrs;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Pics'), 'url' => ['index']];
+if(!$small) {
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Person In Charge'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->pic_name;
 
-if(!$small) {
 $this->params['menu']['content'] = [
 	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
 	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
@@ -84,7 +86,7 @@ $attributes = [
 		'attribute' => 'medias',
 		'value' => function ($model) {
 			$medias = $model->getKckrs('media');
-			return Html::a($medias, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
+			return Html::a($medias, ['o/media/manage', 'picId'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -93,7 +95,7 @@ $attributes = [
 		'attribute' => 'items',
 		'value' => function ($model) {
 			$items = $model->getKckrs('item');
-			return Html::a($items, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
+			return Html::a($items, ['o/media/manage', 'picId'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

@@ -19,7 +19,18 @@ use yii\helpers\Url;
 use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR'), 'url' => ['admin/index']];
+if($publisher != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
+	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id'=>$publisher->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
+} else if($category != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Category'), 'url' => ['setting/category/index']];
+	$this->params['breadcrumbs'][] = ['label' => $category->title->message, 'url' => ['setting/category/view', 'id'=>$category->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
+} else
+	$this->params['breadcrumbs'][] = $this->title;
 
 if($publisher != null) {
 	$this->params['menu']['content'] = [

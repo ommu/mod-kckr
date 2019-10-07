@@ -24,8 +24,8 @@
  * @property string $updated_date
  *
  * The followings are the available model relations:
- * @property KckrPublisherObligation[] $obligations
  * @property Kckrs[] $kckrs
+ * @property KckrPublisherObligation[] $obligations
  * @property Users $creation
  * @property Users $modified
  *
