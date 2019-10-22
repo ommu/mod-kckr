@@ -38,6 +38,6 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Settings');
 
 <?php echo $this->renderWidget(!$model->isNewRecord ? 'admin_view' : 'admin_update', [
 	'contentMenu' => true,
-	'model'=>$model,
+	'model' => $model,
 	'breadcrumb' => false,
 ]); ?>
