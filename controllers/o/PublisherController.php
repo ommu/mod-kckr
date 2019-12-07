@@ -29,9 +29,9 @@
 namespace ommu\kckr\controllers\o;
 
 use Yii;
-use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
+use yii\filters\VerbFilter;
 use ommu\kckr\models\KckrPublisher;
 use ommu\kckr\models\search\KckrPublisher as KckrPublisherSearch;
 

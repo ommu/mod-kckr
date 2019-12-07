@@ -29,9 +29,9 @@
 namespace ommu\kckr\controllers\setting;
 
 use Yii;
-use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
+use yii\filters\VerbFilter;
 use ommu\kckr\models\KckrPic;
 use ommu\kckr\models\search\KckrPic as KckrPicSearch;
 use yii\web\UploadedFile;
