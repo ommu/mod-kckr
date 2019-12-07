@@ -56,7 +56,7 @@ echo $form->field($model, 'permission', ['template' => '{label}{beginWrapper}{hi
 	->textarea(['rows'=>6, 'cols'=>50])
 	->label($model->getAttributeLabel('meta_keyword')); ?>
 
-<div class="ln_solid"></div>
+<hr/>
 
 <?php $photoResize = $model::getPhotoResize();
 echo $form->field($model, 'photo_resize')
@@ -101,21 +101,21 @@ echo $form->field($model, 'photo_resize')
 	->label($model->getAttributeLabel('photo_file_type'))
 	->hint(Yii::t('app', 'pisahkan jenis file dengan koma (,). example: "jpg, jpeg, bmp, gif, png"')); ?>
 
-<div class="ln_solid"></div>
+<hr/>
 
 <?php echo $form->field($model, 'import_file_type')
 	->textInput()
 	->label($model->getAttributeLabel('import_file_type'))
 	->hint(Yii::t('app', 'pisahkan jenis file dengan koma (,). example: "xls, xlsx, ods, csv"')); ?>
 
-<div class="ln_solid"></div>
+<hr/>
 
 <?php $category = ArticleCategory::getCategory();
 echo $form->field($model, 'article_cat_id')
 	->dropDownList($category, ['prompt'=>''])
 	->label($model->getAttributeLabel('article_cat_id')); ?>
 
-<div class="ln_solid"></div>
+<hr/>
 
 <?php echo $form->field($model, 'submitButton')
 	->submitButton(); ?>

@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 		->textInput()
 		->label($model->getAttributeLabel('thanks_document')); ?>
 
-	<div class="ln_solid"></div>
+	<hr/>
 
 	<?php echo $form->field($model, 'regenerate')
 		->checkbox()
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 	->textInput(['type'=>'date'])
 	->label($model->getAttributeLabel('thanks_date')); ?>
 
-<div class="ln_solid"></div>
+<hr/>
 
 <?php echo $form->field($model, 'submitButton')
 	->submitButton(['button'=>Html::submitButton(Yii::t('app', 'Generate'), ['class' => 'btn btn-primary'])]); ?>
