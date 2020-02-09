@@ -89,7 +89,7 @@ $attributes = [
 		'attribute' => 'photos',
 		'value' => function ($model) {
 			$uploadPath = join('/', [$model::getUploadPath(false), 'photo']);
-			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos, 'class'=>'mb-3']).'<br/>'.$model->photos : '-';
+			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos, 'class'=>'d-block border border-width-3 mb-3']).$model->photos : '-';
 		},
 		'format' => 'html',
 		'visible' => !$small,

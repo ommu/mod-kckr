@@ -56,8 +56,6 @@ class AdminController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$this->layout = 'admin_default';
-
 		$model = KckrSetting::findOne(1);
 		if ($model === null) 
 			$model = new KckrSetting(['id'=>1]);
@@ -105,6 +103,7 @@ class AdminController extends Controller
 		}
 		$picColumns = $picSearchModel->getGridColumn($cols);
 
+		$this->view->cards = false;
 		$this->view->title = Yii::t('app', 'Deposit Settings');
 		$this->view->description = '';
 		$this->view->keywords = '';

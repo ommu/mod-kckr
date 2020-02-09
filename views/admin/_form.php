@@ -94,7 +94,7 @@ echo $form->field($model, 'publisher_id')
 	->label($model->getAttributeLabel('receipt_date')); ?>
 
 <?php $uploadPath = join('/', [$model::getUploadPath(false), 'photo']);
-$photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['alt'=>$model->old_photos, 'class'=>'mb-3']) : '';
+$photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['alt'=>$model->old_photos, 'class'=>'d-block border border-width-3 mb-3']).$model->old_photos.'<hr/>' : '';
 echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.$photo.'</div>{input}{error}{hint}{endWrapper}'])
 	->fileInput()
 	->label($model->getAttributeLabel('photos'))
