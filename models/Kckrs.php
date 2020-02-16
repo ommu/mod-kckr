@@ -247,7 +247,7 @@ class Kckrs extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'yii\grid\SerialColumn',
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['pic_id'] = [
 			'attribute' => 'pic_id',
@@ -334,7 +334,7 @@ class Kckrs extends \app\components\ActiveRecord
 				return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
@@ -343,7 +343,7 @@ class Kckrs extends \app\components\ActiveRecord
 				return $model->getMedias('sum');
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['document'] = [
@@ -352,7 +352,7 @@ class Kckrs extends \app\components\ActiveRecord
 				return Html::a($model->thanks_date ? '<span class="glyphicon glyphicon-ok"></span>' : Yii::t('app', 'Document'), ['print', 'id'=>$model->primaryKey], ['title'=>$model->thanks_date ? Yii::t('app', 'Update Document') : Yii::t('app', 'Create Document'), 'class'=>'modal-btn']);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'html',
 		];
 		$this->templateColumns['article'] = [
@@ -363,7 +363,7 @@ class Kckrs extends \app\components\ActiveRecord
 					Html::a(Yii::t('app', 'Article'), ['article', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Create Article')]);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'html',
 		];
 		$this->templateColumns['creation_date'] = [
@@ -410,7 +410,7 @@ class Kckrs extends \app\components\ActiveRecord
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
