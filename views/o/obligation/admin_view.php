@@ -5,9 +5,9 @@
  * @var $this ommu\kckr\controllers\o\ObligationController
  * @var $model ommu\kckr\models\KckrPublisherObligation
  *
- * @author Putra Sudaryanto <putra@ommu.co>
+ * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
+ * @copyright Copyright (c) 2019 OMMU (www.ommu.id)
  * @created date 3 October 2019, 21:46 WIB
  * @link https://bitbucket.org/ommu/kckr
  *

@@ -1,6 +1,6 @@
 {
 	"name": "ommu/kckr",
-	"description": "Karya Cetak dan Karya Rekam (KCKR) Module from Ommu Platform",
+	"description": "Karya Cetak dan Karya Rekam (KCKR) Module from OMMU",
 	"type": "ommu-module",
 	"keywords": [
 		"module",
@@ -28,8 +28,8 @@
 	"authors": [
 		{
 			"name": "Putra Sudaryanto",
-			"email": "putra@ommu.co",
-			"homepage": "https://ommu.co",
+			"email": "putra@ommu.id",
+			"homepage": "https://ommu.id",
 			"role": "Creator"
 		}
 	],
