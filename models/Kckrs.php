@@ -48,7 +48,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 use thamtech\uuid\helpers\UuidHelper;
-use ommu\users\models\Users;
+use app\models\Users;
 use ommu\article\models\Articles;
 
 class Kckrs extends \app\components\ActiveRecord

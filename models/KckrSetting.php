@@ -35,7 +35,7 @@ namespace ommu\kckr\models;
 
 use Yii;
 use yii\helpers\Html;
-use ommu\users\models\Users;
+use app\models\Users;
 use ommu\article\models\ArticleCategory;
 use yii\helpers\Json;
 

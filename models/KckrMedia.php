@@ -39,7 +39,7 @@ namespace ommu\kckr\models;
 
 use Yii;
 use yii\helpers\Url;
-use ommu\users\models\Users;
+use app\models\Users;
 
 class KckrMedia extends \app\components\ActiveRecord
 {
