@@ -64,18 +64,18 @@ class ObligationController extends Controller
 	 */
 	public function behaviors()
 	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-					'publish' => ['POST'],
-				],
-			],
-		];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'publish' => ['POST'],
+                ],
+            ],
+        ];
 	}
 
 	/**
@@ -83,7 +83,7 @@ class ObligationController extends Controller
 	 */
 	public function actionIndex()
 	{
-		return $this->redirect(['manage']);
+        return $this->redirect(['manage']);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class ObligationController extends Controller
         $columns = $searchModel->getGridColumn($cols);
 
         if (($publisher = Yii::$app->request->get('publisher')) != null) {
-			$this->subMenuParam = $publisher;
+            $this->subMenuParam = $publisher;
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
 		}
         if (($category = Yii::$app->request->get('category')) != null) {
@@ -148,23 +148,23 @@ class ObligationController extends Controller
 		$this->subMenuParam = $model->publisher_id;
 
         if (Yii::$app->request->isPost) {
-			$postData = Yii::$app->request->post();
-			$model->load($postData);
-			$model->media_publish_year = $postData['media_publish_year'] ? $postData['media_publish_year'] : '0000';
+            $postData = Yii::$app->request->post();
+            $model->load($postData);
+            $model->media_publish_year = $postData['media_publish_year'] ? $postData['media_publish_year'] : '0000';
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success created.'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success created.'));
                 if (!Yii::$app->request->isAjax) {
 					return $this->redirect(['manage', 'publisher'=>$model->publisher_id]);
                 }
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->view->title = Yii::t('app', 'Add Obligation');
         if (isset($model->publisher)) {
@@ -189,24 +189,24 @@ class ObligationController extends Controller
 		$this->subMenuParam = $model->publisher_id;
 
         if (Yii::$app->request->isPost) {
-			$model->load(Yii::$app->request->post());
-			// $postData = Yii::$app->request->post();
-			// $model->load($postData);
-			// $model->order = $postData['order'] ? $postData['order'] : 0;
+            $model->load(Yii::$app->request->post());
+            // $postData = Yii::$app->request->post();
+            // $model->load($postData);
+            // $model->order = $postData['order'] ? $postData['order'] : 0;
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success updated.'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success updated.'));
                 if (!Yii::$app->request->isAjax) {
                     return $this->redirect(['update', 'id'=>$model->id]);
                 }
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->view->title = Yii::t('app', 'Update Obligation: {media-title}', ['media-title' => $model->media_title]);
 		$this->view->description = '';
@@ -223,7 +223,7 @@ class ObligationController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model = $this->findModel($id);
+        $model = $this->findModel($id);
 		$this->subMenuParam = $model->publisher_id;
 
 		$this->view->title = Yii::t('app', 'Detail Obligation: {media-title}', ['media-title' => $model->media_title]);

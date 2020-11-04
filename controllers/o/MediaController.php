@@ -66,18 +66,18 @@ class MediaController extends Controller
 	 */
 	public function behaviors()
 	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-					'publish' => ['POST'],
-				],
-			],
-		];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'publish' => ['POST'],
+                ],
+            ],
+        ];
 	}
 
 	/**
@@ -85,7 +85,7 @@ class MediaController extends Controller
 	 */
 	public function actionIndex()
 	{
-		return $this->redirect(['manage']);
+        return $this->redirect(['manage']);
 	}
 
 	/**
@@ -112,14 +112,14 @@ class MediaController extends Controller
         $columns = $searchModel->getGridColumn($cols);
 
         if (($kckr = Yii::$app->request->get('kckr')) != null) {
-			$this->subMenuParam = $kckr;
+            $this->subMenuParam = $kckr;
 			$kckr = \ommu\kckr\models\Kckrs::findOne($kckr);
 		}
         if (($category = Yii::$app->request->get('category')) != null) {
             $category = \ommu\kckr\models\KckrCategory::findOne($category);
         }
         if ($publisher != null) {
-			$this->subMenuParam = $publisher;
+            $this->subMenuParam = $publisher;
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
 		}
         if (($pic = Yii::$app->request->get('picId')) != null) {
@@ -165,23 +165,23 @@ class MediaController extends Controller
 		$this->subMenuParam = $model->kckr_id;
 
         if (Yii::$app->request->isPost) {
-			$postData = Yii::$app->request->post();
-			$model->load($postData);
-			$model->media_publish_year = $postData['media_publish_year'] ? $postData['media_publish_year'] : '0000';
+            $postData = Yii::$app->request->post();
+            $model->load($postData);
+            $model->media_publish_year = $postData['media_publish_year'] ? $postData['media_publish_year'] : '0000';
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success created.'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success created.'));
                 if (!Yii::$app->request->isAjax) {
 					return $this->redirect(['manage', 'kckr'=>$model->kckr_id]);
                 }
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->view->title = Yii::t('app', 'Add Media');
         if (isset($model->kckr)) {
@@ -206,24 +206,24 @@ class MediaController extends Controller
 		$this->subMenuParam = $model->kckr_id;
 
         if (Yii::$app->request->isPost) {
-			$model->load(Yii::$app->request->post());
-			// $postData = Yii::$app->request->post();
-			// $model->load($postData);
-			// $model->order = $postData['order'] ? $postData['order'] : 0;
+            $model->load(Yii::$app->request->post());
+            // $postData = Yii::$app->request->post();
+            // $model->load($postData);
+            // $model->order = $postData['order'] ? $postData['order'] : 0;
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
                 if (!Yii::$app->request->isAjax) {
                     return $this->redirect(['update', 'id'=>$model->id]);
                 }
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->view->title = Yii::t('app', 'Update Media: {media-title}', ['media-title' => $model->media_title]);
 		$this->view->description = '';
@@ -240,7 +240,7 @@ class MediaController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model = $this->findModel($id);
+        $model = $this->findModel($id);
 		$this->subMenuParam = $model->kckr_id;
 
 		$this->view->title = Yii::t('app', 'Detail Media: {media-title}', ['media-title' => $model->media_title]);

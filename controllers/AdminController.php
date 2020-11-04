@@ -59,18 +59,18 @@ class AdminController extends Controller
 	 */
 	public function behaviors()
 	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-					'publish' => ['POST'],
-				],
-			],
-		];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'publish' => ['POST'],
+                ],
+            ],
+        ];
 	}
 
 	/**
@@ -78,7 +78,7 @@ class AdminController extends Controller
 	 */
 	public function actionIndex()
 	{
-		return $this->redirect(['manage']);
+        return $this->redirect(['manage']);
 	}
 
 	/**
@@ -105,7 +105,7 @@ class AdminController extends Controller
             $pic = \ommu\kckr\models\KckrPic::findOne($pic);
         }
         if (($publisher = Yii::$app->request->get('publisher')) != null) {
-			$this->subMenuParam = $publisher;
+            $this->subMenuParam = $publisher;
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
 		}
 
@@ -128,7 +128,7 @@ class AdminController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new Kckrs();
+        $model = new Kckrs();
         if (($publisher = Yii::$app->request->get('id')) != null) {
             $model = new Kckrs(['publisher_id'=>$publisher]);
         }
@@ -136,22 +136,22 @@ class AdminController extends Controller
 		$setting = $model->getSetting(['photo_file_type']);
 
         if (Yii::$app->request->isPost) {
-			$model->load(Yii::$app->request->post());
-			$model->photos = UploadedFile::getInstance($model, 'photos');
-			// $postData = Yii::$app->request->post();
-			// $model->load($postData);
-			// $model->order = $postData['order'] ? $postData['order'] : 0;
+            $model->load(Yii::$app->request->post());
+            $model->photos = UploadedFile::getInstance($model, 'photos');
+            // $postData = Yii::$app->request->post();
+            // $model->load($postData);
+            // $model->order = $postData['order'] ? $postData['order'] : 0;
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success created.'));
-				return $this->redirect(['view', 'id'=>$model->id]);
+                Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success created.'));
+                return $this->redirect(['view', 'id'=>$model->id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->view->title = Yii::t('app', 'Create KCKR');
         if (isset($model->publisher)) {
@@ -178,22 +178,22 @@ class AdminController extends Controller
 		$setting = $model->getSetting(['photo_file_type']);
 
         if (Yii::$app->request->isPost) {
-			$model->load(Yii::$app->request->post());
-			$model->photos = UploadedFile::getInstance($model, 'photos');
-			// $postData = Yii::$app->request->post();
-			// $model->load($postData);
-			// $model->order = $postData['order'] ? $postData['order'] : 0;
+            $model->load(Yii::$app->request->post());
+            $model->photos = UploadedFile::getInstance($model, 'photos');
+            // $postData = Yii::$app->request->post();
+            // $model->load($postData);
+            // $model->order = $postData['order'] ? $postData['order'] : 0;
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success updated.'));
-				return $this->redirect(['update', 'id'=>$model->id]);
+                Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success updated.'));
+                return $this->redirect(['update', 'id'=>$model->id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->subMenu = $this->module->params['kckr_submenu'];
 		$this->view->title = Yii::t('app', 'Update KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
@@ -212,7 +212,7 @@ class AdminController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model = $this->findModel($id);
+        $model = $this->findModel($id);
 
 		$this->subMenu = $this->module->params['kckr_submenu'];
 		$this->view->title = Yii::t('app', 'Detail KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
@@ -293,10 +293,10 @@ class AdminController extends Controller
 		}
 
         if (Yii::$app->request->isPost) {
-			$model->load(Yii::$app->request->post());
-			// $postData = Yii::$app->request->post();
-			// $model->load($postData);
-			// $model->order = $postData['order'] ? $postData['order'] : 0;
+            $model->load(Yii::$app->request->post());
+            // $postData = Yii::$app->request->post();
+            // $model->load($postData);
+            // $model->order = $postData['order'] ? $postData['order'] : 0;
 
             if ($model->save()) {
 				ini_set('max_execution_time', 0);
@@ -350,7 +350,7 @@ class AdminController extends Controller
 				}
 
 				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success generated document.'));
-				return $this->redirect(['print', 'id'=>$model->id]);
+                return $this->redirect(['print', 'id'=>$model->id]);
 	
 				ob_end_flush();
 
@@ -358,8 +358,8 @@ class AdminController extends Controller
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->subMenu = $this->module->params['kckr_submenu'];
 		$this->view->title = Yii::t('app', 'Print KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
