@@ -62,8 +62,10 @@ echo $form->field($model, 'pic_signature', ['template' => '{label}{beginWrapper}
 	->checkbox()
 	->label($model->getAttributeLabel('default')); ?>
 
-<?php if($model->isNewRecord && !$model->getErrors())
-	$model->publish = 1;
+<?php 
+if ($model->isNewRecord && !$model->getErrors()) {
+    $model->publish = 1;
+}
 echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>

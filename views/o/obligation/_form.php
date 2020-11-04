@@ -66,8 +66,10 @@ use ommu\kckr\models\KckrCategory;
 	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('media_publish_year')); ?>
 
-<?php if($model->isNewRecord && !$model->getErrors())
-	$model->publish = 1;
+<?php 
+if ($model->isNewRecord && !$model->getErrors()) {
+    $model->publish = 1;
+}
 echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>

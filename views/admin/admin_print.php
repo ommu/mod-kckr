@@ -42,7 +42,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 
 <?php echo $this->description && !$model->thanks_date && Yii::$app->request->isAjax ? Html::tag('p', $this->description, ['class'=>'mb-4']) : '';?>
 
-<?php if($model->document) {
+<?php 
+if ($model->document) {
 	$thanksDocument = Kckrs::parseDocument($model->thanks_document);
 	echo $form->field($model, 'thanks_document', ['template' => '{label}{beginWrapper}'.$thanksDocument.'{endWrapper}'])
 		->textInput()

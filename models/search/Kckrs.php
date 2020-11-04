@@ -60,10 +60,11 @@ class Kckrs extends KckrsModel
 	 */
 	public function search($params, $column=null)
 	{
-		if(!($column && is_array($column)))
-			$query = KckrsModel::find()->alias('t');
-		else
-			$query = KckrsModel::find()->alias('t')->select($column);
+        if (!($column && is_array($column))) {
+            $query = KckrsModel::find()->alias('t');
+        } else {
+            $query = KckrsModel::find()->alias('t')->select($column);
+        }
 		$query->joinWith([
 			'pic pic', 
 			'publisher publisher', 
@@ -78,8 +79,9 @@ class Kckrs extends KckrsModel
 			'query' => $query,
 		];
 		// disable pagination agar data pada api tampil semua
-		if(isset($params['pagination']) && $params['pagination'] == 0)
-			$dataParams['pagination'] = false;
+        if (isset($params['pagination']) && $params['pagination'] == 0) {
+            $dataParams['pagination'] = false;
+        }
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
@@ -112,11 +114,12 @@ class Kckrs extends KckrsModel
 			'defaultOrder' => ['id' => SORT_DESC],
 		]);
 
-		if(Yii::$app->request->get('id'))
-			unset($params['id']);
+        if (Yii::$app->request->get('id')) {
+            unset($params['id']);
+        }
 		$this->load($params);
 
-		if(!$this->validate()) {
+        if (!$this->validate()) {
 			// uncomment the following line if you do not want to return any records when validation fails
 			// $query->where('0=1');
 			return $dataProvider;
@@ -140,27 +143,29 @@ class Kckrs extends KckrsModel
 			'cast(t.updated_date as date)' => $this->updated_date,
 		]);
 
-		if(isset($params['trash']))
-			$query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
-		else {
-			if(!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == ''))
-				$query->andFilterWhere(['IN', 't.publish', [0,1]]);
-			else
-				$query->andFilterWhere(['t.publish' => $this->publish]);
+        if (isset($params['trash'])) {
+            $query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
+        } else {
+            if (!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == '')) {
+                $query->andFilterWhere(['IN', 't.publish', [0,1]]);
+            } else {
+                $query->andFilterWhere(['t.publish' => $this->publish]);
+            }
 		}
 
-		if(isset($params['document']) && $params['document'] != '') {
-			if($params['document'] == 1)
-				$query->andFilterWhere(['NOT IN', 't.thanks_date', ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']]);
-			else if($params['document'] == 0)
-				$query->andFilterWhere(['IN', 't.thanks_date', ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']]);
+        if (isset($params['document']) && $params['document'] != '') {
+            if ($params['document'] == 1) {
+                $query->andFilterWhere(['NOT IN', 't.thanks_date', ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30']]);
+            } else if ($params['document'] == 0) {
+                $query->andFilterWhere(['IN', 't.thanks_date', ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30']]);
+            }
 		}
 
-		if(isset($params['article']) && $params['article'] != '') {
-			if($params['article'] == 1) {
+        if (isset($params['article']) && $params['article'] != '') {
+            if ($params['article'] == 1) {
 				$query->andFilterWhere(['is not', 't.article_id', null])
 					->andFilterWhere(['<>', 't.article_id', '0']);
-			} else if($params['article'] == 0) {
+			} else if ($params['article'] == 0) {
 				$query->andFilterWhere(['is', 't.article_id', null])
 					->andFilterWhere(['t.article_id' => '0']);
 			}

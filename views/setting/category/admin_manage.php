@@ -19,10 +19,10 @@ use yii\helpers\Url;
 use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
-if($breadcrumb) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
-$this->params['breadcrumbs'][] = $this->title;
+if ($breadcrumb) {
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
+    $this->params['breadcrumbs'][] = $this->title;
 }
 
 $this->params['menu']['content'] = [
@@ -47,12 +47,15 @@ array_push($columnData, [
 	'class' => 'app\components\grid\ActionColumn',
 	'header' => Yii::t('app', 'Option'),
 	'urlCreator' => function($action, $model, $key, $index) {
-		if($action == 'view')
-			return Url::to(['setting/category/view', 'id'=>$key]);
-		if($action == 'update')
-			return Url::to(['setting/category/update', 'id'=>$key]);
-		if($action == 'delete')
-			return Url::to(['setting/category/delete', 'id'=>$key]);
+        if ($action == 'view') {
+            return Url::to(['setting/category/view', 'id'=>$key]);
+        }
+        if ($action == 'update') {
+            return Url::to(['setting/category/update', 'id'=>$key]);
+        }
+        if ($action == 'delete') {
+            return Url::to(['setting/category/delete', 'id'=>$key]);
+        }
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {

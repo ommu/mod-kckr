@@ -47,9 +47,11 @@ class AdminController extends Controller
 	 */
 	public function init()
 	{
-		parent::init();
-		if(Yii::$app->request->get('publisher'))
-			$this->subMenu = $this->module->params['publisher_submenu'];
+        parent::init();
+
+        if (Yii::$app->request->get('publisher')) {
+            $this->subMenu = $this->module->params['publisher_submenu'];
+        }
 	}
 
 	/**
@@ -85,22 +87,24 @@ class AdminController extends Controller
 	 */
 	public function actionManage()
 	{
-		$searchModel = new KckrsSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new KckrsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		$gridColumn = Yii::$app->request->get('GridColumn', null);
-		$cols = [];
-		if($gridColumn != null && count($gridColumn) > 0) {
-			foreach($gridColumn as $key => $val) {
-				if($gridColumn[$key] == 1)
-					$cols[] = $key;
-			}
-		}
-		$columns = $searchModel->getGridColumn($cols);
+        $gridColumn = Yii::$app->request->get('GridColumn', null);
+        $cols = [];
+        if ($gridColumn != null && count($gridColumn) > 0) {
+            foreach ($gridColumn as $key => $val) {
+                if ($gridColumn[$key] == 1) {
+                    $cols[] = $key;
+                }
+            }
+        }
+        $columns = $searchModel->getGridColumn($cols);
 
-		if(($pic = Yii::$app->request->get('pic')) != null)
-			$pic = \ommu\kckr\models\KckrPic::findOne($pic);
-		if(($publisher = Yii::$app->request->get('publisher')) != null) {
+        if (($pic = Yii::$app->request->get('pic')) != null) {
+            $pic = \ommu\kckr\models\KckrPic::findOne($pic);
+        }
+        if (($publisher = Yii::$app->request->get('publisher')) != null) {
 			$this->subMenuParam = $publisher;
 			$publisher = \ommu\kckr\models\KckrPublisher::findOne($publisher);
 		}
@@ -125,31 +129,34 @@ class AdminController extends Controller
 	public function actionCreate()
 	{
 		$model = new Kckrs();
-		if(($publisher = Yii::$app->request->get('id')) != null)
-			$model = new Kckrs(['publisher_id'=>$publisher]);
+        if (($publisher = Yii::$app->request->get('id')) != null) {
+            $model = new Kckrs(['publisher_id'=>$publisher]);
+        }
 
 		$setting = $model->getSetting(['photo_file_type']);
 
-		if(Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
 			$model->photos = UploadedFile::getInstance($model, 'photos');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 			// $model->order = $postData['order'] ? $postData['order'] : 0;
 
-			if($model->save()) {
+            if ($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success created.'));
 				return $this->redirect(['view', 'id'=>$model->id]);
 
-			} else {
-				if(Yii::$app->request->isAjax)
-					return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+            } else {
+                if (Yii::$app->request->isAjax) {
+                    return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+                }
 			}
 		}
 
 		$this->view->title = Yii::t('app', 'Create KCKR');
-		if(isset($model->publisher))
-			$this->view->title = Yii::t('app', 'Create KCKR: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
+        if (isset($model->publisher)) {
+            $this->view->title = Yii::t('app', 'Create KCKR: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
+        }
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_create', [
@@ -170,20 +177,21 @@ class AdminController extends Controller
 
 		$setting = $model->getSetting(['photo_file_type']);
 
-		if(Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
 			$model->photos = UploadedFile::getInstance($model, 'photos');
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 			// $model->order = $postData['order'] ? $postData['order'] : 0;
 
-			if($model->save()) {
+            if ($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success updated.'));
 				return $this->redirect(['update', 'id'=>$model->id]);
 
-			} else {
-				if(Yii::$app->request->isAjax)
-					return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+            } else {
+                if (Yii::$app->request->isAjax) {
+                    return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+                }
 			}
 		}
 
@@ -226,7 +234,7 @@ class AdminController extends Controller
 		$model = $this->findModel($id);
 		$model->publish = 2;
 
-		if($model->save(false, ['publish','modified_id'])) {
+        if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success deleted.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
@@ -244,7 +252,7 @@ class AdminController extends Controller
 		$replace = $model->publish == 1 ? 0 : 1;
 		$model->publish = $replace;
 
-		if($model->save(false, ['publish','modified_id'])) {
+        if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success updated.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
@@ -259,8 +267,9 @@ class AdminController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if(($model = Kckrs::findOne($id)) !== null)
-			return $model;
+        if (($model = Kckrs::findOne($id)) !== null) {
+            return $model;
+        }
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
 	}
@@ -276,23 +285,24 @@ class AdminController extends Controller
 		$model = $this->findModel($id);
 		$model->scenario = $model::SCENARIO_DOCUMENT;
 
-		if(!$model->getErrors()) {
+        if (!$model->getErrors()) {
 			$thanksDocument = $model->thanks_document;
-			if(!is_array($thanksDocument))
+            if (!is_array($thanksDocument)) {
 				$thanksDocument = [];
+            }
 		}
 
-		if(Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
 			// $postData = Yii::$app->request->post();
 			// $model->load($postData);
 			// $model->order = $postData['order'] ? $postData['order'] : 0;
 
-			if($model->save()) {
+            if ($model->save()) {
 				ini_set('max_execution_time', 0);
 				ob_start();
 
-				if(!$model->document || ($model->document && $model->regenerate)) {
+                if (!$model->document || ($model->document && $model->regenerate)) {
 					$documents = [];
 
 					$kckrPath = $model::getUploadPath();
@@ -304,7 +314,7 @@ class AdminController extends Controller
 
 					$templatePath = Yii::getAlias('@ommu/kckr/components/templates');
 					$letterTemplate = join('/', [$templatePath, 'document_letter.php']);
-					$letterName = $model->id; 
+					$letterName = $model->id;
 					$fileName = $this->getPdf([
 						'model' => $model, 
 						'kckrAsset' => $kckrAsset,
@@ -312,9 +322,9 @@ class AdminController extends Controller
 					array_push($documents, $fileName);
 
 					$medias = $model->getMedias('count');
-					if($medias > 0) {
+                    if ($medias > 0) {
 						$attachmentTemplate = join('/', [$templatePath, 'document_attachment.php']);
-						$attachmentName = join('-', [$model->id, 'attachment']); 
+						$attachmentName = join('-', [$model->id, 'attachment']);
 						$fileName = $this->getPdf([
 							'model' => $model, 
 							'medias' => $model->medias,
@@ -324,14 +334,16 @@ class AdminController extends Controller
 					}
 
 					$model->thanks_document = $documents;
-					if($model->thanks_user_id == null)
+                    if ($model->thanks_user_id == null) {
 						$model->thanks_user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                    }
 
-					if($model->save()) {
-						if(!empty($thanksDocument)) {
+                    if ($model->save()) {
+                        if (!empty($thanksDocument)) {
 							foreach ($thanksDocument as $key => $val) {
-								if(file_exists(join('/', [$documentPath, $val])))
+                                if (file_exists(join('/', [$documentPath, $val]))) {
 									rename(join('/', [$documentPath, $val]), join('/', [$verwijderenPath, $model->id.'-'.time().'_change_'.$val]));
+                                }
 							}
 						}
 					}
@@ -342,17 +354,19 @@ class AdminController extends Controller
 	
 				ob_end_flush();
 
-			} else {
-				if(Yii::$app->request->isAjax)
-					return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+            } else {
+                if (Yii::$app->request->isAjax) {
+                    return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+                }
 			}
 		}
 
 		$this->subMenu = $this->module->params['kckr_submenu'];
 		$this->view->title = Yii::t('app', 'Print KCKR: {publisher-id}', ['publisher-id' => $model->publisher->publisher_name]);
 		$this->view->description = '';
-		if(Yii::$app->request->isAjax)
+        if (Yii::$app->request->isAjax) {
 			$this->view->description = Yii::t('app', 'Are you sure you want to generated document print?');
+        }
 		$this->view->keywords = '';
 		return $this->oRender('admin_print', [
 			'model' => $model,

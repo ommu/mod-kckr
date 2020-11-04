@@ -151,25 +151,28 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public function getMedias($type='relation', $publish=1)
 	{
-		if($type == 'relation')
-			return $this->hasMany(KckrMedia::className(), ['kckr_id' => 'id'])
-				->alias('medias')
-				->andOnCondition([sprintf('%s.publish', 'medias') => $publish]);
+        if ($type == 'relation') {
+            return $this->hasMany(KckrMedia::className(), ['kckr_id' => 'id'])
+                ->alias('medias')
+                ->andOnCondition([sprintf('%s.publish', 'medias') => $publish]);
+        }
 
 		$model = KckrMedia::find()
-			->alias('t')
-			->where(['t.kckr_id' => $this->id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['t.kckr_id' => $this->id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 
-		if($type == 'sum')
-			$media = $model->sum('media_item');
-		else
-			$media = $model->count();
+        if ($type == 'sum') {
+            $media = $model->sum('media_item');
+        } else {
+            $media = $model->count();
+        }
 
 		return $media ? $media : 0;
 	}
@@ -238,11 +241,13 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -421,19 +426,20 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -441,8 +447,9 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public function getSetting($field=[])
 	{
-		if(empty($field))
-			$field = ['photo_resize', 'photo_resize_size', 'photo_view_size', 'photo_file_type', 'article_cat_id'];
+        if (empty($field)) {
+            $field = ['photo_resize', 'photo_resize_size', 'photo_view_size', 'photo_file_type', 'article_cat_id'];
+        }
 
 		$setting = KckrSetting::find()
 			->select($field)
@@ -462,17 +469,18 @@ class Kckrs extends \app\components\ActiveRecord
 			'langsung' => Yii::t('app', 'Langsung'),
 		);
 
-		if($value !== null)
-			return $items[$value];
-		else
-			return $items;
+        if ($value !== null) {
+            return $items[$value];
+        } else {
+            return $items;
+        }
 	}
 
 	/**
 	 * @param returnAlias set true jika ingin kembaliannya path alias atau false jika ingin string
 	 * relative path. default true.
 	 */
-	public static function getUploadPath($returnAlias=true) 
+	public static function getUploadPath($returnAlias=true)
 	{
 		return ($returnAlias ? Yii::getAlias('@public/kckr') : 'kckr');
 	}
@@ -482,12 +490,13 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public static function parseDocument($documents, $sep='li')
 	{
-		if(!is_array($documents) || (is_array($documents) && empty($documents)))
-			return '-';
+        if (!is_array($documents) || (is_array($documents) && empty($documents))) {
+            return '-';
+        }
 
 		$items = self::getDocumentUrl($documents, true);
 
-		if($sep == 'li') {
+        if ($sep == 'li') {
 			return Html::ul($items, ['item' => function($item, $index) {
 				return Html::tag('li', $item);
 			}, 'class'=>'list-boxed']);
@@ -505,10 +514,11 @@ class Kckrs extends \app\components\ActiveRecord
 
 		$items = [];
 		foreach ($documents as $val) {
-			if($hyperlink)
-				$items[$val] = Html::a($val, join('/', ['@webpublic', $uploadPath, $val]), ['title'=>$val, 'target'=>'_blank']);
-			else
-				$items[$val] = Url::to(join('/', ['@webpublic', $uploadPath, $val]));
+            if ($hyperlink) {
+                $items[$val] = Html::a($val, join('/', ['@webpublic', $uploadPath, $val]), ['title'=>$val, 'target'=>'_blank']);
+            } else {
+                $items[$val] = Url::to(join('/', ['@webpublic', $uploadPath, $val]));
+            }
 		}
 
 		return $items;
@@ -521,12 +531,15 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		if(in_array($this->send_date, ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']))
-			$this->send_date = '';
-		if(in_array($this->receipt_date, ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']))
-			$this->receipt_date = '';
-		if(in_array($this->thanks_date, ['0000-00-00','1970-01-01','0002-12-02','-0001-11-30']))
-			$this->thanks_date = '';
+        if (in_array($this->send_date, ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30'])) {
+            $this->send_date = '';
+        }
+        if (in_array($this->receipt_date, ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30'])) {
+            $this->receipt_date = '';
+        }
+        if (in_array($this->thanks_date, ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30'])) {
+            $this->thanks_date = '';
+        }
 
 		$this->thanks_document = unserialize($this->thanks_document);
 		$this->old_photos = $this->photos;
@@ -545,30 +558,33 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		$setting = $this->getSetting(['photo_file_type']);
 
-		if(parent::beforeValidate()) {
+        if (parent::beforeValidate()) {
 			// $this->photos = UploadedFile::getInstance($this, 'photos');
-			if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
+            if ($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
 				$photoFileType = $this->formatFileType($setting->photo_file_type);
-				if(!in_array(strtolower($this->photos->getExtension()), $photoFileType)) {
+                if (!in_array(strtolower($this->photos->getExtension()), $photoFileType)) {
 					$this->addError('photos', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
 						'name'=>$this->photos->name,
 						'extensions'=>$setting->photo_file_type,
 					]));
 				}
 			} /* else {
-				if($this->isNewRecord || (!$this->isNewRecord && $this->old_photos == ''))
-					$this->addError('photos', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photos')]));
+                if ($this->isNewRecord || (!$this->isNewRecord && $this->old_photos == '')) {
+                    $this->addError('photos', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photos')]));
+                }
 			} */
 
-			if($this->isNewRecord) {
-				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-		}
-		return true;
+            if ($this->isNewRecord) {
+                if ($this->creation_id == null) {
+                    $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -578,36 +594,40 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		$setting = $this->getSetting(['photo_resize', 'photo_resize_size']);
 
-		if(parent::beforeSave($insert)) {
-			if(!$insert) {
-				$uploadPath = join('/', [self::getUploadPath(), 'photo']);
-				$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
-				$this->createUploadDirectory(self::getUploadPath(), 'photo');
+        if (parent::beforeSave($insert)) {
+            if (!$insert) {
+                $uploadPath = join('/', [self::getUploadPath(), 'photo']);
+                $verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+                $this->createUploadDirectory(self::getUploadPath(), 'photo');
 
 				// $this->photos = UploadedFile::getInstance($this, 'photos');
-				if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
-					$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension()); 
-					if($this->photos->saveAs(join('/', [$uploadPath, $fileName]))) {
+                if ($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
+					$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension());
+                    if ($this->photos->saveAs(join('/', [$uploadPath, $fileName]))) {
 						$photoResize = $setting->photo_resize_size;
-						if($setting->photo_resize)
-							$this->resizeImage(join('/', [$uploadPath, $fileName]), $photoResize['width'], $photoResize['height']);
-						if($this->old_photos != '' && file_exists(join('/', [$uploadPath, $this->old_photos])))
-							rename(join('/', [$uploadPath, $this->old_photos]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_photos]));
+                        if ($setting->photo_resize) {
+                            $this->resizeImage(join('/', [$uploadPath, $fileName]), $photoResize['width'], $photoResize['height']);
+                        }
+                        if ($this->old_photos != '' && file_exists(join('/', [$uploadPath, $this->old_photos]))) {
+                            rename(join('/', [$uploadPath, $this->old_photos]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_photos]));
+                        }
 						$this->photos = $fileName;
 					}
 				} else {
-					if($this->photos == '')
-						$this->photos = $this->old_photos;
+                    if ($this->photos == '') {
+                        $this->photos = $this->old_photos;
+                    }
 				}
 
 			}
 			$this->send_date = Yii::$app->formatter->asDate($this->send_date, 'php:Y-m-d');
 			$this->receipt_date = Yii::$app->formatter->asDate($this->receipt_date, 'php:Y-m-d');
-			if($this->scenario == self::SCENARIO_DOCUMENT)
-				$this->thanks_date = Yii::$app->formatter->asDate($this->thanks_date, 'php:Y-m-d');
+            if ($this->scenario == self::SCENARIO_DOCUMENT) {
+                $this->thanks_date = Yii::$app->formatter->asDate($this->thanks_date, 'php:Y-m-d');
+            }
 			$this->thanks_document = serialize($this->thanks_document);
-		}
-		return true;
+        }
+        return true;
 	}
 
 	/**
@@ -617,20 +637,21 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		$setting = $this->getSetting(['photo_resize', 'photo_resize_size']);
 
-		parent::afterSave($insert, $changedAttributes);
+        parent::afterSave($insert, $changedAttributes);
 
-		$uploadPath = join('/', [self::getUploadPath(), 'photo']);
-		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
-		$this->createUploadDirectory(self::getUploadPath(), 'photo');
+        $uploadPath = join('/', [self::getUploadPath(), 'photo']);
+        $verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+        $this->createUploadDirectory(self::getUploadPath(), 'photo');
 
-		if($insert) {
+        if ($insert) {
 			// $this->photos = UploadedFile::getInstance($this, 'photos');
-			if($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
-				$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension()); 
-				if($this->photos->saveAs(join('/', [$uploadPath, $fileName]))) {
+            if ($this->photos instanceof UploadedFile && !$this->photos->getHasError()) {
+				$fileName = join('-', [time(), UuidHelper::uuid(), $this->id]).'.'.strtolower($this->photos->getExtension());
+                if ($this->photos->saveAs(join('/', [$uploadPath, $fileName]))) {
 					$photoResize = $setting->photo_resize_size;
-					if($setting->photo_resize)
-						$this->resizeImage(join('/', [$uploadPath, $fileName]), $photoResize['width'], $photoResize['height']);
+                    if ($setting->photo_resize) {
+                        $this->resizeImage(join('/', [$uploadPath, $fileName]), $photoResize['width'], $photoResize['height']);
+                    }
 					self::updateAll(['photos' => $fileName], ['id' => $this->id]);
 				}
 			}
@@ -643,13 +664,14 @@ class Kckrs extends \app\components\ActiveRecord
 	 */
 	public function afterDelete()
 	{
-		parent::afterDelete();
+        parent::afterDelete();
 
-		$uploadPath = join('/', [self::getUploadPath(), 'photo']);
-		$verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
+        $uploadPath = join('/', [self::getUploadPath(), 'photo']);
+        $verwijderenPath = join('/', [self::getUploadPath(), 'verwijderen']);
 
-		if($this->photos != '' && file_exists(join('/', [$uploadPath, $this->photos])))
-			rename(join('/', [$uploadPath, $this->photos]), join('/', [$verwijderenPath, $this->id.'-'.time().'_deleted_'.$this->photos]));
+        if ($this->photos != '' && file_exists(join('/', [$uploadPath, $this->photos]))) {
+            rename(join('/', [$uploadPath, $this->photos]), join('/', [$verwijderenPath, $this->id.'-'.time().'_deleted_'.$this->photos]));
+        }
 
 	}
 }

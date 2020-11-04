@@ -43,8 +43,9 @@ use yii\helpers\ArrayHelper;
 
 <?php $publisherSuggestUrl = Url::to(['o/publisher/suggest']);
 $publisher = [];
-if($model->publisher_id && isset($model->publisher))
-	$publisher = [$model->publisher_id => $model->publisher->publisher_name];
+if ($model->publisher_id && isset($model->publisher)) {
+    $publisher = [$model->publisher_id => $model->publisher->publisher_name];
+}
 
 echo $form->field($model, 'publisher_id')
 	->widget(Selectize::className(), [
@@ -100,8 +101,10 @@ echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.
 	->label($model->getAttributeLabel('photos'))
 	->hint(Yii::t('app', 'extensions are allowed: {extensions}', ['extensions'=>$setting->photo_file_type])); ?>
 
-<?php if($model->isNewRecord && !$model->getErrors())
-	$model->publish = 1;
+<?php 
+if ($model->isNewRecord && !$model->getErrors()) {
+    $model->publish = 1;
+}
 echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>

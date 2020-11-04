@@ -142,20 +142,22 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	 */
 	public function getHandovers($type='relation', $publish=1)
 	{
-		if($type == 'relation')
-			return $this->hasMany(KckrMedia::className(), ['isbn' => 'isbn'])
-				->alias('handovers')
-				->andOnCondition([sprintf('%s.publish', 'handovers') => $publish]);
+        if ($type == 'relation') {
+            return $this->hasMany(KckrMedia::className(), ['isbn' => 'isbn'])
+                ->alias('handovers')
+                ->andOnCondition([sprintf('%s.publish', 'handovers') => $publish]);
+        }
 
 		$model = KckrMedia::find()
-			->alias('t')
-			->where(['t.isbn' => $this->isbn]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['t.isbn' => $this->isbn]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 			
 		$media = $model->count();
 
@@ -178,11 +180,13 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -301,19 +305,20 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -321,8 +326,9 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	 */
 	public function getSetting($field=[])
 	{
-		if(empty($field))
-			$field = ['import_file_type'];
+        if (empty($field)) {
+            $field = ['import_file_type'];
+        }
 
 		$setting = KckrSetting::find()
 			->select($field)
@@ -339,8 +345,9 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		if(in_array($this->media_publish_year, ['0000','1970','0002','-0001']))
-			$this->media_publish_year = '';
+        if (in_array($this->media_publish_year, ['0000', '1970', '0002', '-0001'])) {
+            $this->media_publish_year = '';
+        }
 
 		// $this->publisherName = isset($this->publisher) ? $this->publisher->publisher_name : '-';
 		// $this->categoryName = isset($this->category) ? $this->category->title->message : '-';
@@ -354,15 +361,17 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
-			if($this->isNewRecord) {
-				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-		}
-		return true;
+        if (parent::beforeValidate()) {
+            if ($this->isNewRecord) {
+                if ($this->creation_id == null) {
+                    $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+        }
+        return true;
 	}
 }

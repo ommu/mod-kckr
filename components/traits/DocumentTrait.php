@@ -41,15 +41,17 @@ trait DocumentTrait
 			$fileName = Inflector::slug(join('-', [time(), UuidHelper::uuid(), $outputName])).'.pdf';
 			$filePath = join('/', [$outputPath, $fileName]);
 
-			if($preview == false)
-				$html2pdf->output($filePath, 'F');
-			else
-				$html2pdf->output($filePath);
+            if ($preview == false) {
+                $html2pdf->output($filePath, 'F');
+            } else {
+                $html2pdf->output($filePath);
+            }
 		
-			if($returnIsPath == true)
-				return $filePath;
-			else
-				return $fileName;
+            if ($returnIsPath == true) {
+                return $filePath;
+            } else {
+                return $fileName;
+            }
 
 		} catch(Html2PdfException $ex) {
 			Yii::error(print_r($ex->getMessage(), true));

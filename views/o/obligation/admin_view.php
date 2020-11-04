@@ -23,11 +23,11 @@ $this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', ' Obligation'), 'url' => ['manage', 'publisher'=>$model->publisher->id]];
 $this->params['breadcrumbs'][] = $model->media_title;
 
-if(!$small) {
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
-];
+if (!$small) {
+    $this->params['menu']['content'] = [
+        ['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
+        ['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+    ];
 } ?>
 
 <div class="kckr-publisher-obligation-view">
@@ -49,8 +49,9 @@ $attributes = [
 		'attribute' => 'publisherName',
 		'value' => function ($model) {
 			$publisherName = isset($model->publisher) ? $model->publisher->publisher_name : '-';
-			if($publisherName != '-')
-				return Html::a($publisherName, ['o/publisher/view', 'id'=>$model->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
+            if ($publisherName != '-') {
+                return Html::a($publisherName, ['o/publisher/view', 'id'=>$model->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
+            }
 			return $publisherName;
 		},
 		'format' => 'html',
@@ -59,8 +60,9 @@ $attributes = [
 		'attribute' => 'categoryName',
 		'value' => function ($model) {
 			$categoryName = isset($model->category) ? $model->category->title->message : '-';
-			if($categoryName != '-')
-				return Html::a($categoryName, ['setting/category/view', 'id'=>$model->cat_id], ['title'=>$categoryName, 'class'=>'modal-btn']);
+            if ($categoryName != '-') {
+                return Html::a($categoryName, ['setting/category/view', 'id'=>$model->cat_id], ['title'=>$categoryName, 'class'=>'modal-btn']);
+            }
 			return $categoryName;
 		},
 		'format' => 'html',

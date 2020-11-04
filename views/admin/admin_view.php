@@ -17,9 +17,9 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-if(!$small) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->publisher->publisher_name;
+if (!$small) {
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = $model->publisher->publisher_name;
 } ?>
 
 <div class="kckrs-view">
@@ -41,8 +41,9 @@ $attributes = [
 		'attribute' => 'article_id',
 		'value' => function ($model) {
 			$articleTitle = isset($model->article) ? $model->article->title : '-';
-			if($articleTitle != '-')
-				return Html::a($articleTitle, ['/article/admin/view', 'id'=>$model->article_id], ['title'=>$articleTitle, 'class'=>'modal-btn']);
+            if ($articleTitle != '-') {
+                return Html::a($articleTitle, ['/article/admin/view', 'id'=>$model->article_id], ['title'=>$articleTitle, 'class'=>'modal-btn']);
+            }
 			return $articleTitle;
 		},
 		'format' => 'html',
@@ -51,8 +52,9 @@ $attributes = [
 		'attribute' => 'publisherName',
 		'value' => function ($model) {
 			$publisherName = isset($model->publisher) ? $model->publisher->publisher_name : '-';
-			if($publisherName != '-')
-				return Html::a($publisherName, ['o/publisher/view', 'id'=>$model->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
+            if ($publisherName != '-') {
+                return Html::a($publisherName, ['o/publisher/view', 'id'=>$model->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
+            }
 			return $publisherName;
 		},
 		'format' => 'html',
@@ -79,8 +81,9 @@ $attributes = [
 		'attribute' => 'picName',
 		'value' => function ($model) {
 			$picName = isset($model->pic) ? $model->pic->pic_name : '-';
-			if($picName != '-')
-				return Html::a($picName, ['setting/pic/view', 'id'=>$model->pic_id], ['title'=>$picName, 'class'=>'modal-btn']);
+            if ($picName != '-') {
+                return Html::a($picName, ['setting/pic/view', 'id'=>$model->pic_id], ['title'=>$picName, 'class'=>'modal-btn']);
+            }
 			return $picName;
 		},
 		'format' => 'html',

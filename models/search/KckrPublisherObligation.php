@@ -60,10 +60,11 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 	 */
 	public function search($params, $column=null)
 	{
-		if(!($column && is_array($column)))
-			$query = KckrPublisherObligationModel::find()->alias('t');
-		else
-			$query = KckrPublisherObligationModel::find()->alias('t')->select($column);
+        if (!($column && is_array($column))) {
+            $query = KckrPublisherObligationModel::find()->alias('t');
+        } else {
+            $query = KckrPublisherObligationModel::find()->alias('t')->select($column);
+        }
 		$query->joinWith([
 			'publisher publisher', 
 			'category.title category', 
@@ -78,8 +79,9 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 			'query' => $query,
 		];
 		// disable pagination agar data pada api tampil semua
-		if(isset($params['pagination']) && $params['pagination'] == 0)
-			$dataParams['pagination'] = false;
+        if (isset($params['pagination']) && $params['pagination'] == 0) {
+            $dataParams['pagination'] = false;
+        }
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
@@ -108,11 +110,12 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 			'defaultOrder' => ['id' => SORT_DESC],
 		]);
 
-		if(Yii::$app->request->get('id'))
-			unset($params['id']);
+        if (Yii::$app->request->get('id')) {
+            unset($params['id']);
+        }
 		$this->load($params);
 
-		if(!$this->validate()) {
+        if (!$this->validate()) {
 			// uncomment the following line if you do not want to return any records when validation fails
 			// $query->where('0=1');
 			return $dataProvider;
@@ -131,20 +134,22 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 			'cast(t.updated_date as date)' => $this->updated_date,
 		]);
 
-		if(isset($params['trash']))
-			$query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
-		else {
-			if(!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == ''))
-				$query->andFilterWhere(['IN', 't.publish', [0,1]]);
-			else
-				$query->andFilterWhere(['t.publish' => $this->publish]);
+        if (isset($params['trash'])) {
+            $query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
+        } else {
+            if (!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == '')) {
+                $query->andFilterWhere(['IN', 't.publish', [0,1]]);
+            } else {
+                $query->andFilterWhere(['t.publish' => $this->publish]);
+            }
 		}
 
-		if(isset($params['handover']) && $params['handover'] != '') {
-			if($this->handover == 1)
-				$query->andWhere(['is not', 'handovers.id', null]);
-			else if($this->handover == 0)
-				$query->andWhere(['is', 'handovers.id', null]);
+        if (isset($params['handover']) && $params['handover'] != '') {
+            if ($this->handover == 1) {
+                $query->andWhere(['is not', 'handovers.id', null]);
+            } else if ($this->handover == 0) {
+                $query->andWhere(['is', 'handovers.id', null]);
+            }
 		}
 
 		$query->andFilterWhere(['like', 't.media_title', $this->media_title])

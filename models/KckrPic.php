@@ -106,29 +106,32 @@ class KckrPic extends \app\components\ActiveRecord
 	 */
 	public function getKckrs($type='relation', $publish=1)
 	{
-		if($type == 'relation')
-			return $this->hasMany(Kckrs::className(), ['pic_id' => 'id'])
-				->alias('kckrs')
-				->andOnCondition([sprintf('%s.publish', 'kckrs') => $publish]);
+        if ($type == 'relation') {
+            return $this->hasMany(Kckrs::className(), ['pic_id' => 'id'])
+                ->alias('kckrs')
+                ->andOnCondition([sprintf('%s.publish', 'kckrs') => $publish]);
+        }
 
 		$model = Kckrs::find()
-			->alias('t')
-			->where(['t.pic_id' => $this->id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['t.pic_id' => $this->id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 
-		if($type == 'count')
-			$kckrs = $model->count();
-		else {
+        if ($type == 'count') {
+            $kckrs = $model->count();
+        } else {
 			$model->joinWith('medias medias');
-			if($type == 'media')
-				$kckrs = $model->count('medias.id');
-			else if($type == 'item')
-				$kckrs = $model->sum('medias.media_item');
+            if ($type == 'media') {
+                $kckrs = $model->count('medias.id');
+            } else if ($type == 'item') {
+                $kckrs = $model->sum('medias.media_item');
+            }
 		}
 
 		return $kckrs ? $kckrs : 0;
@@ -166,11 +169,13 @@ class KckrPic extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -296,35 +301,38 @@ class KckrPic extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
 	 * function getPic
 	 */
-	public static function getPic($publish=null, $array=true) 
+	public static function getPic($publish=null, $array=true)
 	{
 		$model = self::find()->alias('t')
 			->select(['t.id', 't.pic_name']);
-		if($publish != null)
-			$model->andWhere(['t.publish' => $publish]);
+        if ($publish != null) {
+            $model->andWhere(['t.publish' => $publish]);
+        }
 
 		$model = $model->orderBy('t.pic_name ASC')->all();
 
-		if($array == true)
-			return \yii\helpers\ArrayHelper::map($model, 'id', 'pic_name');
+        if ($array == true) {
+            return \yii\helpers\ArrayHelper::map($model, 'id', 'pic_name');
+        }
 
 		return $model;
 	}
@@ -346,30 +354,33 @@ class KckrPic extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
+        if (parent::beforeValidate()) {
 			// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
-			if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
+            if ($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
 				$picSignatureFileType = ['jpg', 'jpeg', 'png', 'bmp', 'gif'];
-				if(!in_array(strtolower($this->pic_signature->getExtension()), $picSignatureFileType)) {
+                if (!in_array(strtolower($this->pic_signature->getExtension()), $picSignatureFileType)) {
 					$this->addError('pic_signature', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
 						'name'=>$this->pic_signature->name,
 						'extensions'=>$this->formatFileType($picSignatureFileType, false),
 					]));
-				}
-			} else {
-				if($this->isNewRecord || (!$this->isNewRecord && $this->old_pic_signature == ''))
-					$this->addError('pic_signature', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('pic_signature')]));
+                }
+            } else {
+                if ($this->isNewRecord || (!$this->isNewRecord && $this->old_pic_signature == '')) {
+                    $this->addError('pic_signature', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('pic_signature')]));
+                }
 			}
 
-			if($this->isNewRecord) {
-				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-		}
-		return true;
+            if ($this->isNewRecord) {
+                if ($this->creation_id == null) {
+                    $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -377,28 +388,30 @@ class KckrPic extends \app\components\ActiveRecord
 	 */
 	public function beforeSave($insert)
 	{
-		if(parent::beforeSave($insert)) {
-			if(!$insert) {
+        if (parent::beforeSave($insert)) {
+            if (!$insert) {
 				$uploadPath = join('/', [Kckrs::getUploadPath(), 'pic']);
 				$verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
 				$this->createUploadDirectory(Kckrs::getUploadPath(), 'pic');
 
 				// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
-				if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
-					$fileName = join('-', [time(), UuidHelper::uuid(), 'pic', $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
-					if($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName]))) {
-						if($this->old_pic_signature != '' && file_exists(join('/', [$uploadPath, $this->old_pic_signature])))
-							rename(join('/', [$uploadPath, $this->old_pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_pic_signature]));
+                if ($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
+					$fileName = join('-', [time(), UuidHelper::uuid(), 'pic', $this->id]).'.'.strtolower($this->pic_signature->getExtension());
+                    if ($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName]))) {
+                        if ($this->old_pic_signature != '' && file_exists(join('/', [$uploadPath, $this->old_pic_signature]))) {
+                            rename(join('/', [$uploadPath, $this->old_pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_change_'.$this->old_pic_signature]));
+                        }
 						$this->pic_signature = $fileName;
 					}
 				} else {
-					if($this->pic_signature == '')
-						$this->pic_signature = $this->old_pic_signature;
+                    if ($this->pic_signature == '') {
+                        $this->pic_signature = $this->old_pic_signature;
+                    }
 				}
 
-			}
-		}
-		return true;
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -406,18 +419,19 @@ class KckrPic extends \app\components\ActiveRecord
 	 */
 	public function afterSave($insert, $changedAttributes)
 	{
-		parent::afterSave($insert, $changedAttributes);
+        parent::afterSave($insert, $changedAttributes);
 
 		$uploadPath = join('/', [Kckrs::getUploadPath(), 'pic']);
-		$verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
+        $verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
 		$this->createUploadDirectory(Kckrs::getUploadPath(), 'pic');
 
-		if($insert) {
+        if ($insert) {
 			// $this->pic_signature = UploadedFile::getInstance($this, 'pic_signature');
-			if($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
-				$fileName = join('-', [time(), UuidHelper::uuid(), 'pic', $this->id]).'.'.strtolower($this->pic_signature->getExtension()); 
-				if($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName])))
-					self::updateAll(['pic_signature' => $fileName], ['id' => $this->id]);
+            if ($this->pic_signature instanceof UploadedFile && !$this->pic_signature->getHasError()) {
+				$fileName = join('-', [time(), UuidHelper::uuid(), 'pic', $this->id]).'.'.strtolower($this->pic_signature->getExtension());
+                if ($this->pic_signature->saveAs(join('/', [$uploadPath, $fileName]))) {
+                    self::updateAll(['pic_signature' => $fileName], ['id' => $this->id]);
+                }
 			}
 
 		}
@@ -428,13 +442,13 @@ class KckrPic extends \app\components\ActiveRecord
 	 */
 	public function afterDelete()
 	{
-		parent::afterDelete();
+        parent::afterDelete();
 
 		$uploadPath = join('/', [Kckrs::getUploadPath()]);
-		$verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
+        $verwijderenPath = join('/', [Kckrs::getUploadPath(), 'verwijderen']);
 
-		if($this->pic_signature != '' && file_exists(join('/', [$uploadPath, $this->pic_signature])))
-			rename(join('/', [$uploadPath, $this->pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_deleted_'.$this->pic_signature]));
-
+        if ($this->pic_signature != '' && file_exists(join('/', [$uploadPath, $this->pic_signature]))) {
+            rename(join('/', [$uploadPath, $this->pic_signature]), join('/', [$verwijderenPath, $this->id.'-'.time().'_deleted_'.$this->pic_signature]));
+        }
 	}
 }

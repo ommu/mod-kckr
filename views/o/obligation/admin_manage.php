@@ -20,19 +20,20 @@ use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-if($publisher != null) {
+if ($publisher != null) {
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
 	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id'=>$publisher->id]];
 	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
-} else if($category != null) {
+} else if ($category != null) {
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Category'), 'url' => ['setting/category/index']];
 	$this->params['breadcrumbs'][] = ['label' => $category->title->message, 'url' => ['setting/category/view', 'id'=>$category->id]];
 	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
-} else
-	$this->params['breadcrumbs'][] = $this->title;
+} else {
+    $this->params['breadcrumbs'][] = $this->title;
+}
 
-if($publisher != null) {
+if ($publisher != null) {
 	$this->params['menu']['content'] = [
 		['label' => Yii::t('app', 'Add Obligation'), 'url' => Url::to(['create', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
 		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
@@ -48,11 +49,13 @@ $this->params['menu']['option'] = [
 <div class="kckr-publisher-obligation-manage">
 <?php Pjax::begin(); ?>
 
-<?php if($publisher != null)
-	echo $this->render('/o/publisher/admin_view', ['model'=>$publisher, 'small'=>true]); ?>
+<?php if ($publisher != null) {
+    echo $this->render('/o/publisher/admin_view', ['model'=>$publisher, 'small'=>true]);
+} ?>
 
-<?php if($category != null)
-	echo $this->render('/setting/category/admin_view', ['model'=>$category, 'small'=>true]); ?>
+<?php if ($category != null) {
+    echo $this->render('/setting/category/admin_view', ['model'=>$category, 'small'=>true]);
+} ?>
 
 <?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 
@@ -64,12 +67,15 @@ array_push($columnData, [
 	'class' => 'app\components\grid\ActionColumn',
 	'header' => Yii::t('app', 'Option'),
 	'urlCreator' => function($action, $model, $key, $index) {
-		if($action == 'view')
-			return Url::to(['view', 'id'=>$key]);
-		if($action == 'update')
-			return Url::to(['update', 'id'=>$key]);
-		if($action == 'delete')
-			return Url::to(['delete', 'id'=>$key]);
+        if ($action == 'view') {
+            return Url::to(['view', 'id'=>$key]);
+        }
+        if ($action == 'update') {
+            return Url::to(['update', 'id'=>$key]);
+        }
+        if ($action == 'delete') {
+            return Url::to(['delete', 'id'=>$key]);
+        }
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {

@@ -155,11 +155,13 @@ class KckrMedia extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -287,19 +289,20 @@ class KckrMedia extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -307,8 +310,9 @@ class KckrMedia extends \app\components\ActiveRecord
 	 */
 	public function getSetting($field=[])
 	{
-		if(empty($field))
-			$field = ['import_file_type'];
+        if (empty($field)) {
+            $field = ['import_file_type'];
+        }
 
 		$setting = KckrSetting::find()
 			->select($field)
@@ -325,8 +329,9 @@ class KckrMedia extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		if(in_array($this->media_publish_year, ['0000','1970','0002','-0001']))
-			$this->media_publish_year = '';
+        if (in_array($this->media_publish_year, ['0000', '1970', '0002', '-0001'])) {
+            $this->media_publish_year = '';
+        }
 
 		// $this->picId = isset($this->kckr) ? $this->kckr->pic->pic_name : '-';
 		// $this->categoryName = isset($this->category) ? $this->category->title->message : '-';
@@ -340,15 +345,17 @@ class KckrMedia extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
-			if($this->isNewRecord) {
-				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-		}
-		return true;
+        if (parent::beforeValidate()) {
+            if ($this->isNewRecord) {
+                if ($this->creation_id == null) {
+                    $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+        }
+        return true;
 	}
 }

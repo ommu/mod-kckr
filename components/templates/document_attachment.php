@@ -12,8 +12,8 @@ use ommu\kckr\models\Kckrs;
 	table, caption, tbody, tfoot, thead, tr, th, td,
 	article, aside, details, figcaption, figure, footer, header,
 	hgroup, nav, section {
-		color: #111; 
-		font-size: 12px; 
+		color: #111;
+		font-size: 12px;
 		line-height: 16px;
 		font-weight: 400;
 	}
@@ -72,8 +72,8 @@ use ommu\kckr\models\Kckrs;
 			<th style="vertical-align: middle; width: 120px;"><strong><?php echo strtoupper('Keterangan');?></strong></th>
 		</tr>
 		<?php 
-		$i=0;
-		foreach($medias as $key => $val) {
+		$i = 0;
+        foreach ($medias as $key => $val) {
 		$i++; ?>
 		<tr <?php echo $i%2 == 0 ? 'class="even"' : '';?>>
 			<td class="center" style="vertical-align: middle; width: 1px;"><?php echo $i;?></td>
@@ -101,7 +101,7 @@ use ommu\kckr\models\Kckrs;
 				<?php $data = $model->thanks_date;?>
 				Yogyakarta, <?php echo Yii::$app->formatter->asDate($model->thanks_date, 'long');?><br/>
 				<?php echo $model->pic->pic_position?>
-				<?php if($model->pic->pic_signature != '') {
+				<?php if ($model->pic->pic_signature != '') {
 					$images = join('/', [Kckrs::getUploadPath(), 'pic', $model->pic->pic_signature]);?>
 					<br/><br/>
 					<img src="<?php echo $images;?>" style="height: 100px;">

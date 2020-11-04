@@ -100,29 +100,32 @@ class KckrPublisher extends \app\components\ActiveRecord
 	 */
 	public function getKckrs($type='relation', $publish=1)
 	{
-		if($type == 'relation')
-			return $this->hasMany(Kckrs::className(), ['publisher_id' => 'id'])
-				->alias('kckrs')
-				->andOnCondition([sprintf('%s.publish', 'kckrs') => $publish]);
+        if ($type == 'relation') {
+            return $this->hasMany(Kckrs::className(), ['publisher_id' => 'id'])
+                ->alias('kckrs')
+                ->andOnCondition([sprintf('%s.publish', 'kckrs') => $publish]);
+        }
 
 		$model = Kckrs::find()
-			->alias('t')
-			->where(['t.publisher_id' => $this->id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['t.publisher_id' => $this->id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 
-		if($type == 'count')
-			$kckrs = $model->count();
-		else {
+        if ($type == 'count') {
+            $kckrs = $model->count();
+        } else {
 			$model->joinWith('medias medias');
-			if($type == 'media')
-				$kckrs = $model->count('medias.id');
-			else if($type == 'item')
-				$kckrs = $model->sum('medias.media_item');
+            if ($type == 'media') {
+                $kckrs = $model->count('medias.id');
+            } else if ($type == 'item') {
+                $kckrs = $model->sum('medias.media_item');
+            }
 		}
 
 		return $kckrs ? $kckrs : 0;
@@ -134,20 +137,22 @@ class KckrPublisher extends \app\components\ActiveRecord
 	 */
 	public function getObligations($type='relation', $publish=1)
 	{
-		if($type == 'relation')
-			return $this->hasMany(KckrPublisherObligation::className(), ['publisher_id' => 'id'])
-				->alias('obligations')
-				->andOnCondition([sprintf('%s.publish', 'obligations') => $publish]);
+        if ($type == 'relation') {
+            return $this->hasMany(KckrPublisherObligation::className(), ['publisher_id' => 'id'])
+                ->alias('obligations')
+                ->andOnCondition([sprintf('%s.publish', 'obligations') => $publish]);
+        }
 
 		$model = KckrPublisherObligation::find()
-			->alias('t')
-			->where(['t.publisher_id' => $this->id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['t.publisher_id' => $this->id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 
 		$obligations = $model->count();
 
@@ -186,11 +191,13 @@ class KckrPublisher extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -316,19 +323,20 @@ class KckrPublisher extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -341,10 +349,11 @@ class KckrPublisher extends \app\components\ActiveRecord
 			0 => Yii::t('app', 'Luar D.I. Yogyakarta'),
 		);
 
-		if($value !== null)
-			return $items[$value];
-		else
-			return $items;
+        if ($value !== null) {
+            return $items[$value];
+        } else {
+            return $items;
+        }
 	}
 
 	/**
@@ -363,15 +372,17 @@ class KckrPublisher extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
-			if($this->isNewRecord) {
-				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-		}
-		return true;
+        if (parent::beforeValidate()) {
+            if ($this->isNewRecord) {
+                if ($this->creation_id == null) {
+                    $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+        }
+        return true;
 	}
 }
