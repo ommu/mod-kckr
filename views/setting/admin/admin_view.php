@@ -23,7 +23,7 @@ if ($breadcrumb) {
 
 if (!$small) {
     $this->params['menu']['content'] = [
-        ['label' => Yii::t('app', 'Reset'), 'url' => Url::to(['delete']), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to reset this setting?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+        ['label' => Yii::t('app', 'Reset'), 'url' => Url::to(['delete']), 'htmlOptions' => ['data-confirm' => Yii::t('app', 'Are you sure you want to reset this setting?'), 'data-method' => 'post', 'class' => 'btn btn-danger'], 'icon' => 'trash'],
     ];
 } ?>
 
@@ -99,7 +99,7 @@ $attributes = [
 	],
 	[
 		'attribute' => '',
-		'value' => Html::a(Yii::t('app', 'Update'), ['update'], ['title'=>Yii::t('app', 'Update'), 'class'=>'btn btn-primary']),
+		'value' => Html::a(Yii::t('app', 'Update'), ['update'], ['title' => Yii::t('app', 'Update'), 'class' => 'btn btn-primary']),
 		'format' => 'html',
 	],
 ];
@@ -107,7 +107,7 @@ $attributes = [
 echo DetailView::widget([
 	'model' => $model,
 	'options' => [
-		'class'=>'table table-striped detail-view',
+		'class' => 'table table-striped detail-view',
 	],
 	'attributes' => $attributes,
 ]); ?>

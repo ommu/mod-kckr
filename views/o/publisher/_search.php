@@ -49,10 +49,10 @@ use yii\widgets\ActiveForm;
 
 		<?php $publisherArea = $model::getPublisherArea();
 		echo $form->field($model, 'publisher_area')
-			->dropDownList($publisherArea, ['prompt'=>'']);?>
+			->dropDownList($publisherArea, ['prompt' => '']);?>
 
 		<?php echo $form->field($model, 'publish')
-			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
+			->dropDownList($model->filterYesNo(), ['prompt' => '']);?>
 
 		<div class="form-group">
 			<?php echo Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']); ?>

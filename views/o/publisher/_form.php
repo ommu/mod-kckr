@@ -21,7 +21,7 @@ use app\components\widgets\ActiveForm;
 <div class="kckr-publisher-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => true,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -36,15 +36,15 @@ use app\components\widgets\ActiveForm;
 
 <?php $publisherArea = $model::getPublisherArea();
 echo $form->field($model, 'publisher_area')
-	->dropDownList($publisherArea, ['prompt'=>''])
+	->dropDownList($publisherArea, ['prompt' => ''])
 	->label($model->getAttributeLabel('publisher_area')); ?>
 
 <?php echo $form->field($model, 'publisher_name')
-	->textarea(['rows'=>3, 'cols'=>50])
+	->textarea(['rows' => 3, 'cols' => 50])
 	->label($model->getAttributeLabel('publisher_name')); ?>
 
 <?php echo $form->field($model, 'publisher_address')
-	->textarea(['rows'=>4, 'cols'=>50])
+	->textarea(['rows' => 4, 'cols' => 50])
 	->label($model->getAttributeLabel('publisher_address')); ?>
 
 <?php echo $form->field($model, 'publisher_phone')

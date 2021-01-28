@@ -33,7 +33,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'publish',
-		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
+		'value' => $model->quickAction(Url::to(['publish', 'id' => $model->primaryKey]), $model->publish),
 		'format' => 'raw',
 		'visible' => !$small,
 	],
@@ -42,7 +42,7 @@ $attributes = [
 		'value' => function ($model) {
 			$articleTitle = isset($model->article) ? $model->article->title : '-';
             if ($articleTitle != '-') {
-                return Html::a($articleTitle, ['/article/admin/view', 'id'=>$model->article_id], ['title'=>$articleTitle, 'class'=>'modal-btn']);
+                return Html::a($articleTitle, ['/article/admin/view', 'id' => $model->article_id], ['title' => $articleTitle, 'class' => 'modal-btn']);
             }
 			return $articleTitle;
 		},
@@ -53,7 +53,7 @@ $attributes = [
 		'value' => function ($model) {
 			$publisherName = isset($model->publisher) ? $model->publisher->publisher_name : '-';
             if ($publisherName != '-') {
-                return Html::a($publisherName, ['o/publisher/view', 'id'=>$model->publisher_id], ['title'=>$publisherName, 'class'=>'modal-btn']);
+                return Html::a($publisherName, ['o/publisher/view', 'id' => $model->publisher_id], ['title' => $publisherName, 'class' => 'modal-btn']);
             }
 			return $publisherName;
 		},
@@ -82,7 +82,7 @@ $attributes = [
 		'value' => function ($model) {
 			$picName = isset($model->pic) ? $model->pic->pic_name : '-';
             if ($picName != '-') {
-                return Html::a($picName, ['setting/pic/view', 'id'=>$model->pic_id], ['title'=>$picName, 'class'=>'modal-btn']);
+                return Html::a($picName, ['setting/pic/view', 'id' => $model->pic_id], ['title' => $picName, 'class' => 'modal-btn']);
             }
 			return $picName;
 		},
@@ -92,7 +92,7 @@ $attributes = [
 		'attribute' => 'photos',
 		'value' => function ($model) {
 			$uploadPath = join('/', [$model::getUploadPath(false), 'photo']);
-			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos, 'class'=>'d-block border border-width-3 mb-3']).$model->photos : '-';
+			return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt' => $model->photos, 'class' => 'd-block border border-width-3 mb-4']).$model->photos : '-';
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -101,7 +101,7 @@ $attributes = [
 		'attribute' => 'medias',
 		'value' => function ($model) {
 			$medias = $model->getMedias('count');
-			return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} medias', ['count'=>$medias])]);
+			return Html::a($medias, ['o/media/manage', 'kckr' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} medias', ['count' => $medias])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -157,7 +157,7 @@ $attributes = [
 	],
 	[
 		'attribute' => '',
-		'value' => Html::a(Yii::t('app', 'Update'), ['update', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Update'), 'class'=>'btn btn-success btn-sm']),
+		'value' => Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->primaryKey], ['title' => Yii::t('app', 'Update'), 'class' => 'btn btn-success btn-sm']),
 		'format' => 'html',
 		'visible' => !$small && Yii::$app->request->isAjax ? true : false,
 	],
@@ -166,7 +166,7 @@ $attributes = [
 echo DetailView::widget([
 	'model' => $model,
 	'options' => [
-		'class'=>'table table-striped detail-view',
+		'class' => 'table table-striped detail-view',
 	],
 	'attributes' => $attributes,
 ]); ?>

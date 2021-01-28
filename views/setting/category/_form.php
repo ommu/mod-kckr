@@ -21,7 +21,7 @@ use app\components\widgets\ActiveForm;
 <div class="kckr-category-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => true,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -36,19 +36,19 @@ use app\components\widgets\ActiveForm;
 
 <?php $categoryType = $model::getCategoryType();
 echo $form->field($model, 'category_type')
-	->dropDownList($categoryType, ['prompt'=>''])
+	->dropDownList($categoryType, ['prompt' => ''])
 	->label($model->getAttributeLabel('category_type')); ?>
 
 <?php echo $form->field($model, 'category_name_i')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('category_name_i')); ?>
 
 <?php echo $form->field($model, 'category_desc_i')
-	->textarea(['rows'=>3, 'cols'=>50, 'maxlength'=>true])
+	->textarea(['rows' => 3, 'cols' => 50, 'maxlength' => true])
 	->label($model->getAttributeLabel('category_desc_i')); ?>
 
 <?php echo $form->field($model, 'category_code')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('category_code')); ?>
 
 <?php 

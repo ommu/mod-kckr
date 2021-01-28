@@ -252,7 +252,7 @@ class Kckrs extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['pic_id'] = [
 			'attribute' => 'pic_id',
@@ -305,7 +305,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'attribute' => 'photos',
 			'value' => function($model, $key, $index, $column) {
 				$uploadPath = join('/', [self::getUploadPath(false), 'photo']);
-				return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt'=>$model->photos]) : '-';
+				return $model->photos ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->photos])), ['alt' => $model->photos]) : '-';
 			},
 			'format' => 'html',
 		];
@@ -336,10 +336,10 @@ class Kckrs extends \app\components\ActiveRecord
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getMedias('count');
-				return Html::a($medias, ['o/media/manage', 'kckr'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax'=>0]);
+				return Html::a($medias, ['o/media/manage', 'kckr' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
@@ -348,27 +348,27 @@ class Kckrs extends \app\components\ActiveRecord
 				return $model->getMedias('sum');
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['document'] = [
 			'attribute' => 'document',
 			'value' => function($model, $key, $index, $column) {
-				return Html::a($model->thanks_date ? '<span class="glyphicon glyphicon-ok"></span>' : Yii::t('app', 'Document'), ['print', 'id'=>$model->primaryKey], ['title'=>$model->thanks_date ? Yii::t('app', 'Update Document') : Yii::t('app', 'Create Document'), 'class'=>'modal-btn']);
+				return Html::a($model->thanks_date ? '<span class="glyphicon glyphicon-ok"></span>' : Yii::t('app', 'Document'), ['print', 'id' => $model->primaryKey], ['title' => $model->thanks_date ? Yii::t('app', 'Update Document') : Yii::t('app', 'Create Document'), 'class' => 'modal-btn']);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'html',
 		];
 		$this->templateColumns['article'] = [
 			'attribute' => 'article',
 			'value' => function($model, $key, $index, $column) {
 				return isset($model->article) ? 
-					Html::a('<span class="glyphicon glyphicon-ok"></span>', ['article', 'id'=>$model->primaryKey, 'aid'=>$model->article_id], ['title'=>Yii::t('app', 'Update Article')]) : 
-					Html::a(Yii::t('app', 'Article'), ['article', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Create Article')]);
+					Html::a('<span class="glyphicon glyphicon-ok"></span>', ['article', 'id' => $model->primaryKey, 'aid' => $model->article_id], ['title' => Yii::t('app', 'Update Article')]) : 
+					Html::a(Yii::t('app', 'Article'), ['article', 'id' => $model->primaryKey], ['title' => Yii::t('app', 'Create Article')]);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'html',
 		];
 		$this->templateColumns['creation_date'] = [
@@ -411,11 +411,11 @@ class Kckrs extends \app\components\ActiveRecord
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
-				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+				$url = Url::to(['publish', 'id' => $model->primaryKey]);
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
@@ -499,7 +499,7 @@ class Kckrs extends \app\components\ActiveRecord
         if ($sep == 'li') {
 			return Html::ul($items, ['item' => function($item, $index) {
 				return Html::tag('li', $item);
-			}, 'class'=>'list-boxed']);
+			}, 'class' => 'list-boxed']);
 		}
 
 		return implode($sep, $items);
@@ -515,7 +515,7 @@ class Kckrs extends \app\components\ActiveRecord
 		$items = [];
 		foreach ($documents as $val) {
             if ($hyperlink) {
-                $items[$val] = Html::a($val, join('/', ['@webpublic', $uploadPath, $val]), ['title'=>$val, 'target'=>'_blank']);
+                $items[$val] = Html::a($val, join('/', ['@webpublic', $uploadPath, $val]), ['title' => $val, 'target' => '_blank']);
             } else {
                 $items[$val] = Url::to(join('/', ['@webpublic', $uploadPath, $val]));
             }
@@ -564,13 +564,13 @@ class Kckrs extends \app\components\ActiveRecord
 				$photoFileType = $this->formatFileType($setting->photo_file_type);
                 if (!in_array(strtolower($this->photos->getExtension()), $photoFileType)) {
 					$this->addError('photos', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
-						'name'=>$this->photos->name,
-						'extensions'=>$setting->photo_file_type,
+						'name' => $this->photos->name,
+						'extensions' => $setting->photo_file_type,
 					]));
 				}
 			} /* else {
                 if ($this->isNewRecord || (!$this->isNewRecord && $this->old_photos == '')) {
-                    $this->addError('photos', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photos')]));
+                    $this->addError('photos', Yii::t('app', '{attribute} cannot be blank.', ['attribute' => $this->getAttributeLabel('photos')]));
                 }
 			} */
 

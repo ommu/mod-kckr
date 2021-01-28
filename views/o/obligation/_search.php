@@ -33,7 +33,7 @@ use ommu\kckr\models\KckrCategory;
 
 		<?php $category = KckrCategory::getCategory();
 		echo $form->field($model, 'cat_id')
-			->dropDownList($category, ['prompt'=>'']);?>
+			->dropDownList($category, ['prompt' => '']);?>
 
 		<?php echo $form->field($model, 'media_title');?>
 
@@ -59,7 +59,7 @@ use ommu\kckr\models\KckrCategory;
 			->input('date');?>
 
 		<?php echo $form->field($model, 'publish')
-			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
+			->dropDownList($model->filterYesNo(), ['prompt' => '']);?>
 
 		<div class="form-group">
 			<?php echo Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']); ?>

@@ -134,7 +134,7 @@ class KckrSetting extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['license'] = [
 			'attribute' => 'license',
@@ -166,7 +166,7 @@ class KckrSetting extends \app\components\ActiveRecord
 				return self::getPhotoResize($model->photo_resize);
 			},
 			'filter' => self::getPhotoResize(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['photo_resize_size'] = [
 			'attribute' => 'photo_resize_size',
@@ -249,8 +249,8 @@ class KckrSetting extends \app\components\ActiveRecord
         }
 
 		$items = array(
-			1 => Yii::t('app', 'Yes, the public can view {module} unless they are made private.', ['module'=>$moduleName]),
-			0 => Yii::t('app', 'No, the public cannot view {module}.', ['module'=>$moduleName]),
+			1 => Yii::t('app', 'Yes, the public can view {module} unless they are made private.', ['module' => $moduleName]),
+			0 => Yii::t('app', 'No, the public cannot view {module}.', ['module' => $moduleName]),
 		);
 
         if ($value !== null) {
@@ -304,7 +304,7 @@ class KckrSetting extends \app\components\ActiveRecord
 		foreach ($view_size as $key => $value) {
 			$views[] = ucfirst($key).": ".self::getSize($value);
 		}
-		return Html::ul($views, ['encode'=>false, 'class'=>'list-boxed']);
+		return Html::ul($views, ['encode' => false, 'class' => 'list-boxed']);
 	}
 
 	/**
@@ -340,11 +340,11 @@ class KckrSetting extends \app\components\ActiveRecord
             }
 
             if ($this->photo_resize_size['width'] == '') {
-                $this->addError('photo_resize_size', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photo_resize_size')]));
+                $this->addError('photo_resize_size', Yii::t('app', '{attribute} cannot be blank.', ['attribute' => $this->getAttributeLabel('photo_resize_size')]));
             }
 
             if ($this->photo_view_size['small']['width'] == '' || $this->photo_view_size['medium']['width'] == '' || $this->photo_view_size['large']['width'] == '') {
-                $this->addError('photo_view_size', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('photo_view_size')]));
+                $this->addError('photo_view_size', Yii::t('app', '{attribute} cannot be blank.', ['attribute' => $this->getAttributeLabel('photo_view_size')]));
             }
         }
         return true;

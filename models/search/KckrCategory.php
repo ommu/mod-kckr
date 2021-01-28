@@ -73,11 +73,11 @@ class KckrCategory extends KckrCategoryModel
 		])
 		->groupBy(['id']);
 
-		// add conditions that should always apply here
+        // add conditions that should always apply here
 		$dataParams = [
 			'query' => $query,
 		];
-		// disable pagination agar data pada api tampil semua
+        // disable pagination agar data pada api tampil semua
         if (isset($params['pagination']) && $params['pagination'] == 0) {
             $dataParams['pagination'] = false;
         }
@@ -111,10 +111,10 @@ class KckrCategory extends KckrCategoryModel
 		$this->load($params);
 
         if (!$this->validate()) {
-			// uncomment the following line if you do not want to return any records when validation fails
-			// $query->where('0=1');
-			return $dataProvider;
-		}
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
 
 		// grid filtering conditions
 		$query->andFilterWhere([
@@ -137,7 +137,7 @@ class KckrCategory extends KckrCategoryModel
             } else {
                 $query->andFilterWhere(['t.publish' => $this->publish]);
             }
-		}
+        }
 
 		$query->andFilterWhere(['like', 't.category_code', $this->category_code])
 			->andFilterWhere(['like', 'title.message', $this->category_name_i])

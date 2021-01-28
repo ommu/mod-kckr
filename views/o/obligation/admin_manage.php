@@ -22,12 +22,12 @@ use yii\widgets\Pjax;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
 if ($publisher != null) {
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
-	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id'=>$publisher->id]];
+	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id' => $publisher->id]];
 	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
 } else if ($category != null) {
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Category'), 'url' => ['setting/category/index']];
-	$this->params['breadcrumbs'][] = ['label' => $category->title->message, 'url' => ['setting/category/view', 'id'=>$category->id]];
+	$this->params['breadcrumbs'][] = ['label' => $category->title->message, 'url' => ['setting/category/view', 'id' => $category->id]];
 	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
 } else {
     $this->params['breadcrumbs'][] = $this->title;
@@ -35,9 +35,9 @@ if ($publisher != null) {
 
 if ($publisher != null) {
 	$this->params['menu']['content'] = [
-		['label' => Yii::t('app', 'Add Obligation'), 'url' => Url::to(['create', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-success']],
-		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
-		['label' => Yii::t('app', 'Export'), 'url' => Url::to(['export', 'id'=>$publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class'=>'btn modal-btn btn-primary']],
+		['label' => Yii::t('app', 'Add Obligation'), 'url' => Url::to(['create', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn modal-btn btn-success']],
+		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn modal-btn btn-primary']],
+		['label' => Yii::t('app', 'Export'), 'url' => Url::to(['export', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn modal-btn btn-primary']],
 	];
 }
 $this->params['menu']['option'] = [
@@ -50,16 +50,16 @@ $this->params['menu']['option'] = [
 <?php Pjax::begin(); ?>
 
 <?php if ($publisher != null) {
-    echo $this->render('/o/publisher/admin_view', ['model'=>$publisher, 'small'=>true]);
+    echo $this->render('/o/publisher/admin_view', ['model' => $publisher, 'small' => true]);
 } ?>
 
 <?php if ($category != null) {
-    echo $this->render('/setting/category/admin_view', ['model'=>$category, 'small'=>true]);
+    echo $this->render('/setting/category/admin_view', ['model' => $category, 'small' => true]);
 } ?>
 
-<?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
+<?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
-<?php echo $this->render('_option_form', ['model'=>$searchModel, 'gridColumns'=>$searchModel->activeDefaultColumns($columns), 'route'=>$this->context->route]); ?>
+<?php echo $this->render('_option_form', ['model' => $searchModel, 'gridColumns' => $searchModel->activeDefaultColumns($columns), 'route' => $this->context->route]); ?>
 
 <?php
 $columnData = $columns;
@@ -68,21 +68,21 @@ array_push($columnData, [
 	'header' => Yii::t('app', 'Option'),
 	'urlCreator' => function($action, $model, $key, $index) {
         if ($action == 'view') {
-            return Url::to(['view', 'id'=>$key]);
+            return Url::to(['view', 'id' => $key]);
         }
         if ($action == 'update') {
-            return Url::to(['update', 'id'=>$key]);
+            return Url::to(['update', 'id' => $key]);
         }
         if ($action == 'delete') {
-            return Url::to(['delete', 'id'=>$key]);
+            return Url::to(['delete', 'id' => $key]);
         }
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title'=>Yii::t('app', 'Detail Obligation'), 'class'=>'modal-btn']);
+			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Obligation'), 'class' => 'modal-btn']);
 		},
 		'update' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title'=>Yii::t('app', 'Update Obligation'), 'class'=>'modal-btn']);
+			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Obligation'), 'class' => 'modal-btn']);
 		},
 		'delete' => function ($url, $model, $key) {
 			return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [

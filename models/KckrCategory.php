@@ -221,7 +221,7 @@ class KckrCategory extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['category_name_i'] = [
 			'attribute' => 'category_name_i',
@@ -247,7 +247,7 @@ class KckrCategory extends \app\components\ActiveRecord
 				return self::getCategoryType($model->category_type);
 			},
 			'filter' => self::getCategoryType(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'html',
 		];
 		$this->templateColumns['creation_date'] = [
@@ -291,40 +291,40 @@ class KckrCategory extends \app\components\ActiveRecord
 			'attribute' => 'obligations',
 			'value' => function($model, $key, $index, $column) {
 				$obligations = $model->getObligations('count');
-				return Html::a($obligations, ['o/obligation/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} obligations', ['count'=>$obligations]), 'data-pjax'=>0]);
+				return Html::a($obligations, ['o/obligation/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} obligations', ['count' => $obligations]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['medias'] = [
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getMedias('count');
-				return Html::a($medias, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax'=>0]);
+				return Html::a($medias, ['o/media/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
 			'attribute' => 'items',
 			'value' => function($model, $key, $index, $column) {
 				$items = $model->getMedias('sum');
-				return Html::a($items, ['o/media/manage', 'category'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items]), 'data-pjax'=>0]);
+				return Html::a($items, ['o/media/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
-				$url = Url::to(['setting/category/publish', 'id'=>$model->primaryKey]);
+				$url = Url::to(['setting/category/publish', 'id' => $model->primaryKey]);
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];

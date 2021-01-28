@@ -33,7 +33,7 @@ use ommu\kckr\models\KckrPic;
 
 		<?php $pic = KckrPic::getPic();
 		echo $form->field($model, 'pic_id')
-			->dropDownList($pic, ['prompt'=>'']);?>
+			->dropDownList($pic, ['prompt' => '']);?>
 
 		<?php echo $form->field($model, 'publisherName');?>
 
@@ -41,7 +41,7 @@ use ommu\kckr\models\KckrPic;
 
 		<?php $sendType = $model::getSendType();
 			echo $form->field($model, 'send_type')
-			->dropDownList($sendType, ['prompt'=>'']);?>
+			->dropDownList($sendType, ['prompt' => '']);?>
 
 		<?php echo $form->field($model, 'send_date')
 			->input('date');?>
@@ -72,7 +72,7 @@ use ommu\kckr\models\KckrPic;
 			->input('date');?>
 
 		<?php echo $form->field($model, 'publish')
-			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
+			->dropDownList($model->filterYesNo(), ['prompt' => '']);?>
 
 		<div class="form-group">
 			<?php echo Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']); ?>

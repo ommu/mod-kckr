@@ -202,7 +202,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['publisher_name'] = [
 			'attribute' => 'publisher_name',
@@ -270,30 +270,30 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'attribute' => 'obligations',
 			'value' => function($model, $key, $index, $column) {
 				$obligations = $model->getObligations('count');
-				return Html::a($obligations, ['o/obligation/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} obligations', ['count'=>$obligations]), 'data-pjax'=>0]);
+				return Html::a($obligations, ['o/obligation/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} obligations', ['count' => $obligations]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['kckrs'] = [
 			'attribute' => 'kckrs',
 			'value' => function($model, $key, $index, $column) {
 				$kckrs = $model->getKckrs('count');
-				return Html::a($kckrs, ['admin/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs]), 'data-pjax'=>0]);
+				return Html::a($kckrs, ['admin/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} kckrs', ['count' => $kckrs]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['medias'] = [
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getKckrs('media');
-				return Html::a($medias, ['o/media/manage', 'publisher'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax'=>0]);
+				return Html::a($medias, ['o/media/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
@@ -302,17 +302,17 @@ class KckrPublisher extends \app\components\ActiveRecord
 				return $model->getKckrs('item');
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
-				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+				$url = Url::to(['publish', 'id' => $model->primaryKey]);
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];

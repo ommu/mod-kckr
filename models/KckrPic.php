@@ -180,7 +180,7 @@ class KckrPic extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['pic_name'] = [
 			'attribute' => 'pic_name',
@@ -204,7 +204,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'pic_signature',
 			'value' => function($model, $key, $index, $column) {
 				$uploadPath = self::getUploadPath(false);
-				return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['alt'=>$model->pic_signature]) : '-';
+				return $model->pic_signature ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->pic_signature])), ['alt' => $model->pic_signature]) : '-';
 			},
 			'format' => 'html',
 		];
@@ -249,30 +249,30 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'kckrs',
 			'value' => function($model, $key, $index, $column) {
 				$kckrs = $model->getKckrs('count');
-				return Html::a($kckrs, ['admin/manage', 'pic'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} kckrs', ['count'=>$kckrs]), 'data-pjax'=>0]);
+				return Html::a($kckrs, ['admin/manage', 'pic' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} kckrs', ['count' => $kckrs]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['medias'] = [
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getKckrs('media');
-				return Html::a($medias, ['o/media/manage', 'picId'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} karya', ['count'=>$medias]), 'data-pjax'=>0]);
+				return Html::a($medias, ['o/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['items'] = [
 			'attribute' => 'items',
 			'value' => function($model, $key, $index, $column) {
 				$items = $model->getKckrs('item');
-				return Html::a($items, ['o/media/manage', 'picId'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} items', ['count'=>$items]), 'data-pjax'=>0]);
+				return Html::a($items, ['o/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['default'] = [
@@ -281,16 +281,16 @@ class KckrPic extends \app\components\ActiveRecord
 				return $this->filterYesNo($model->default);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
-				$url = Url::to(['setting/pic/publish', 'id'=>$model->primaryKey]);
+				$url = Url::to(['setting/pic/publish', 'id' => $model->primaryKey]);
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
@@ -360,13 +360,13 @@ class KckrPic extends \app\components\ActiveRecord
 				$picSignatureFileType = ['jpg', 'jpeg', 'png', 'bmp', 'gif'];
                 if (!in_array(strtolower($this->pic_signature->getExtension()), $picSignatureFileType)) {
 					$this->addError('pic_signature', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
-						'name'=>$this->pic_signature->name,
-						'extensions'=>$this->formatFileType($picSignatureFileType, false),
+						'name' => $this->pic_signature->name,
+						'extensions' => $this->formatFileType($picSignatureFileType, false),
 					]));
                 }
             } else {
                 if ($this->isNewRecord || (!$this->isNewRecord && $this->old_pic_signature == '')) {
-                    $this->addError('pic_signature', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('pic_signature')]));
+                    $this->addError('pic_signature', Yii::t('app', '{attribute} cannot be blank.', ['attribute' => $this->getAttributeLabel('pic_signature')]));
                 }
 			}
 

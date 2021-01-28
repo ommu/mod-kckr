@@ -58,7 +58,7 @@ class AdminController extends Controller
 	{
 		$model = KckrSetting::findOne(1);
         if ($model === null) {
-            $model = new KckrSetting(['id'=>1]);
+            $model = new KckrSetting(['id' => 1]);
         }
 
         if (Yii::$app->request->isPost) {
@@ -70,7 +70,7 @@ class AdminController extends Controller
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR setting success created.'));
                 return $this->redirect(['update']);
-                //return $this->redirect(['view', 'id'=>$model->id]);
+                //return $this->redirect(['view', 'id' => $model->id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
@@ -132,7 +132,7 @@ class AdminController extends Controller
 	{
 		$model = KckrSetting::findOne(1);
         if ($model === null) {
-            $model = new KckrSetting(['id'=>1]);
+            $model = new KckrSetting(['id' => 1]);
         }
 
         if (Yii::$app->request->isPost) {

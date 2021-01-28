@@ -18,16 +18,17 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
 use ommu\kckr\models\Kckrs;
+use ommu\flatpickr\Flatpickr;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['view', 'id'=>$model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 ?>
 
 <div class="kckrs-print">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -40,7 +41,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Print');
 
 <?php //echo $form->errorSummary($model);?>
 
-<?php echo $this->description && !$model->thanks_date && Yii::$app->request->isAjax ? Html::tag('p', $this->description, ['class'=>'mb-4']) : '';?>
+<?php echo $this->description && !$model->thanks_date && Yii::$app->request->isAjax ? Html::tag('p', $this->description, ['class' => 'mb-4']) : '';?>
 
 <?php 
 if ($model->document) {
@@ -57,13 +58,13 @@ if ($model->document) {
 } ?>
 
 <?php echo $form->field($model, 'thanks_date')
-	->textInput(['type'=>'date'])
+    ->widget(Flatpickr::className(), ['model' => $model, 'attribute' => 'thanks_date'])
 	->label($model->getAttributeLabel('thanks_date')); ?>
 
 <hr/>
 
 <?php echo $form->field($model, 'submitButton')
-	->submitButton(['button'=>Html::submitButton(Yii::t('app', 'Generate'), ['class' => 'btn btn-primary'])]); ?>
+	->submitButton(['button' => Html::submitButton(Yii::t('app', 'Generate'), ['class' => 'btn btn-primary'])]); ?>
 
 <?php ActiveForm::end(); ?>
 

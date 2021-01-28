@@ -17,8 +17,8 @@
 use yii\helpers\Url;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-$this->params['breadcrumbs'][] = ['label' => $model->kckr->publisher->publisher_name, 'url' => ['admin/view', 'id'=>$model->kckr_id]];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Media'), 'url' => ['manage', 'kckr'=>$model->kckr_id]];
+$this->params['breadcrumbs'][] = ['label' => $model->kckr->publisher->publisher_name, 'url' => ['admin/view', 'id' => $model->kckr_id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Media'), 'url' => ['manage', 'kckr' => $model->kckr_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Create');
 ?>
 

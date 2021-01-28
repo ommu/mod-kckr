@@ -41,19 +41,19 @@ use ommu\kckr\models\Kckrs;
 <?php //echo $form->errorSummary($model);?>
 
 <?php echo $form->field($model, 'pic_name')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('pic_name')); ?>
 
 <?php echo $form->field($model, 'pic_nip')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('pic_nip')); ?>
 
 <?php echo $form->field($model, 'pic_position')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('pic_position')); ?>
 
 <?php $uploadPath = join('/', [Kckrs::getUploadPath(false), 'pic']);
-$picSignature = !$model->isNewRecord && $model->old_pic_signature != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_pic_signature])), ['alt'=>$model->old_pic_signature, 'class'=>'d-block border border-width-3 mb-3']).$model->old_pic_signature.'<hr/>' : '';
+$picSignature = !$model->isNewRecord && $model->old_pic_signature != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_pic_signature])), ['alt' => $model->old_pic_signature, 'class' => 'd-block border border-width-3 mb-4']).$model->old_pic_signature.'<hr/>' : '';
 echo $form->field($model, 'pic_signature', ['template' => '{label}{beginWrapper}<div>'.$picSignature.'</div>{input}{error}{hint}{endWrapper}'])
 	->fileInput()
 	->label($model->getAttributeLabel('pic_signature')); ?>

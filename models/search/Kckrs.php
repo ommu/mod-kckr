@@ -74,11 +74,11 @@ class Kckrs extends KckrsModel
 		])
 		->groupBy(['id']);
 
-		// add conditions that should always apply here
+        // add conditions that should always apply here
 		$dataParams = [
 			'query' => $query,
 		];
-		// disable pagination agar data pada api tampil semua
+        // disable pagination agar data pada api tampil semua
         if (isset($params['pagination']) && $params['pagination'] == 0) {
             $dataParams['pagination'] = false;
         }
@@ -120,10 +120,10 @@ class Kckrs extends KckrsModel
 		$this->load($params);
 
         if (!$this->validate()) {
-			// uncomment the following line if you do not want to return any records when validation fails
-			// $query->where('0=1');
-			return $dataProvider;
-		}
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
 
 		// grid filtering conditions
 		$query->andFilterWhere([
@@ -151,7 +151,7 @@ class Kckrs extends KckrsModel
             } else {
                 $query->andFilterWhere(['t.publish' => $this->publish]);
             }
-		}
+        }
 
         if (isset($params['document']) && $params['document'] != '') {
             if ($params['document'] == 1) {
@@ -159,7 +159,7 @@ class Kckrs extends KckrsModel
             } else if ($params['document'] == 0) {
                 $query->andFilterWhere(['IN', 't.thanks_date', ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30']]);
             }
-		}
+        }
 
         if (isset($params['article']) && $params['article'] != '') {
             if ($params['article'] == 1) {

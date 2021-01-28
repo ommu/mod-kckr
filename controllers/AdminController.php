@@ -130,7 +130,7 @@ class AdminController extends Controller
 	{
         $model = new Kckrs();
         if (($publisher = Yii::$app->request->get('id')) != null) {
-            $model = new Kckrs(['publisher_id'=>$publisher]);
+            $model = new Kckrs(['publisher_id' => $publisher]);
         }
 
 		$setting = $model->getSetting(['photo_file_type']);
@@ -144,7 +144,7 @@ class AdminController extends Controller
 
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success created.'));
-                return $this->redirect(['view', 'id'=>$model->id]);
+                return $this->redirect(['view', 'id' => $model->id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
@@ -155,7 +155,7 @@ class AdminController extends Controller
 
 		$this->view->title = Yii::t('app', 'Create KCKR');
         if (isset($model->publisher)) {
-            $this->view->title = Yii::t('app', 'Create KCKR: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
+            $this->view->title = Yii::t('app', 'Create KCKR: Publisher {publisher-name}', ['publisher-name' => $model->publisher->publisher_name]);
         }
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -186,7 +186,7 @@ class AdminController extends Controller
 
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success updated.'));
-                return $this->redirect(['update', 'id'=>$model->id]);
+                return $this->redirect(['update', 'id' => $model->id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
@@ -350,7 +350,7 @@ class AdminController extends Controller
 				}
 
 				Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR success generated document.'));
-                return $this->redirect(['print', 'id'=>$model->id]);
+                return $this->redirect(['print', 'id' => $model->id]);
 	
 				ob_end_flush();
 

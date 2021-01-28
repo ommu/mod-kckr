@@ -24,7 +24,7 @@ use ommu\kckr\models\KckrCategory;
 <div class="kckr-media-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => true,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -42,20 +42,20 @@ use ommu\kckr\models\KckrCategory;
 		'options' => [
 			'placeholder' => Yii::t('app', 'Select a category..'),
 		],
-		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a category..')], KckrCategory::getCategory()),
+		'items' => ArrayHelper::merge(['' => Yii::t('app', 'Select a category..')], KckrCategory::getCategory()),
 	])
 	->label($model->getAttributeLabel('cat_id')); ?>
 
 <?php echo $form->field($model, 'isbn')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('isbn')); ?>
 
 <?php echo $form->field($model, 'media_title')
-	->textarea(['rows'=>2, 'cols'=>50])
+	->textarea(['rows' => 2, 'cols' => 50])
 	->label($model->getAttributeLabel('media_title')); ?>
 
 <?php echo $form->field($model, 'media_desc')
-	->textarea(['rows'=>3, 'cols'=>50])
+	->textarea(['rows' => 3, 'cols' => 50])
 	->label($model->getAttributeLabel('media_desc')); ?>
 
 <?php echo $form->field($model, 'media_author')
@@ -63,11 +63,11 @@ use ommu\kckr\models\KckrCategory;
 	->label($model->getAttributeLabel('media_author')); ?>
 
 <?php echo $form->field($model, 'media_publish_year')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('media_publish_year')); ?>
 
 <?php echo $form->field($model, 'media_item')
-	->textInput(['type'=>'number', 'min'=>'1'])
+	->textInput(['type' => 'number', 'min' => '1'])
 	->label($model->getAttributeLabel('media_item')); ?>
 
 <?php 

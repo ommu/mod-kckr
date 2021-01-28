@@ -116,10 +116,10 @@ class ObligationController extends Controller
 
 		$this->view->title = Yii::t('app', 'Obligations');
         if ($publisher) {
-            $this->view->title = Yii::t('app', 'Obligations: Publisher {publisher-name}', ['publisher-name'=>$publisher->publisher_name]);
+            $this->view->title = Yii::t('app', 'Obligations: Publisher {publisher-name}', ['publisher-name' => $publisher->publisher_name]);
         }
         if ($category) {
-            $this->view->title = Yii::t('app', 'Obligations: Category {category-name}', ['category-name'=>$category->category_name_i]);
+            $this->view->title = Yii::t('app', 'Obligations: Category {category-name}', ['category-name' => $category->category_name_i]);
         }
 
 		$this->view->description = '';
@@ -144,7 +144,7 @@ class ObligationController extends Controller
             throw new \yii\web\ForbiddenHttpException(Yii::t('app', 'The requested page does not exist.'));
         }
 
-		$model = new KckrPublisherObligation(['publisher_id'=>$id]);
+		$model = new KckrPublisherObligation(['publisher_id' => $id]);
 		$this->subMenuParam = $model->publisher_id;
 
         if (Yii::$app->request->isPost) {
@@ -155,9 +155,9 @@ class ObligationController extends Controller
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success created.'));
                 if (!Yii::$app->request->isAjax) {
-					return $this->redirect(['manage', 'publisher'=>$model->publisher_id]);
+					return $this->redirect(['manage', 'publisher' => $model->publisher_id]);
                 }
-                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher' => $model->publisher_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
@@ -168,7 +168,7 @@ class ObligationController extends Controller
 
 		$this->view->title = Yii::t('app', 'Add Obligation');
         if (isset($model->publisher)) {
-            $this->view->title = Yii::t('app', 'Add Obligation: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
+            $this->view->title = Yii::t('app', 'Add Obligation: Publisher {publisher-name}', ['publisher-name' => $model->publisher->publisher_name]);
         }
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -197,9 +197,9 @@ class ObligationController extends Controller
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success updated.'));
                 if (!Yii::$app->request->isAjax) {
-                    return $this->redirect(['update', 'id'=>$model->id]);
+                    return $this->redirect(['update', 'id' => $model->id]);
                 }
-                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher' => $model->publisher_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
@@ -247,7 +247,7 @@ class ObligationController extends Controller
 
         if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success deleted.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher' => $model->publisher_id]);
 		}
 	}
 
@@ -265,7 +265,7 @@ class ObligationController extends Controller
 
         if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr publisher obligation success updated.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher'=>$model->publisher_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'publisher' => $model->publisher_id]);
 		}
 	}
 
@@ -280,7 +280,7 @@ class ObligationController extends Controller
             throw new \yii\web\ForbiddenHttpException(Yii::t('app', 'The requested page does not exist.'));
         }
 
-		$model = new KckrPublisherObligation(['publisher_id'=>$id]);
+		$model = new KckrPublisherObligation(['publisher_id' => $id]);
 		$this->subMenuParam = $model->publisher_id;
 
 		$setting = $model->setting;
@@ -360,8 +360,8 @@ class ObligationController extends Controller
 	
 				} else {
 					Yii::$app->session->setFlash('error', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
-						'name'=>$importFilename->name,
-						'extensions'=>$setting->import_file_type,
+						'name' => $importFilename->name,
+						'extensions' => $setting->import_file_type,
 					]));
 				}
 			} else {
@@ -376,14 +376,14 @@ class ObligationController extends Controller
 			}
 
             if (!Yii::$app->request->isAjax) {
-				return $this->redirect(['import', 'id'=>$id]);
+				return $this->redirect(['import', 'id' => $id]);
             }
-			return $this->redirect(Yii::$app->request->referrer ?: ['import', 'id'=>$id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['import', 'id' => $id]);
 		}
 
 		$this->view->title = Yii::t('app', 'Import Obligation');
         if (isset($model->publisher)) {
-			$this->view->title = Yii::t('app', 'Import Obligation: Publisher {publisher-name}', ['publisher-name'=>$model->publisher->publisher_name]);
+			$this->view->title = Yii::t('app', 'Import Obligation: Publisher {publisher-name}', ['publisher-name' => $model->publisher->publisher_name]);
         }
 		$this->view->description = '';
         if (Yii::$app->request->isAjax) {

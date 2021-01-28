@@ -96,7 +96,7 @@ class MediaController extends Controller
 	{
         $searchModel = new KckrMediaSearch();
         if (($publisher = Yii::$app->request->get('publisher')) != null) {
-            $searchModel = new KckrMediaSearch(['publisherId'=>$publisher]);
+            $searchModel = new KckrMediaSearch(['publisherId' => $publisher]);
         }
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -128,13 +128,13 @@ class MediaController extends Controller
 
 		$this->view->title = Yii::t('app', 'Medias');
         if ($kckr) {
-            $this->view->title = Yii::t('app', 'Medias: Publisher {publisher-name}', ['publisher-name'=>$kckr->publisher->publisher_name]);
+            $this->view->title = Yii::t('app', 'Medias: Publisher {publisher-name}', ['publisher-name' => $kckr->publisher->publisher_name]);
         }
         if ($category) {
-            $this->view->title = Yii::t('app', 'Medias: Category {category-name}', ['category-name'=>$category->category_name_i]);
+            $this->view->title = Yii::t('app', 'Medias: Category {category-name}', ['category-name' => $category->category_name_i]);
         }
         if ($publisher) {
-            $this->view->title = Yii::t('app', 'Medias: Publisher {publisher-name}', ['publisher-name'=>$publisher->publisher_name]);
+            $this->view->title = Yii::t('app', 'Medias: Publisher {publisher-name}', ['publisher-name' => $publisher->publisher_name]);
         }
 
 		$this->view->description = '';
@@ -161,7 +161,7 @@ class MediaController extends Controller
             throw new \yii\web\ForbiddenHttpException(Yii::t('app', 'The requested page does not exist.'));
         }
 
-		$model = new KckrMedia(['kckr_id'=>$id]);
+		$model = new KckrMedia(['kckr_id' => $id]);
 		$this->subMenuParam = $model->kckr_id;
 
         if (Yii::$app->request->isPost) {
@@ -172,9 +172,9 @@ class MediaController extends Controller
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success created.'));
                 if (!Yii::$app->request->isAjax) {
-					return $this->redirect(['manage', 'kckr'=>$model->kckr_id]);
+					return $this->redirect(['manage', 'kckr' => $model->kckr_id]);
                 }
-                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr' => $model->kckr_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
@@ -185,7 +185,7 @@ class MediaController extends Controller
 
 		$this->view->title = Yii::t('app', 'Add Media');
         if (isset($model->kckr)) {
-            $this->view->title = Yii::t('app', 'Add Media: Publisher {publisher-name}', ['publisher-name'=>$model->kckr->publisher->publisher_name]);
+            $this->view->title = Yii::t('app', 'Add Media: Publisher {publisher-name}', ['publisher-name' => $model->kckr->publisher->publisher_name]);
         }
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -214,9 +214,9 @@ class MediaController extends Controller
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
                 if (!Yii::$app->request->isAjax) {
-                    return $this->redirect(['update', 'id'=>$model->id]);
+                    return $this->redirect(['update', 'id' => $model->id]);
                 }
-                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr' => $model->kckr_id]);
 
             } else {
                 if (Yii::$app->request->isAjax) {
@@ -264,7 +264,7 @@ class MediaController extends Controller
 
         if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success deleted.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr' => $model->kckr_id]);
 		}
 	}
 
@@ -282,7 +282,7 @@ class MediaController extends Controller
 
         if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Kckr media success updated.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr'=>$model->kckr_id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage', 'kckr' => $model->kckr_id]);
 		}
 	}
 
@@ -297,7 +297,7 @@ class MediaController extends Controller
             throw new \yii\web\ForbiddenHttpException(Yii::t('app', 'The requested page does not exist.'));
         }
 
-		$model = new KckrMedia(['kckr_id'=>$id]);
+		$model = new KckrMedia(['kckr_id' => $id]);
 		$this->subMenuParam = $model->kckr_id;
 
 		$setting = $model->setting;
@@ -368,8 +368,8 @@ class MediaController extends Controller
 	
 				} else {
 					Yii::$app->session->setFlash('error', Yii::t('app', 'The file {name} cannot be uploaded. Only files with these extensions are allowed: {extensions}', [
-						'name'=>$importFilename->name,
-						'extensions'=>$setting->import_file_type,
+						'name' => $importFilename->name,
+						'extensions' => $setting->import_file_type,
 					]));
 				}
 			} else {
@@ -384,14 +384,14 @@ class MediaController extends Controller
 			}
 
             if (!Yii::$app->request->isAjax) {
-				return $this->redirect(['import', 'id'=>$id]);
+				return $this->redirect(['import', 'id' => $id]);
             }
-			return $this->redirect(Yii::$app->request->referrer ?: ['import', 'id'=>$id]);
+			return $this->redirect(Yii::$app->request->referrer ?: ['import', 'id' => $id]);
 		}
 
 		$this->view->title = Yii::t('app', 'Import Media');
         if (isset($model->kckr->publisher)) {
-			$this->view->title = Yii::t('app', 'Import Media: Publisher {publisher-name}', ['publisher-name'=>$model->kckr->publisher->publisher_name]);
+			$this->view->title = Yii::t('app', 'Import Media: Publisher {publisher-name}', ['publisher-name' => $model->kckr->publisher->publisher_name]);
         }
 		$this->view->description = '';
         if (Yii::$app->request->isAjax) {

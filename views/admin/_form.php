@@ -20,6 +20,7 @@ use app\components\widgets\ActiveForm;
 use ommu\kckr\models\KckrPic;
 use ommu\selectize\Selectize;
 use yii\helpers\ArrayHelper;
+use ommu\flatpickr\Flatpickr;
 ?>
 
 <div class="kckrs-form">
@@ -52,7 +53,7 @@ echo $form->field($model, 'publisher_id')
 		'options' => [
 			'placeholder' => Yii::t('app', 'Select a publisher...'),
 		],
-		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a publisher..')], $publisher),
+		'items' => ArrayHelper::merge(['' => Yii::t('app', 'Select a publisher..')], $publisher),
 		'url' => $publisherSuggestUrl,
 		'queryParam' => 'term',
 		'pluginOptions' => [
@@ -65,7 +66,7 @@ echo $form->field($model, 'publisher_id')
 	->label($model->getAttributeLabel('publisher_id')); ?>
 
 <?php echo $form->field($model, 'letter_number')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('letter_number')); ?>
 
 <?php echo $form->field($model, 'pic_id')
@@ -73,7 +74,7 @@ echo $form->field($model, 'publisher_id')
 		'options' => [
 			'placeholder' => Yii::t('app', 'Select a person in charge..'),
 		],
-		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a person in charge..')], KckrPic::getPic()),
+		'items' => ArrayHelper::merge(['' => Yii::t('app', 'Select a person in charge..')], KckrPic::getPic()),
 	])
 	->label($model->getAttributeLabel('pic_id')); ?>
 
@@ -82,24 +83,24 @@ echo $form->field($model, 'publisher_id')
 		'options' => [
 			'placeholder' => Yii::t('app', 'Select a send type..'),
 		],
-		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a send type..')], $model::getSendType()),
+		'items' => ArrayHelper::merge(['' => Yii::t('app', 'Select a send type..')], $model::getSendType()),
 	])
 	->label($model->getAttributeLabel('send_type')); ?>
 
 <?php echo $form->field($model, 'send_date')
-	->textInput(['type'=>'date'])
+    ->widget(Flatpickr::className(), ['model' => $model, 'attribute' => 'send_date'])
 	->label($model->getAttributeLabel('send_date')); ?>
 
 <?php echo $form->field($model, 'receipt_date')
-	->textInput(['type'=>'date'])
+    ->widget(Flatpickr::className(), ['model' => $model, 'attribute' => 'receipt_date'])
 	->label($model->getAttributeLabel('receipt_date')); ?>
 
 <?php $uploadPath = join('/', [$model::getUploadPath(false), 'photo']);
-$photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['alt'=>$model->old_photos, 'class'=>'d-block border border-width-3 mb-3']).$model->old_photos.'<hr/>' : '';
+$photo = !$model->isNewRecord && $model->old_photos != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->old_photos])), ['alt' => $model->old_photos, 'class' => 'd-block border border-width-3 mb-4']).$model->old_photos.'<hr/>' : '';
 echo $form->field($model, 'photos', ['template' => '{label}{beginWrapper}<div>'.$photo.'</div>{input}{error}{hint}{endWrapper}'])
 	->fileInput()
 	->label($model->getAttributeLabel('photos'))
-	->hint(Yii::t('app', 'extensions are allowed: {extensions}', ['extensions'=>$setting->photo_file_type])); ?>
+	->hint(Yii::t('app', 'extensions are allowed: {extensions}', ['extensions' => $setting->photo_file_type])); ?>
 
 <?php 
 if ($model->isNewRecord && !$model->getErrors()) {
