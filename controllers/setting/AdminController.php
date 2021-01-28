@@ -30,6 +30,7 @@ use yii\filters\VerbFilter;
 use ommu\kckr\models\KckrSetting;
 use ommu\kckr\models\search\KckrCategory as KckrCategorySearch;
 use ommu\kckr\models\search\KckrPic as KckrPicSearch;
+use yii\web\UploadedFile;
 
 class AdminController extends Controller
 {
@@ -63,6 +64,7 @@ class AdminController extends Controller
 
         if (Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
+            $model->letterhead = UploadedFile::getInstance($model, 'letterhead');
             // $postData = Yii::$app->request->post();
             // $model->load($postData);
             // $model->order = $postData['order'] ? $postData['order'] : 0;
@@ -137,6 +139,7 @@ class AdminController extends Controller
 
         if (Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
+            $model->letterhead = UploadedFile::getInstance($model, 'letterhead');
             // $postData = Yii::$app->request->post();
             // $model->load($postData);
             // $model->order = $postData['order'] ? $postData['order'] : 0;

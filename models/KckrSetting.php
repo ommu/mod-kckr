@@ -38,6 +38,7 @@ use yii\helpers\Html;
 use app\models\Users;
 use ommu\article\models\ArticleCategory;
 use yii\helpers\Json;
+use yii\web\UploadedFile;
 
 class KckrSetting extends \app\components\ActiveRecord
 {
@@ -46,7 +47,8 @@ class KckrSetting extends \app\components\ActiveRecord
 
 	public $gridForbiddenColumn = [];
 
-	public $modifiedDisplayname;
+    public $modifiedDisplayname;
+    public $letterhead;
 
 	/**
 	 * @return string the associated database table name
@@ -65,7 +67,7 @@ class KckrSetting extends \app\components\ActiveRecord
 			[['license', 'permission', 'meta_description', 'meta_keyword', 'photo_file_type', 'import_file_type', 'article_cat_id'], 'required'],
 			[['permission', 'photo_resize', 'article_cat_id', 'modified_id'], 'integer'],
 			[['meta_description', 'meta_keyword'], 'string'],
-			[['photo_resize', 'photo_resize_size', 'photo_view_size'], 'safe'],
+			[['photo_resize', 'photo_resize_size', 'photo_view_size', 'letterhead'], 'safe'],
 			//[['photo_resize_size', 'photo_view_size', 'photo_file_type'], 'serialize'],
 			//[['import_file_type'], 'json'],
 			[['license'], 'string', 'max' => 32],
@@ -97,6 +99,7 @@ class KckrSetting extends \app\components\ActiveRecord
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 			'width' => Yii::t('app', 'Width'),
 			'height' => Yii::t('app', 'Height'),
+			'letterhead' => Yii::t('app', 'Letterhead'),
 		];
 	}
 
@@ -324,7 +327,13 @@ class KckrSetting extends \app\components\ActiveRecord
         if (!empty($import_file_type)) {
             $this->import_file_type = $this->formatFileType($import_file_type, false);
         }
-		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+        // $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+        $this->letterhead = '';
+        
+        $uploadPath = Kckrs::getUploadPath();
+        if (file_exists(join('/', [$uploadPath, 'letterhead.png']))) {
+            $this->letterhead = 'letterhead.png';
+        }
 	}
 
 	/**
@@ -362,5 +371,21 @@ class KckrSetting extends \app\components\ActiveRecord
 			$this->import_file_type = Json::encode($this->formatFileType($this->import_file_type));
         }
         return true;
+	}
+
+	/**
+	 * After save attributes
+	 */
+	public function afterSave($insert, $changedAttributes)
+	{
+        parent::afterSave($insert, $changedAttributes);
+
+		$uploadPath = Kckrs::getUploadPath();
+
+        // $this->letterhead = UploadedFile::getInstance($this, 'letterhead');
+        if ($this->letterhead instanceof UploadedFile && !$this->letterhead->getHasError()) {
+            $fileName = 'letterhead.png';
+            $this->letterhead->saveAs(join('/', [$uploadPath, $fileName]));
+        }
 	}
 }

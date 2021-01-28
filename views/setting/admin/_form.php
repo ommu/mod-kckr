@@ -15,8 +15,10 @@
  */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
 use ommu\article\models\ArticleCategory;
+use ommu\kckr\models\Kckrs;
 ?>
 
 <div class="kckr-setting-form">
@@ -57,6 +59,14 @@ echo $form->field($model, 'permission', ['template' => '{label}{beginWrapper}{hi
 <?php echo $form->field($model, 'meta_keyword')
 	->textarea(['rows' => 6, 'cols' => 50])
 	->label($model->getAttributeLabel('meta_keyword')); ?>
+
+<hr/>
+
+<?php $uploadPath = Kckrs::getUploadPath(false);
+$letterhead = $model->letterhead != '' ? Html::img(Url::to(join('/', ['@webpublic', $uploadPath, $model->letterhead])), ['alt' => $model->letterhead, 'class' => 'd-block border border-width-3 mb-4']).$model->letterhead.'<hr/>' : '';
+echo $form->field($model, 'letterhead', ['template' => '{label}{beginWrapper}<div>'.$letterhead.'</div>{input}{error}{hint}{endWrapper}'])
+	->fileInput()
+	->label($model->getAttributeLabel('letterhead')); ?>
 
 <hr/>
 
