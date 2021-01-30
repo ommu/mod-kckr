@@ -36,11 +36,13 @@ use yii\filters\VerbFilter;
 use ommu\kckr\models\Kckrs;
 use ommu\kckr\models\search\Kckrs as KckrsSearch;
 use yii\web\UploadedFile;
+use thamtech\uuid\helpers\UuidHelper;
+use yii\helpers\Inflector;
 
 class AdminController extends Controller
 {
-	use \ommu\kckr\components\traits\DocumentTrait;
 	use \ommu\traits\FileTrait;
+	use \ommu\traits\DocumentTrait;
 
 	/**
 	 * {@inheritdoc}
@@ -314,7 +316,7 @@ class AdminController extends Controller
 
 					$templatePath = Yii::getAlias('@ommu/kckr/components/templates');
 					$letterTemplate = join('/', [$templatePath, 'document_letter.php']);
-					$letterName = $model->id;
+                    $letterName = Inflector::slug(join('-', [time(), UuidHelper::uuid(), $model->id]));
 					$fileName = $this->getPdf([
 						'model' => $model, 
 						'kckrAsset' => $kckrAsset,
@@ -324,7 +326,7 @@ class AdminController extends Controller
 					$medias = $model->getMedias('count');
                     if ($medias > 0) {
 						$attachmentTemplate = join('/', [$templatePath, 'document_attachment.php']);
-						$attachmentName = join('-', [$model->id, 'attachment']);
+                        $attachmentName = Inflector::slug(join('-', [time(), UuidHelper::uuid(), $model->id, 'attachment']));
 						$fileName = $this->getPdf([
 							'model' => $model, 
 							'medias' => $model->medias,
