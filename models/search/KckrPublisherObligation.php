@@ -71,8 +71,9 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
 			'creation creation', 
 			'modified modified',
 			'handovers handovers',
-		])
-		->groupBy(['id']);
+		]);
+
+		$query->groupBy(['id']);
 
         // add conditions that should always apply here
 		$dataParams = [

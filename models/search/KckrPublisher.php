@@ -68,8 +68,9 @@ class KckrPublisher extends KckrPublisherModel
 		$query->joinWith([
 			'creation creation', 
 			'modified modified'
-		])
-		->groupBy(['id']);
+		]);
+
+		$query->groupBy(['id']);
 
         // add conditions that should always apply here
 		$dataParams = [

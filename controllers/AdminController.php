@@ -314,6 +314,7 @@ class AdminController extends Controller
 
 					$kckrAsset = \ommu\kckr\components\assets\KckrAsset::register($this->getView());
 
+                    // letter
 					$templatePath = Yii::getAlias('@ommu/kckr/components/templates');
 					$letterTemplate = join('/', [$templatePath, 'document_letter.php']);
                     $letterName = Inflector::slug(join('-', [time(), UuidHelper::uuid(), $model->id]));
@@ -323,6 +324,7 @@ class AdminController extends Controller
 					], $letterTemplate, $documentPath, $letterName, false, false, 'P', 'Legal');
 					array_push($documents, $fileName);
 
+                    // attachment
 					$medias = $model->getMedias('count');
                     if ($medias > 0) {
 						$attachmentTemplate = join('/', [$templatePath, 'document_attachment.php']);

@@ -72,8 +72,9 @@ class KckrMedia extends KckrMediaModel
 			'modified modified',
 			'kckr.pic pic', 
 			'kckr.publisher publisher', 
-		])
-		->groupBy(['id']);
+		]);
+
+		$query->groupBy(['id']);
 
         // add conditions that should always apply here
 		$dataParams = [
