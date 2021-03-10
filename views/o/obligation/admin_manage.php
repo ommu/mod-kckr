@@ -36,13 +36,14 @@ if ($publisher != null) {
 if ($publisher != null) {
 	$this->params['menu']['content'] = [
 		['label' => Yii::t('app', 'Add Obligation'), 'url' => Url::to(['create', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-primary modal-btn']],
-		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn modal-btn btn-primary']],
-		['label' => Yii::t('app', 'Export'), 'url' => Url::to(['export', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn modal-btn btn-primary']],
+		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-default modal-btn']],
+		['label' => Yii::t('app', 'Export'), 'url' => Url::to(['export', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-dark modal-btn']],
 	];
 }
 $this->params['menu']['option'] = [
 	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],
 	['label' => Yii::t('app', 'Grid Option'), 'url' => 'javascript:void(0);'],
+	['label' => Yii::t('app', 'Export'), 'url' => 'javascript:void(0);'],
 ];
 ?>
 

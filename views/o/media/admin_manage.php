@@ -43,7 +43,7 @@ if ($kckr != null) {
 if ($kckr != null) {
 	$this->params['menu']['content'] = [
 		['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create', 'id' => $kckr->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-primary modal-btn']],
-		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id' => $kckr->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn modal-btn btn-primary']],
+		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id' => $kckr->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-default modal-btn']],
 	];
 }
 $this->params['menu']['option'] = [
