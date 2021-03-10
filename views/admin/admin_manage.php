@@ -35,7 +35,7 @@ if ($pic != null) {
 }
 
 $this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Add KCKR'), 'url' => $publisher != null ? Url::to(['create', 'id' => $publisher->id]) : Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-success']],
+	['label' => Yii::t('app', 'Add KCKR'), 'url' => $publisher != null ? Url::to(['create', 'id' => $publisher->id]) : Url::to(['create']), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-primary']],
 ];
 $this->params['menu']['option'] = [
 	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],
