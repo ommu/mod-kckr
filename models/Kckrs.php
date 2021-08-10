@@ -531,13 +531,13 @@ class Kckrs extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-        if (in_array($this->send_date, ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30'])) {
+        if (Yii::$app->formatter->asDate($this->send_date) == '-') {
             $this->send_date = '';
         }
-        if (in_array($this->receipt_date, ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30'])) {
+        if (Yii::$app->formatter->asDate($this->receipt_date) == '-') {
             $this->receipt_date = '';
         }
-        if (in_array($this->thanks_date, ['0000-00-00', '1970-01-01', '0002-12-02', '-0001-11-30'])) {
+        if (Yii::$app->formatter->asDate($this->thanks_date) == '-') {
             $this->thanks_date = '';
         }
 
