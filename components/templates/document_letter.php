@@ -40,11 +40,10 @@ use ommu\kckr\models\Kckrs;
 
 <page tyle="font-size: 12pt">
 <div style="height: 99%;">
-	<?php $kop = join('/', [$kckrAsset->basePath, 'images', '{$letter_kop}']);
-    if (!file_exists($kop)) {
-        $kop = join('/', [$kckrAsset->basePath, 'images', 'bpad_kop.png']);
+	<?php if (!file_exists($letterhead)) {
+        $letterhead = join('/', [$kckrAsset->basePath, 'images', 'bpad_kop.png']);
     }?>
-	<img style="width: 100%;" src="<?php echo $kop;?>" alt="">
+	<img style="width: 100%;" src="<?php echo $letterhead;?>" alt="">
 	
 	<div style="padding-left: 30mm; padding-right: 30mm; width: 71%;">
 		<table style="width: 100%;">

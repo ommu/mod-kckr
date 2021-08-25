@@ -321,6 +321,7 @@ class AdminController extends Controller
 					$fileName = $this->getPdf([
 						'model' => $model, 
 						'kckrAsset' => $kckrAsset,
+						'letterhead' => join('/', [$kckrPath, 'letterhead.png']),
 					], $letterTemplate, $documentPath, $letterName, false, false, 'P', 'Legal');
 					array_push($documents, $fileName);
 
@@ -333,6 +334,7 @@ class AdminController extends Controller
 							'model' => $model, 
 							'medias' => $model->medias,
 							'kckrAsset' => $kckrAsset,
+                            'letterhead' => join('/', [$kckrPath, 'letterhead.png']),
 						], $attachmentTemplate, $documentPath, $attachmentName, false, false, 'L', 'FOLIO');
 						array_push($documents, $fileName);
 					}
