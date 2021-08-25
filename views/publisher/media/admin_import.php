@@ -40,6 +40,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Import');
 		<?php echo Html::fileInput('importFilename', '', ['id' => 'importFilename']);?>
 		<div class="help-block help-block-error">
 			<?php echo Yii::t('app', 'extensions are allowed: {extensions}', ['extensions' => $model->setting->import_file_type]);?>
+            <hr/>
+            <?php echo Html::a(Yii::t('app', 'download template import'), $template, ['class' => 'btn btn-success btn-sm']);?>
 		</div>
 	</div>
 </div>

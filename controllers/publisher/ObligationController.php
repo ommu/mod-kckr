@@ -280,6 +280,9 @@ class ObligationController extends Controller
             throw new \yii\web\ForbiddenHttpException(Yii::t('app', 'The requested page does not exist.'));
         }
 
+        $kckrAsset = \ommu\kckr\components\assets\KckrAsset::register($this->getView());
+        $template = join('/', [$kckrAsset->baseUrl, 'import_obligation_template.xlsx']);
+
 		$model = new KckrPublisherObligation(['publisher_id' => $id]);
 		$this->subMenuParam = $model->publisher_id;
 
@@ -392,6 +395,7 @@ class ObligationController extends Controller
 		$this->view->keywords = '';
 		return $this->oRender('admin_import', [
 			'model' => $model,
+			'template' => $template,
 		]);
 	}
 

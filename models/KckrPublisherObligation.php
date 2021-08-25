@@ -67,7 +67,7 @@ class KckrPublisherObligation extends \app\components\ActiveRecord
 	{
 		return [
 			[['publisher_id', 'cat_id', 'media_title'], 'required'],
-			[['publish', 'publisher_id', 'cat_id', 'creation_id', 'modified_id'], 'integer'],
+			[['publish', 'publisher_id', 'cat_id', 'media_publish_year', 'creation_id', 'modified_id'], 'integer'],
 			[['media_title', 'media_desc', 'media_author'], 'string'],
 			[['media_desc', 'isbn', 'media_publish_year', 'media_author'], 'safe'],
 			[['isbn'], 'string', 'max' => 32],
