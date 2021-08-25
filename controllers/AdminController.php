@@ -16,6 +16,7 @@
  *	RunAction
  *	Publish
  *	Print
+ *	Article
  *
  *	findModel
  *
@@ -38,6 +39,8 @@ use ommu\kckr\models\search\Kckrs as KckrsSearch;
 use yii\web\UploadedFile;
 use thamtech\uuid\helpers\UuidHelper;
 use yii\helpers\Inflector;
+use ommu\article\models\Articles;
+use ommu\kckr\models\KckrSetting;
 
 class AdminController extends Controller
 {
@@ -376,6 +379,68 @@ class AdminController extends Controller
 		$this->view->keywords = '';
 		return $this->oRender('admin_print', [
 			'model' => $model,
+		]);
+	}
+
+	/**
+	 * Prints an existing Kckrs model.
+	 * If print is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionArticle($id)
+	{
+		$kckr = $this->findModel($id);
+		$kckrSetting = $kckr->getSetting(['article_cat_id']);
+		
+		if(isset($kckr->article)) {
+			$model = $kckr->article;
+        } else {
+			$model = new Articles(['cat_id' => $kckrSetting->article_cat_id]);
+        }
+		$setting = $model->getSetting(['headline', 'headline_category', 'media_image_limit', 'media_image_type', 'media_file_limit', 'media_file_type']);
+
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+            if ($model->category->single_photo || $setting->media_image_limit == 1) {
+                $model->image = UploadedFile::getInstance($model, 'image');
+            }
+            if ($model->category->single_file || $setting->media_file_limit == 1) {
+                $model->file = UploadedFile::getInstance($model, 'file');
+            }
+            // $postData = Yii::$app->request->post();
+            // $model->load($postData);
+            // $model->order = $postData['order'] ? $postData['order'] : 0;
+
+            if ($model->save()) {
+                if (!$model->isNewRecord) {
+                    $kckr->article_id = $model->id;
+                    $kckr->save();
+
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR Article success created.'));
+                } else {
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'KCKR Article success updated.'));
+                }
+                return $this->redirect(['manage']);
+
+            } else {
+                if (Yii::$app->request->isAjax) {
+                    return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+                }
+            }
+        }
+
+		$this->subMenu = $this->module->params['kckr_submenu'];
+		$this->view->title = Yii::t('app', 'Create KCKR Article');
+        if (!$model->isNewRecord) {
+            $this->view->title = Yii::t('app', 'KCKR Article: {title}', ['title' => $model->title]);
+        }
+		$this->view->description = '';
+		$this->view->keywords = '';
+		return $this->orender('admin_article', [
+			'kckr' => $kckr,
+			'model' => $model,
+			'setting' => $setting,
 		]);
 	}
 }

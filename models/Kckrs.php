@@ -364,7 +364,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'attribute' => 'articles',
 			'value' => function($model, $key, $index, $column) {
 				return $model->articles ? 
-					Html::a('<span class="glyphicon glyphicon-ok"></span>', ['article', 'id' => $model->primaryKey, 'aid' => $model->article_id], ['title' => Yii::t('app', 'Update Article')]) : 
+					Html::a('<span class="glyphicon glyphicon-ok"></span>', ['article', 'id' => $model->primaryKey], ['title' => Yii::t('app', 'Update Article')]) : 
 					Html::a(Yii::t('app', 'Article'), ['article', 'id' => $model->primaryKey], ['title' => Yii::t('app', 'Create Article')]);
 			},
 			'filter' => $this->filterYesNo(),
