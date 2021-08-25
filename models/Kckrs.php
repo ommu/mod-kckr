@@ -65,7 +65,7 @@ class Kckrs extends \app\components\ActiveRecord
 	public $creationDisplayname;
 	public $modifiedDisplayname;
 	public $document;
-	public $article;
+	public $articles;
 	public $regenerate;
 
 	const SCENARIO_DOCUMENT = 'documentForm';
@@ -138,7 +138,7 @@ class Kckrs extends \app\components\ActiveRecord
 			'thanksUserDisplayname' => Yii::t('app', 'Thanks User'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
-			'article' => Yii::t('app', 'Article'),
+			'articles' => Yii::t('app', 'Article'),
 			'document' => Yii::t('app', 'Document'),
 			'regenerate' => Yii::t('app', 'Regenerate Document'),
 			'documents' => Yii::t('app', 'Documents'),
@@ -360,10 +360,10 @@ class Kckrs extends \app\components\ActiveRecord
 			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'html',
 		];
-		$this->templateColumns['article'] = [
-			'attribute' => 'article',
+		$this->templateColumns['articles'] = [
+			'attribute' => 'articles',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->article) ? 
+				return $model->articles ? 
 					Html::a('<span class="glyphicon glyphicon-ok"></span>', ['article', 'id' => $model->primaryKey, 'aid' => $model->article_id], ['title' => Yii::t('app', 'Update Article')]) : 
 					Html::a(Yii::t('app', 'Article'), ['article', 'id' => $model->primaryKey], ['title' => Yii::t('app', 'Create Article')]);
 			},
@@ -549,6 +549,7 @@ class Kckrs extends \app\components\ActiveRecord
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 		$this->document = $this->thanks_date ? 1 : 0;
+		$this->articles = isset($this->article) ? 1 : 0;
 	}
 
 	/**

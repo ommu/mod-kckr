@@ -27,7 +27,7 @@ class Kckrs extends KckrsModel
 	public function rules()
 	{
 		return [
-			[['id', 'publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id', 'document', 'article'], 'integer'],
+			[['id', 'publish', 'article_id', 'pic_id', 'publisher_id', 'thanks_user_id', 'creation_id', 'modified_id', 'document', 'articles'], 'integer'],
 			[['letter_number', 'send_type', 'send_date', 'receipt_date', 'thanks_date', 'thanks_document', 'photos', 'creation_date', 'modified_date', 'updated_date', 'picName', 'publisherName', 'thanksUserDisplayname', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
@@ -162,13 +162,15 @@ class Kckrs extends KckrsModel
             }
         }
 
-        if (isset($params['article']) && $params['article'] != '') {
-            if ($params['article'] == 1) {
+        if (isset($params['articles']) && $params['articles'] != '') {
+            if ($params['articles'] == 1) {
 				$query->andFilterWhere(['is not', 't.article_id', null])
 					->andFilterWhere(['<>', 't.article_id', '0']);
-			} else if ($params['article'] == 0) {
-				$query->andFilterWhere(['is', 't.article_id', null])
-					->andFilterWhere(['t.article_id' => '0']);
+			} else if ($params['articles'] == 0) {
+				$query->andFilterWhere(['or',
+                    ['is', 't.article_id', null],
+                    ['t.article_id' => '0'],
+                ]);
 			}
 		}
 
