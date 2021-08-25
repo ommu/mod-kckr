@@ -86,7 +86,7 @@ $attributes = [
 		'attribute' => 'medias',
 		'value' => function ($model) {
 			$medias = $model->getKckrs('media');
-			return Html::a($medias, ['o/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias])]);
+			return Html::a($medias, ['publisher/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -95,7 +95,7 @@ $attributes = [
 		'attribute' => 'items',
 		'value' => function ($model) {
 			$items = $model->getKckrs('item');
-			return Html::a($items, ['o/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items])]);
+			return Html::a($items, ['publisher/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

@@ -2,7 +2,7 @@
 /**
  * Kckr Publisher Obligation (kckr-publisher-obligation)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\ObligationController
+ * @var $this ommu\kckr\controllers\publisher\ObligationController
  * @var $model ommu\kckr\models\KckrPublisherObligation
  * @var $form app\components\widgets\ActiveForm
  *
@@ -17,8 +17,8 @@
 use yii\helpers\Url;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
-$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['o/publisher/view', 'id' => $model->publisher->id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['publisher/admin/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['publisher/admin/view', 'id' => $model->publisher->id]];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', ' Obligation'), 'url' => ['manage', 'publisher' => $model->publisher->id]];
 $this->params['breadcrumbs'][] = ['label' => $model->media_title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');

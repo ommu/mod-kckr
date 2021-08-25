@@ -2,7 +2,7 @@
 /**
  * Kckr Publishers (kckr-publisher)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\PublisherController
+ * @var $this ommu\kckr\controllers\publisher\AdminController
  * @var $model ommu\kckr\models\KckrPublisher
  * @var $searchModel ommu\kckr\models\search\KckrPublisher
  *

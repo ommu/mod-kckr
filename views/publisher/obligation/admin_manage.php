@@ -1,15 +1,15 @@
 <?php
 /**
- * Kckr Media (kckr-media)
+ * Kckr Publisher Obligation (kckr-publisher-obligation)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\MediaController
- * @var $model ommu\kckr\models\KckrMedia
- * @var $searchModel ommu\kckr\models\search\KckrMedia
+ * @var $this ommu\kckr\controllers\publisher\ObligationController
+ * @var $model ommu\kckr\models\KckrPublisherObligation
+ * @var $searchModel ommu\kckr\models\search\KckrPublisherObligation
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2019 OMMU (www.ommu.id)
- * @created date 4 July 2019, 21:55 WIB
+ * @created date 3 October 2019, 21:46 WIB
  * @link https://bitbucket.org/ommu/kckr
  *
  */
@@ -20,55 +20,42 @@ use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-if ($kckr != null) {
-	$this->params['breadcrumbs'][] = ['label' => $kckr->publisher->publisher_name, 'url' => ['admin/view', 'id' => $kckr->id]];
-	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
+if ($publisher != null) {
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['publisher/admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['publisher/admin/view', 'id' => $publisher->id]];
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
 } else if ($category != null) {
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Category'), 'url' => ['setting/category/index']];
 	$this->params['breadcrumbs'][] = ['label' => $category->title->message, 'url' => ['setting/category/view', 'id' => $category->id]];
-	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
-} else if ($publisher != null) {
-	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
-	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id' => $publisher->id]];
-	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
-} else if ($pic != null) {
-	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Setting'), 'url' => ['setting/admin/index']];
-	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Person In Charge'), 'url' => ['setting/pic/index']];
-	$this->params['breadcrumbs'][] = ['label' => $pic->pic_name, 'url' => ['setting/pic/view', 'id' => $pic->id]];
-	$this->params['breadcrumbs'][] = Yii::t('app', 'Medias');
-} else
-	$this->params['breadcrumbs'][] = $this->title;
+	$this->params['breadcrumbs'][] = Yii::t('app', 'Obligations');
+} else {
+    $this->params['breadcrumbs'][] = $this->title;
+}
 
-if ($kckr != null) {
+if ($publisher != null) {
 	$this->params['menu']['content'] = [
-		['label' => Yii::t('app', 'Add Media'), 'url' => Url::to(['create', 'id' => $kckr->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-primary modal-btn']],
-		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id' => $kckr->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-default modal-btn']],
+		['label' => Yii::t('app', 'Add Obligation'), 'url' => Url::to(['create', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-primary modal-btn']],
+		['label' => Yii::t('app', 'Import'), 'url' => Url::to(['import', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-default modal-btn']],
+		['label' => Yii::t('app', 'Export'), 'url' => Url::to(['export', 'id' => $publisher->id]), 'icon' => 'plus-square', 'htmlOptions' => ['class' => 'btn btn-dark modal-btn']],
 	];
 }
 $this->params['menu']['option'] = [
 	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],
 	['label' => Yii::t('app', 'Grid Option'), 'url' => 'javascript:void(0);'],
+	['label' => Yii::t('app', 'Export'), 'url' => 'javascript:void(0);'],
 ];
 ?>
 
-<div class="kckr-media-manage">
+<div class="kckr-publisher-obligation-manage">
 <?php Pjax::begin(); ?>
 
-<?php if ($kckr != null) {
-    echo $this->render('/admin/admin_view', ['model' => $kckr, 'small' => true]);
+<?php if ($publisher != null) {
+    echo $this->render('/publisher/admin/admin_view', ['model' => $publisher, 'small' => true]);
 } ?>
 
 <?php if ($category != null) {
     echo $this->render('/setting/category/admin_view', ['model' => $category, 'small' => true]);
-} ?>
-
-<?php if ($publisher != null) {
-    echo $this->render('/o/publisher/admin_view', ['model' => $publisher, 'small' => true]);
-} ?>
-
-<?php if ($pic != null) {
-    echo $this->render('/setting/pic/admin_view', ['model' => $pic, 'small' => true]);
 } ?>
 
 <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -93,14 +80,14 @@ array_push($columnData, [
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Media'), 'class' => 'modal-btn']);
+			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Obligation'), 'class' => 'modal-btn']);
 		},
 		'update' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Media'), 'class' => 'modal-btn']);
+			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Obligation'), 'class' => 'modal-btn']);
 		},
 		'delete' => function ($url, $model, $key) {
 			return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-				'title' => Yii::t('app', 'Delete Media'),
+				'title' => Yii::t('app', 'Delete Obligation'),
 				'data-confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
 				'data-method'  => 'post',
 			]);

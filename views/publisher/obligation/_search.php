@@ -2,7 +2,7 @@
 /**
  * Kckr Publisher Obligation (kckr-publisher-obligation)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\ObligationController
+ * @var $this ommu\kckr\controllers\publisher\ObligationController
  * @var $model ommu\kckr\models\search\KckrPublisherObligation
  * @var $form yii\widgets\ActiveForm
  *

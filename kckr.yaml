@@ -14,7 +14,7 @@ kckr_submenu:
   media:
     label: Media(s)
     url:
-      0: 'o/media/manage'
+      0: 'publisher/media/manage'
       kckr: $_GET*id
     select: controller
   print:
@@ -42,13 +42,13 @@ publisher_submenu:
   publisher:
     label: Publisher
     url:
-      0: 'o/publisher/view'
+      0: 'o/admin/view'
       id: $_GET*id
     select: controller
   obligation:
     label: Obligation(s)
     url:
-      0: 'o/obligation/manage'
+      0: 'publisher/obligation/manage'
       publisher: $_GET*id
       publish: 1
     select: controller
@@ -62,7 +62,7 @@ publisher_submenu:
   media:
     label: Media(s)
     url:
-      0: 'o/media/manage'
+      0: 'publisher/media/manage'
       publisher: $_GET*id
       publish: 1
     select: controller

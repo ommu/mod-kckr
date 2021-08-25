@@ -1,14 +1,14 @@
 <?php
 /**
- * Kckr Media (kckr-media)
+ * Kckr Publisher Obligation (kckr-publisher-obligation)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\MediaController
- * @var $model ommu\kckr\models\KckrMedia
+ * @var $this ommu\kckr\controllers\publisher\ObligationController
+ * @var $model ommu\kckr\models\KckrPublisherObligation
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2019 OMMU (www.ommu.id)
- * @created date 4 July 2019, 21:55 WIB
+ * @created date 3 October 2019, 21:46 WIB
  * @link https://bitbucket.org/ommu/kckr
  *
  */
@@ -18,8 +18,9 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-$this->params['breadcrumbs'][] = ['label' => $model->kckr->publisher->publisher_name, 'url' => ['admin/view', 'id' => $model->kckr_id]];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Media'), 'url' => ['manage', 'kckr' => $model->kckr_id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['publisher/admin/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['publisher/admin/view', 'id' => $model->publisher->id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', ' Obligation'), 'url' => ['manage', 'publisher' => $model->publisher->id]];
 $this->params['breadcrumbs'][] = $model->media_title;
 
 if (!$small) {
@@ -29,7 +30,7 @@ if (!$small) {
     ];
 } ?>
 
-<div class="kckr-media-view">
+<div class="kckr-publisher-obligation-view">
 
 <?php
 $attributes = [
@@ -45,22 +46,11 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'picId',
-		'value' => function ($model) {
-			$picId = isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
-            if ($picId != '-') {
-                return Html::a($picId, ['setting/pic/view', 'id' => $model->kckr->pic_id], ['title' => $picId, 'class' => 'modal-btn']);
-            }
-			return $picId;
-		},
-		'format' => 'html',
-	],
-	[
 		'attribute' => 'publisherName',
 		'value' => function ($model) {
-			$publisherName = isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
+			$publisherName = isset($model->publisher) ? $model->publisher->publisher_name : '-';
             if ($publisherName != '-') {
-                return Html::a($publisherName, ['o/publisher/view', 'id' => $model->kckr->publisher_id], ['title' => $publisherName, 'class' => 'modal-btn']);
+                return Html::a($publisherName, ['publisher/admin/view', 'id' => $model->publisher_id], ['title' => $publisherName, 'class' => 'modal-btn']);
             }
 			return $publisherName;
 		},
@@ -98,8 +88,8 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'media_item',
-		'value' => $model->media_item ? $model->media_item : '-',
+		'attribute' => 'handover',
+		'value' => $model->filterYesNo($model->handover),
 		'visible' => !$small,
 	],
 	[

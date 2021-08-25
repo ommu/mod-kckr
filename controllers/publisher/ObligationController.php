@@ -1,7 +1,7 @@
 <?php
 /**
  * ObligationController
- * @var $this ommu\kckr\controllers\o\ObligationController
+ * @var $this ommu\kckr\controllers\publisher\ObligationController
  * @var $model ommu\kckr\models\KckrPublisherObligation
  *
  * ObligationController implements the CRUD actions for KckrPublisherObligation model.
@@ -27,7 +27,7 @@
  *
  */
 
-namespace ommu\kckr\controllers\o;
+namespace ommu\kckr\controllers\publisher;
 
 use Yii;
 use app\components\Controller;

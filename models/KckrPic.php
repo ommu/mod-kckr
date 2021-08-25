@@ -259,7 +259,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getKckrs('media');
-				return Html::a($medias, ['o/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
+				return Html::a($medias, ['publisher/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class' => 'text-center'],
@@ -269,7 +269,7 @@ class KckrPic extends \app\components\ActiveRecord
 			'attribute' => 'items',
 			'value' => function($model, $key, $index, $column) {
 				$items = $model->getKckrs('item');
-				return Html::a($items, ['o/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items]), 'data-pjax' => 0]);
+				return Html::a($items, ['publisher/media/manage', 'picId' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class' => 'text-center'],

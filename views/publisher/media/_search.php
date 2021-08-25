@@ -2,7 +2,7 @@
 /**
  * Kckr Media (kckr-media)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\MediaController
+ * @var $this ommu\kckr\controllers\publisher\MediaController
  * @var $model ommu\kckr\models\search\KckrMedia
  * @var $form yii\widgets\ActiveForm
  *

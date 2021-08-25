@@ -270,7 +270,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'attribute' => 'obligations',
 			'value' => function($model, $key, $index, $column) {
 				$obligations = $model->getObligations('count');
-				return Html::a($obligations, ['o/obligation/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} obligations', ['count' => $obligations]), 'data-pjax' => 0]);
+				return Html::a($obligations, ['publisher/obligation/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} obligations', ['count' => $obligations]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class' => 'text-center'],
@@ -290,7 +290,7 @@ class KckrPublisher extends \app\components\ActiveRecord
 			'attribute' => 'medias',
 			'value' => function($model, $key, $index, $column) {
 				$medias = $model->getKckrs('media');
-				return Html::a($medias, ['o/media/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
+				return Html::a($medias, ['publisher/media/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class' => 'text-center'],

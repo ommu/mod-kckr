@@ -27,8 +27,8 @@ if ($pic != null) {
 	$this->params['breadcrumbs'][] = Yii::t('app', 'KCKR(s)');
 } else if ($publisher != null) {
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
-	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['o/publisher/view', 'id' => $publisher->id]];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['publisher/admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => $publisher->publisher_name, 'url' => ['publisher/admin/view', 'id' => $publisher->id]];
 	$this->params['breadcrumbs'][] = Yii::t('app', 'KCKR(s)');
 } else {
     $this->params['breadcrumbs'][] = Yii::t('app', 'Deposit');
@@ -51,7 +51,7 @@ $this->params['menu']['option'] = [
 } ?>
 
 <?php if ($publisher != null) {
-    echo $this->render('/o/publisher/admin_view', ['model' => $publisher, 'small' => true]);
+    echo $this->render('/publisher/admin/admin_view', ['model' => $publisher, 'small' => true]);
 } ?>
 
 <?php //echo $this->render('_search', ['model' => $searchModel]); ?>

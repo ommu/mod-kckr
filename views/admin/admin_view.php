@@ -54,7 +54,7 @@ $attributes = [
 		'value' => function ($model) {
 			$publisherName = isset($model->publisher) ? $model->publisher->publisher_name : '-';
             if ($publisherName != '-') {
-                return Html::a($publisherName, ['o/publisher/view', 'id' => $model->publisher_id], ['title' => $publisherName, 'class' => 'modal-btn']);
+                return Html::a($publisherName, ['publisher/admin/view', 'id' => $model->publisher_id], ['title' => $publisherName, 'class' => 'modal-btn']);
             }
 			return $publisherName;
 		},
@@ -102,7 +102,7 @@ $attributes = [
 		'attribute' => 'medias',
 		'value' => function ($model) {
 			$medias = $model->getMedias('count');
-			return Html::a($medias, ['o/media/manage', 'kckr' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} medias', ['count' => $medias])]);
+			return Html::a($medias, ['publisher/media/manage', 'kckr' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} medias', ['count' => $medias])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

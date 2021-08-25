@@ -1,9 +1,9 @@
 <?php
 /**
- * Kckr Publishers (kckr-publisher)
+ * Kckr Media (kckr-media)
  * @var $this app\components\View
- * @var $this ommu\kckr\controllers\o\PublisherController
- * @var $model ommu\kckr\models\KckrPublisher
+ * @var $this ommu\kckr\controllers\publisher\MediaController
+ * @var $model ommu\kckr\models\KckrMedia
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
@@ -17,18 +17,19 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-if (!$small) {
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['index']];
-    $this->params['breadcrumbs'][] = $model->publisher_name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['admin/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->kckr->publisher->publisher_name, 'url' => ['admin/view', 'id' => $model->kckr_id]];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Media'), 'url' => ['manage', 'kckr' => $model->kckr_id]];
+$this->params['breadcrumbs'][] = $model->media_title;
 
+if (!$small) {
     $this->params['menu']['content'] = [
         ['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id' => $model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class' => 'btn btn-primary']],
         ['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id' => $model->id]), 'htmlOptions' => ['data-confirm' => Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method' => 'post', 'class' => 'btn btn-danger'], 'icon' => 'trash'],
     ];
 } ?>
 
-<div class="kckr-publisher-view">
+<div class="kckr-media-view">
 
 <?php
 $attributes = [
@@ -44,54 +45,61 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'publisher_area',
-		'value' => $model::getPublisherArea($model->publisher_area),
-	],
-	[
-		'attribute' => 'publisher_name',
-		'value' => $model->publisher_name ? $model->publisher_name : '-',
-	],
-	[
-		'attribute' => 'publisher_address',
-		'value' => $model->publisher_address ? $model->publisher_address : '-',
-	],
-	[
-		'attribute' => 'publisher_phone',
-		'value' => $model->publisher_phone ? $model->publisher_phone : '-',
-	],
-	[
-		'attribute' => 'obligations',
+		'attribute' => 'picId',
 		'value' => function ($model) {
-			$obligations = $model->getObligations('count');
-			return Html::a($obligations, ['o/obligation/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} obligations', ['count' => $obligations])]);
+			$picId = isset($model->kckr) ? $model->kckr->pic->pic_name : '-';
+            if ($picId != '-') {
+                return Html::a($picId, ['setting/pic/view', 'id' => $model->kckr->pic_id], ['title' => $picId, 'class' => 'modal-btn']);
+            }
+			return $picId;
 		},
 		'format' => 'html',
+	],
+	[
+		'attribute' => 'publisherName',
+		'value' => function ($model) {
+			$publisherName = isset($model->kckr) ? $model->kckr->publisher->publisher_name : '-';
+            if ($publisherName != '-') {
+                return Html::a($publisherName, ['publisher/admin/view', 'id' => $model->kckr->publisher_id], ['title' => $publisherName, 'class' => 'modal-btn']);
+            }
+			return $publisherName;
+		},
+		'format' => 'html',
+	],
+	[
+		'attribute' => 'categoryName',
+		'value' => function ($model) {
+			$categoryName = isset($model->category) ? $model->category->title->message : '-';
+            if ($categoryName != '-') {
+                return Html::a($categoryName, ['setting/category/view', 'id' => $model->cat_id], ['title' => $categoryName, 'class' => 'modal-btn']);
+            }
+			return $categoryName;
+		},
+		'format' => 'html',
+	],
+	[
+		'attribute' => 'media_title',
+		'value' => $model->media_title ? $model->media_title : '-',
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'kckrs',
-		'value' => function ($model) {
-			$kckrs = $model->getKckrs('count');
-			return Html::a($kckrs, ['admin/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} kckrs', ['count' => $kckrs])]);
-		},
-		'format' => 'html',
+		'attribute' => 'media_desc',
+		'value' => $model->media_desc ? $model->media_desc : '-',
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'medias',
-		'value' => function ($model) {
-			$medias = $model->getKckrs('media');
-			return Html::a($medias, ['o/media/manage', 'publisher' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias])]);
-		},
-		'format' => 'html',
+		'attribute' => 'media_publish_year',
+		'value' => $model->media_publish_year ? $model->media_publish_year : '-',
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'items',
-		'value' => function ($model) {
-			return $model->getKckrs('item');
-		},
-		'format' => 'html',
+		'attribute' => 'media_author',
+		'value' => $model->media_author ? $model->media_author : '-',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'media_item',
+		'value' => $model->media_item ? $model->media_item : '-',
 		'visible' => !$small,
 	],
 	[

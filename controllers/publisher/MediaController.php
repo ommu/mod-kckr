@@ -1,7 +1,7 @@
 <?php
 /**
  * MediaController
- * @var $this ommu\kckr\controllers\o\MediaController
+ * @var $this ommu\kckr\controllers\publisher\MediaController
  * @var $model ommu\kckr\models\KckrMedia
  *
  * MediaController implements the CRUD actions for KckrMedia model.
@@ -27,7 +27,7 @@
  *
  */
 
-namespace ommu\kckr\controllers\o;
+namespace ommu\kckr\controllers\publisher;
 
 use Yii;
 use app\components\Controller;

@@ -1,10 +1,10 @@
 <?php
 /**
- * PublisherController
- * @var $this ommu\kckr\controllers\o\PublisherController
+ * AdminController
+ * @var $this ommu\kckr\controllers\publisher\AdminController
  * @var $model ommu\kckr\models\KckrPublisher
  *
- * PublisherController implements the CRUD actions for KckrPublisher model.
+ * AdminController implements the CRUD actions for KckrPublisher model.
  * Reference start
  * TOC :
  *	Index
@@ -26,7 +26,7 @@
  *
  */
 
-namespace ommu\kckr\controllers\o;
+namespace ommu\kckr\controllers\publisher;
 
 use Yii;
 use app\components\Controller;
@@ -35,7 +35,7 @@ use yii\filters\VerbFilter;
 use ommu\kckr\models\KckrPublisher;
 use ommu\kckr\models\search\KckrPublisher as KckrPublisherSearch;
 
-class PublisherController extends Controller
+class AdminController extends Controller
 {
 	/**
 	 * {@inheritdoc}

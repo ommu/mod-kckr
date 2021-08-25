@@ -65,7 +65,7 @@ $attributes = [
 		'attribute' => 'obligations',
 		'value' => function ($model) {
 			$obligations = $model->getObligations('count');
-			return Html::a($obligations, ['o/obligation/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} obligations', ['count' => $obligations])]);
+			return Html::a($obligations, ['publisher/obligation/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} obligations', ['count' => $obligations])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -74,7 +74,7 @@ $attributes = [
 		'attribute' => 'medias',
 		'value' => function ($model) {
 			$medias = $model->getMedias('count');
-			return Html::a($medias, ['o/media/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias])]);
+			return Html::a($medias, ['publisher/media/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} karya', ['count' => $medias])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -83,7 +83,7 @@ $attributes = [
 		'attribute' => 'items',
 		'value' => function ($model) {
 			$items = $model->getMedias('sum');
-			return Html::a($items, ['o/media/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items])]);
+			return Html::a($items, ['publisher/media/manage', 'category' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} items', ['count' => $items])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

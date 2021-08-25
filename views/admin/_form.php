@@ -42,7 +42,7 @@ use ommu\flatpickr\Flatpickr;
 
 <?php //echo $form->errorSummary($model);?>
 
-<?php $publisherSuggestUrl = Url::to(['o/publisher/suggest']);
+<?php $publisherSuggestUrl = Url::to(['publisher/admin/suggest']);
 $publisher = [];
 if ($model->publisher_id && isset($model->publisher)) {
     $publisher = [$model->publisher_id => $model->publisher->publisher_name];

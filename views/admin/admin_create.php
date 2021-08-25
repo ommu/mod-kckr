@@ -18,8 +18,8 @@ use yii\helpers\Url;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Deposit'), 'url' => ['index']];
 if (($id = Yii::$app->request->get('id')) != null) {
-	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['o/publisher/index']];
-	$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['o/publisher/view', 'id' => $model->publisher_id]];
+	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Publisher'), 'url' => ['publisher/admin/index']];
+	$this->params['breadcrumbs'][] = ['label' => $model->publisher->publisher_name, 'url' => ['publisher/admin/view', 'id' => $model->publisher_id]];
 	$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'KCKR(s)'), 'url' => ['manage', 'publisher' => $model->publisher_id]];
 }
 $this->params['breadcrumbs'][] = Yii::t('app', 'Create');
