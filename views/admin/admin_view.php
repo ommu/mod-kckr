@@ -47,6 +47,7 @@ $attributes = [
 			return $articleTitle;
 		},
 		'format' => 'html',
+		'visible' => !$small,
 	],
 	[
 		'attribute' => 'publisherName',
