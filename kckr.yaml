@@ -39,12 +39,18 @@ kckr_submenu:
       data-method: post
     select: action
 publisher_submenu:
-  publisher:
-    label: Publisher
+  view:
+    label: Info
     url:
-      0: 'o/admin/view'
+      0: 'publisher/admin/view'
       id: $_GET*id
-    select: controller
+    select: action
+  update:
+    label: Update
+    url:
+      0: 'publisher/admin/update'
+      id: $_GET*id
+    select: action
   obligation:
     label: Obligation(s)
     url:
@@ -66,6 +72,15 @@ publisher_submenu:
       publisher: $_GET*id
       publish: 1
     select: controller
+  delete:
+    label: Delete
+    url:
+      0: 'publisher/admin/delete'
+      id: $_GET*id
+    htmlOptions:
+      data-confirm: Are you sure you want to delete this item?
+      data-method: post
+    select: action
 setting_submenu:
   update:
     label: Settings

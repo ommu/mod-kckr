@@ -69,7 +69,7 @@ class KckrMedia extends \app\components\ActiveRecord
 	{
 		return [
 			[['kckr_id', 'cat_id', 'media_title', 'media_item'], 'required'],
-			[['publish', 'kckr_id', 'cat_id', 'media_item', 'creation_id', 'modified_id'], 'integer'],
+			[['publish', 'kckr_id', 'cat_id', 'media_publish_year', 'media_item', 'creation_id', 'modified_id'], 'integer'],
 			[['media_title', 'media_desc', 'media_author'], 'string'],
 			[['media_desc', 'isbn', 'media_publish_year', 'media_author'], 'safe'],
 			[['isbn'], 'string', 'max' => 32],
