@@ -63,7 +63,8 @@ class KckrPublisher extends KckrPublisherModel
         if (!($column && is_array($column))) {
             $query = KckrPublisherModel::find()->alias('t');
         } else {
-            $query = KckrPublisherModel::find()->alias('t')->select($column);
+            $query = KckrPublisherModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'creation creation', 

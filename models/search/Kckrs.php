@@ -63,7 +63,8 @@ class Kckrs extends KckrsModel
         if (!($column && is_array($column))) {
             $query = KckrsModel::find()->alias('t');
         } else {
-            $query = KckrsModel::find()->alias('t')->select($column);
+            $query = KckrsModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'pic pic', 

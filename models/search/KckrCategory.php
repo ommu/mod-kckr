@@ -63,7 +63,8 @@ class KckrCategory extends KckrCategoryModel
         if (!($column && is_array($column))) {
             $query = KckrCategoryModel::find()->alias('t');
         } else {
-            $query = KckrCategoryModel::find()->alias('t')->select($column);
+            $query = KckrCategoryModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'title title', 
