@@ -63,7 +63,8 @@ class KckrMedia extends KckrMediaModel
         if (!($column && is_array($column))) {
             $query = KckrMediaModel::find()->alias('t');
         } else {
-            $query = KckrMediaModel::find()->alias('t')->select($column);
+            $query = KckrMediaModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'kckr kckr', 

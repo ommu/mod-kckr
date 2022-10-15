@@ -63,7 +63,8 @@ class KckrPublisherObligation extends KckrPublisherObligationModel
         if (!($column && is_array($column))) {
             $query = KckrPublisherObligationModel::find()->alias('t');
         } else {
-            $query = KckrPublisherObligationModel::find()->alias('t')->select($column);
+            $query = KckrPublisherObligationModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'publisher publisher', 

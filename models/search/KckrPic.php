@@ -63,7 +63,8 @@ class KckrPic extends KckrPicModel
         if (!($column && is_array($column))) {
             $query = KckrPicModel::find()->alias('t');
         } else {
-            $query = KckrPicModel::find()->alias('t')->select($column);
+            $query = KckrPicModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'creation creation', 

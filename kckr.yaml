@@ -1,6 +1,6 @@
 kckr_submenu:
   view:
-    label: Info
+    label: Detail
     url:
       0: 'admin/view'
       id: $_GET*id
@@ -40,7 +40,7 @@ kckr_submenu:
     select: action
 publisher_submenu:
   view:
-    label: Info
+    label: Detail
     url:
       0: 'publisher/admin/view'
       id: $_GET*id
