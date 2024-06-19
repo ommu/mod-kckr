@@ -3,7 +3,7 @@
  * m210825_234057_kckr_module_insert_kckr_article_category
  * 
  * @author Putra Sudaryanto <putra@ommu.id>
- * @contact (+62)856-299-4114
+ * @contact (+62)811-2540-432
  * @copyright Copyright (c) 2019 OMMU (www.ommu.id)
  * @created date 25 August 2021, 23:42 WIB
  * @link https://bitbucket.org/ommu/kckr
