@@ -14,15 +14,15 @@
 		"yii2"
 	],
 	"license": "Apache-2.0",
-	"homepage": "https://bitbucket.org/ommu/kckr",
+	"homepage": "https://github.com/ommu/mod-kckr",
 	"support": {
-		"issues": "https://bitbucket.org/ommu/kckr/issues",
-		"wiki": "https://bitbucket.org/ommu/kckr/wiki",
-		"source": "https://bitbucket.org/ommu/kckr"
+		"issues": "https://github.com/ommu/mod-kckr/issues",
+		"wiki": "https://github.com/ommu/mod-kckr/wiki",
+		"source": "https://github.com/ommu/mod-kckr"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://bitbucket.org/ommu/kckr.git"
+		"url": "https://github.com/ommu/mod-kckr.git"
 	},
 	"authors": [
 		{
