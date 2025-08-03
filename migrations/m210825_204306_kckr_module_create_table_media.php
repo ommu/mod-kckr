@@ -6,7 +6,7 @@
  * @contact (+62)811-2540-432
  * @copyright Copyright (c) 2021 OMMU (www.ommu.id)
  * @created date 25 August 2021, 20:43 WIB
- * @link https://bitbucket.org/ommu/kckr
+ * @link https://github.com/ommu/mod-kckr
  *
  */
 

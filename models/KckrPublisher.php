@@ -6,7 +6,7 @@
  * @contact (+62)811-2540-432
  * @copyright Copyright (c) 2019 OMMU (www.ommu.id)
  * @created date 4 July 2019, 21:50 WIB
- * @link https://bitbucket.org/ommu/kckr
+ * @link https://github.com/ommu/mod-kckr
  *
  * This is the model class for table "ommu_kckr_publisher".
  *
